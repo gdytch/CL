@@ -21,16 +21,16 @@
             border-bottom: 1px solid;
         }
         .radio:checked + span{
-            color: #85CE36; 
+            color: #85CE36;
             border-bottom: 1px solid;
         }
-       
+
         .radio + span:before {
-          content: none; 
+          content: none;
         }
 
         .radio:checked + span:before {
-          content: none; 
+          content: none;
         }
         .user-section{
                 color: #a7a7a7;
@@ -67,10 +67,10 @@
                             @foreach ($users as $user)
                                 <div >
                                     <label>
-                                        <input class="radio" name="id" type="radio" value="{{$user->id}}" @if(count($users)<2) checked @elseif(old('id') == $user->id) checked @endif>
-                                        
-                                        <span class="accounts"><img src="{{asset('img/'.$user->avatar)}}" class="login-img"> {{$user->lname}}, {{$user->fname}}</span>
-                                        <p class="user-section">{{$user->sectionTo->name}}</p>
+                                        <input class="radio" name="id" type="radio" value="{{$user->id}}" @if(count($users)<2) checked @elseif(old('id') == $user->id) checked @endif @if(!$user->sectionTo->status)disabled @endif>
+
+                                        <span class="accounts"><img src="{{asset('storage/avatar/'.$user->avatar)}}" class="login-img"> {{$user->lname}}, {{$user->fname}}</span>
+                                        <p class="user-section">{{$user->sectionTo->name}} @if(!$user->sectionTo->status)<span style="color:#ff7a7a;"><em>(Closed)</em></span>@endif</p>
                                     </label>
                                 </div>
                             @endforeach
@@ -79,7 +79,7 @@
 
                         <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
                             <label for="password">Password</label>
-                            <input type="password" class="form-control underlined" name="password" id="password" placeholder="Your password" required @if(count($users)<2) autofocus @endif>
+                            <input type="password" class="form-control underlined" name="password" id="password" placeholder="Your password" required @if(count($users)<2) autofocus @endif @if(count($users)==1)@if(!$user->sectionTo->status)disabled @endif @endif>
                             @if ($errors->has('password'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('password') }}</strong>
@@ -88,10 +88,11 @@
                         </div>
 
                         <div class="form-group">
-                            <button type="submit" class="btn btn-block btn-primary">Login</button>
+                            <button type="submit" class="btn btn-block btn-primary" @if(count($users)==1)@if(!$user->sectionTo->status)disabled @endif @endif>Login</button>
                         </div>
 
                     </form>
+                    <a href="#" onclick="document.location.reload(true)" class="btn btn-md btn-secondary">Refresh</a>
                 </div>
             </div>
             @include('inc.messages')

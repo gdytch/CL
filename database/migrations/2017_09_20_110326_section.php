@@ -15,8 +15,10 @@ class Section extends Migration
     {
         Schema::create('sections', function($table){
             $table->increments('id');
-            $table->string('name');
+            $table->string('name')->unique();
             $table->string('path');
+            $table->timestamps();
+
         });
     }
 

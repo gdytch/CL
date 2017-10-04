@@ -13,9 +13,9 @@ class Avatar extends Migration
      */
     public function up()
     {
-        Schema::table('admins', function($table){
-            $table->string('avatar')->nullable();
-        });
+        // Schema::table('admins', function($table){
+        //     $table->string('avatar')->nullable();
+        // });
         Schema::table('students', function($table){
             $table->string('avatar')->nullable();
         });

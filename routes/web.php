@@ -26,6 +26,8 @@ Route::group(['middleware' => 'auth:admin'], function () {
     Route::prefix('admin')->group(function(){
         Route::resource('student', 'StudentsController');
         Route::resource('section', 'SectionsController');
+        Route::post('admin/create/batch', 'StudentsController@batch')->name('student.create.batch');
+        Route::get('section/status/{id}', 'SectionsController@changeStatus')->name('section.status');
     });
 
 });
@@ -40,4 +42,9 @@ Route::group(['middleware' => 'auth:web'], function () {
     Route::get('/home', 'HomeController@index')->name('home');
     Route::prefix('home')->group(function(){
     });
+});
+
+
+Route::get('/test', function(){
+    return view('dashboards.test');
 });

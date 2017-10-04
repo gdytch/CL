@@ -7,10 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class Section extends Model
 {
 	 protected $fillable = [
-        'fname', 'lname', 'password', 'section', 'path', 'avatar',
+        'name', 'path', 'status'
     ];
-    
-    public function students(){
-        return $this->hasMany('App\Student', 'id', 'section');
+
+    public function Students(){
+        return $this->hasMany('App\Student', 'section', 'id');
     }
 }

@@ -14,5 +14,17 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+    public function getFiles($id){
+        $student = Student::find($id);
+        $directory = public_path()."\\storage"."\\".$student->sectionTo->path."\\".$student->path;
+        $contents = File::allFiles($directory);
+
+        foreach ($contents as $key => $file) {
+            $path = pathinfo((string)$file."");
+            $files[$key] = (object) array('name' => $path['basename'], 'type' => $path['extension'], 'path' => $path['dirname']);
+        }
+        return $files;
+
+    }
 
 }

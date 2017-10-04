@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use App\Student;
 use Auth;
 
@@ -25,7 +26,16 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('layouts.student')->with('dashboard_content', 'dashboards.student.pages.home');
+        $student = Student::find(Auth::user()->id);
+        $directory = public_path()."\\storage"."\\".$student->sectionTo->path."\\".$student->path."\\files\\";
+        $contents = File::allFiles($directory);
+
+        foreach ($contents as $key => $file) {
+            $path = pathinfo((string)$file."");
+            $files[$key] = (object) array('name' => $path['basename'], 'type' => $path['extension'], 'path' => $path['dirname']);
+        }
+
+        return view('layouts.student')->with('dashboard_content', 'dashboards.student.pages.home')->with('student', $student)->with('files', $files);
     }
 
     public function login(Request $request){

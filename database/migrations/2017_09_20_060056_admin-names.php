@@ -16,6 +16,8 @@ class AdminNames extends Migration
         Schema::table('admins', function ($table){
             $table->string('fname');
             $table->string('lname');
+            $table->timestamps();
+            
         });
     }
 

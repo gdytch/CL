@@ -8,47 +8,32 @@
                     <span class="l l3"></span>
                     <span class="l l4"></span>
                     <span class="l l5"></span>
-                </div> Modular Admin </div>
+                </div> Computer Class </div>
         </div>
         <nav class="menu">
             <ul class="sidebar-menu metismenu" id="sidebar-menu">
                 <li class="active">
-                    <a href="index.html">
-                        <i class="fa fa-home"></i> Dashboard </a>
+                    <a href="{{route('home')}}">
+                        <i class="fa fa-home"></i> My Files </a>
                 </li>
                 <li>
-                    <a href="">
-                        <i class="fa fa-th-large"></i> Items Manager
-                        <i class="fa arrow"></i>
+                    <a href="#">
+                        <i class="fa fa-user"></i> Profile
                     </a>
-                    <ul class="sidebar-nav">
-                        <li>
-                            <a href="items-list.html"> Items List </a>
-                        </li>
-                        <li>
-                            <a href="item-editor.html"> Item Editor </a>
-                        </li>
-                    </ul>
                 </li>
                 <li>
-                    <a href="">
-                        <i class="fa fa-bar-chart"></i> Charts
-                        <i class="fa arrow"></i>
+                    <a href="#">
+                        <i class="fa fa-gear"></i> Settings
                     </a>
-                    <ul class="sidebar-nav">
-                        <li>
-                            <a href="charts-flot.html"> Flot Charts </a>
-                        </li>
-                        <li>
-                            <a href="charts-morris.html"> Morris Charts </a>
-                        </li>
-                    </ul>
+                </li><li>
+                    <a href="#">
+                        <i class="fa fa-trash"></i> Recycle Bin
+                    </a>
                 </li>
-            
             </ul>
         </nav>
     </div>
-    <footer class="sidebar-footer">
+    {{-- <footer class="sidebar-footer">
         <ul class="sidebar-menu metismenu" id="customize-menu">
             <li>
                 <ul>
@@ -143,8 +128,8 @@
                     <i class="fa fa-cog"></i> Customize </a>
             </li>
         </ul>
-    </footer>
+    </footer> --}}
 </aside>
-<div class="sidebar-overlay" id="sidebar-overlay"></div>
+{{-- <div class="sidebar-overlay" id="sidebar-overlay"></div>
 <div class="sidebar-mobile-menu-handle" id="sidebar-mobile-menu-handle"></div>
-<div class="mobile-menu-handle"></div>
+<div class="mobile-menu-handle"></div> --}}

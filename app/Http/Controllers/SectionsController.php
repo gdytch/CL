@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 
 use Illuminate\Http\Request;
 use App\Section;
@@ -25,7 +27,7 @@ class SectionsController extends Controller
      */
     public function create()
     {
-        //
+        return view('layouts.admin')->with('dashboard_content' ,'dashboards.admin.section.create');
     }
 
     /**
@@ -36,7 +38,23 @@ class SectionsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->Validate($request, [
+            'name' => 'unique:sections'
+        ]);
+
+        $section = new Section();
+        $section->name = strtoupper($request->name);
+        $section->path = strtoupper($request->path);
+        $section->status = 0;
+        $section->save();
+
+        $path = '/storage'.'/'.$section->path;
+        if (!File::exists(public_path().'/'.$path))
+        {
+            File::makeDirectory(public_path().'/'.$path,0777,true);
+        }
+
+        return redirect()->route('section.index')->withSuccess('Section Added.');
     }
 
     /**
@@ -47,7 +65,8 @@ class SectionsController extends Controller
      */
     public function show($id)
     {
-        //
+        $section = Section::find($id);
+        return view('layouts.admin')->with('dashboard_content', 'dashboards.admin.section.show')->with('section', $section);
     }
 
     /**
@@ -58,7 +77,8 @@ class SectionsController extends Controller
      */
     public function edit($id)
     {
-        //
+        $section = Section::find($id);
+        return view('layouts.admin')->with('dashboard_content', 'dashboards.admin.section.edit')->with('section', $section);
     }
 
     /**
@@ -70,7 +90,13 @@ class SectionsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $section = Section::find($id);
+        if($section->path != $request->path){
+            File::move(public_path()."\\storage\\".$section->path, public_path().'\\storage\\'.$request->path);
+
+        }
+        $section->update($request->all());
+        return redirect()->route('section.show',$section->id)->withSuccess('Saved');
     }
 
     /**
@@ -82,5 +108,17 @@ class SectionsController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function changeStatus($id){
+        $section = Section::find($id);
+
+        if($section->status)
+            $section->status = 0;
+        else
+            $section->status = 1;
+        $section->save();
+
+        return redirect()->back()->withSuccess($section->name.' status changed');
     }
 }
