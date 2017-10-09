@@ -25,7 +25,7 @@
                 </div>
                 <div class="row">
                     <div class=" col-md-2" style="text-align: right">
-                        <img src="{{asset('img/'.$student->avatar)}}" alt="" class="student_avatar">
+                        <img src="{{asset('storage/avatar/'.$student->avatar)}}" alt="" class="student_avatar">
                         <a href="#" class="btn btn-info" style="width: 100%;">Change Avatar</a>
                     </div>
                     <form role="form" class="col col-md-4" action="{{route('student.update',$student->id)}}" method="POST">

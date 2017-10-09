@@ -3,27 +3,27 @@
         <div class="sidebar-header">
             <div class="brand">
                 <div class="logo">
-                    <span class="l l1"></span>
-                    <span class="l l2"></span>
-                    <span class="l l3"></span>
-                    <span class="l l4"></span>
-                    <span class="l l5"></span>
+                    <i class="fa fa-desktop"></i>
                 </div> ComputerClass </div>
         </div>
         <nav class="menu">
             <ul class="sidebar-menu metismenu" id="sidebar-menu">
-                <li {{ (Request::is('admin') ? 'class=active' : '') }}>
+                <li {{ (Route::is('admin') ? 'class=active' : '') }}>
                     <a href="{{route('admin')}}">
                         <i class="fa fa-home"></i> Dashboard </a>
                 </li>
-                <li {{ (Request::is('student') ? 'class=active' : '') }}>
+                <li {{ (Route::is('student.index','student.show','student.edit','student.create') ? 'class=active' : '') }}>
                     <a href="{{route('student.index')}}">
                         <i class="fa fa-user"></i> Student Manager </a>
                 </li>
-                 <li {{ (Request::is('section') ? 'class=active' : '') }}>
+                 <li {{ (Route::is('section.index','section.create','section.edit','section.show') ? 'class=active' : '') }}>
                     <a href="{{route('section.index')}}">
                         <i class="fa fa-group"></i> Section Manager </a>
                 </li>
+                <li {{ (Route::is('activity.index','activity.create','activity.edit','activity.show') ? 'class=active' : '') }}>
+                   <a href="{{route('activity.index')}}">
+                       <i class="fa fa-book"></i> Activity Manager </a>
+               </li>
             </ul>
         </nav>
     </div>

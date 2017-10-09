@@ -2,11 +2,11 @@
     <section class="section">
         <div class="row sameheight-container">
             <div class="col col-12 col-sm-12 col-md-12 col-xl-12">
-                <button type="button" name="button" class="btn btn-lg btn-primary" data-toggle="modal" data-target="#uploadmodal"><i class="fa fa-file"></i> Save/Upload File</button><br><br>
+                @if($files != null)<button type="button" name="button" class="btn btn-lg btn-danger" data-toggle="modal" data-target="#emptybinmodal"> <i class="fa fa-trash"></i> Empty trash</button><br><br> @endif
                 <div class="card sameheight-item">
                     <div class="card-block">
                         <div class="title-block">
-                            <h4 class="title">My Files </h4>
+                            <h4 class="title"> Trash </h4>
                             <hr>
                         </div>
                         <div class="col">
@@ -21,13 +21,14 @@
                                                       <p class="file-name">{{$file->name}}.{{$file->type}}</p>
                                                   </div>
                                                   <div class="dropdown-menu file-dropdown pull-menu-right" aria-labelledby="dropDown{{$key}}">
-                                                      <form action="{{route('file.show',$student->id)}}" method="get">
-                                                          {{ csrf_field() }}
+                                                      <form action="{{route('file.destroy',$student->id)}}" method="post">
+                                                          {{csrf_field()}}
+                                                          <input type="hidden" name="_method" value="DELETE">
                                                           <input type="hidden" name="file" value="{{$file->name}}.{{$file->type}}">
-                                                          <button type="submit" name="submit"class="dropdown-item" >Download</button>
+                                                          <input type="hidden" name="method" value="restore">
+                                                          <button type="submit" name="submit" class="dropdown-item">Restore</button>
                                                       </form>
-
-                                                    <a  class="dropdown-item" href="#" data-toggle="modal" data-target="#deletemodal{{$key}}">Delete</a>
+                                                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#deletemodal{{$key}}">Delete</a>
                                                   </div>
                                                 </div>
                                             </a>
@@ -41,7 +42,7 @@
                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                                   </div>
                                                   <div class="modal-body">
-                                                      Are you sure to delete this file?
+                                                      Are you sure to permanently delete this file?
                                                       <div class="">
                                                           <img src="@if(file_exists($file->path)){{asset('img/icons/'.$file->type.'.png')}} @else {{asset('img/icons/file.png')}}@endif" alt="" class="file-icon" style="width: 100px">
                                                           <p class="file-name">{{$file->name}}.{{$file->type}}</p>
@@ -51,7 +52,7 @@
                                                       <form action="{{route('file.destroy',$student->id)}}" method="post">
                                                           {{csrf_field()}}
                                                           <input type="hidden" name="_method" value="DELETE">
-                                                          <input type="hidden" name="method" value="recycle">
+                                                          <input type="hidden" name="method" value="delete">
                                                           <input type="hidden" name="file" value="{{$file->name}}.{{$file->type}}">
                                                           <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
                                                           <button type="submit" name="submit" class="btn btn-primary">Yes</button>
@@ -82,44 +83,25 @@
 
         </div>
 
-        <div class="modal fade" id="uploadmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal fade" id="emptybinmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h4 class="modal-title" id="myModalLabel">Save/Upload File</h4>
+                <h4 class="modal-title" id="myModalLabel">Delete</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
               </div>
               <div class="modal-body">
-                  <form action="{{route('file.store')}}" method="post" enctype="multipart/form-data">
-                      {{csrf_field()}}
-                      <br>
-                      <div class="form-group">
-                          <label class="control-label col-md-4">Select File</label>
-                          <input type="file" id="file" class="form-control file-input" name="file" required placeholder="">
-                      </div>
-                      <input type="hidden" name="id" value="{{$student->id}}">
-                      <br>
-                      <div class="form-row align-items-center">
-                        <div class="col">
-                         <label class="control-label col-md-4">Activity </label>
-
-                          <select name="activity" class="select form-control" id="inlineFormCustomSelect">
-                            @foreach ($student->SectionTo->Activities as $activity)
-                                <option value="{{$activity->name}}">{{$activity->name}} {{$activity->description}}</option>
-
-                            @endforeach
-                          </select>
-                        </div>
-
-                      </div>
-                      <form>
-
-
+                  Are you sure to delete all files?
 
               </div>
               <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary" name="success">Upload</button>
-                </form>
+                  <form action="{{route('file.destroy',$student->id)}}" method="post">
+                      {{csrf_field()}}
+                      <input type="hidden" name="_method" value="DELETE">
+                      <input type="hidden" name="method" value="empty">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                      <button type="submit" name="submit" class="btn btn-primary">Yes</button>
+                  </form>
               </div>
             </div>
           </div>

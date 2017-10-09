@@ -28,19 +28,24 @@ Route::group(['middleware' => 'auth:admin'], function () {
         Route::resource('section', 'SectionsController');
         Route::post('admin/create/batch', 'StudentsController@batch')->name('student.create.batch');
         Route::get('section/status/{id}', 'SectionsController@changeStatus')->name('section.status');
+        Route::resource('activity', 'ActivitiesController');
     });
 
 });
 
 
-
+Route::resource('file', 'FilesController');
 Route::post('/login', 'HomeController@login')->name('login');
-Route::get('/checkUser', 'HomeController@checkUser')->name('checkUser');
+Route::get('/checkUsers', 'HomeController@checkUser')->name('checkUser');
 
 //Student
 Route::group(['middleware' => 'auth:web'], function () {
     Route::get('/home', 'HomeController@index')->name('home');
     Route::prefix('home')->group(function(){
+        Route::get('trash', 'HomeController@trash')->name('trash');
+        Route::post('update_password/{id}', 'StudentsController@update_password')->name('update.password');
+        Route::get('settings', 'HomeController@settings')->name('student.settings');
+        Route::get('profile', 'HomeController@profile')->name('student.profile');
     });
 });
 

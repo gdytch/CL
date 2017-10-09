@@ -13,4 +13,8 @@ class Section extends Model
     public function Students(){
         return $this->hasMany('App\Student', 'section', 'id');
     }
+
+	public function Activities(){
+		return $this->hasMany('App\Activity', 'section_id', 'id')->orderBy('name', 'DESC');
+	}
 }

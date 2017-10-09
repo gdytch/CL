@@ -13,31 +13,46 @@
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#batchModal">Batch Add</button>
                         </div>
                     </div>
+                    <section class="section">
+                        <div class="row">
+                            <div class="col-12">
 
-                    <div class="row row-sm stats-container">
-                        <table class="table table-striped" id="StudentTable">
-                            <thead>
-                                <tr>
-                                    <th>First name</th>
-                                    <th>Last name</th>
-                                    <th>Section</th>
-                                    <th class="nosort">Folder</th>
-                                    <th class="nosort"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            @foreach ($students as $student)
-                                <tr>
-                                    <td>{{$student->fname}}</td>
-                                    <td>{{$student->lname}}</td>
-                                    <td>{{$student->sectionTo->name}}</td>
-                                    <td>{{$student->path}}</td>
-                                    <td><a href="{{route('student.show',$student->id)}}" class="btn btn-sm btn-info">View</a></td>
-                                </tr>
-                            @endforeach
-                            </tbody>
-                        </table>
-                    </div>
+                                <?php if(!isset($_GET['id'])) $_GET['id']='all'; ?>
+                                <h4>Sections
+                                <a href="{{url('admin/student?id=all')}}" class="btn @if($_GET['id'] == 'all')  btn-primary @else  btn-secondary @endif" >All</a>
+                                @foreach ($sections as $key => $section)
+                                    <a href="{{url('admin/student?id='.$section->id)}}" class="btn @if($_GET['id'] == $section->id)  btn-primary @else  btn-secondary @endif">{{$section->name}}</a>
+
+                                @endforeach
+                                <br><br>
+                                </h4>
+                            </div>
+                            <div class="col-12 card" style="padding: 30px;">
+                                <table class="table table-striped" id="StudentTable">
+                                    <thead>
+                                        <tr>
+                                            <th>First name</th>
+                                            <th>Last name</th>
+                                            <th>Section</th>
+                                            <th class="nosort">Folder</th>
+                                            <th class="nosort"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($students as $student)
+                                            <tr>
+                                                <td>{{$student->fname}}</td>
+                                                <td>{{$student->lname}}</td>
+                                                <td>{{$student->sectionTo->name}}</td>
+                                                <td>{{$student->path}}</td>
+                                                <td><a href="{{route('student.show',$student->id)}}" class="btn btn-sm btn-info">View</a></td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
                 </div>
             </div>
         </div>

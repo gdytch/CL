@@ -5,11 +5,20 @@
 {{-- <script type="text/javascript" src="{{asset('js/bootstrap.min.js')}}"></script> --}}
 <script type="text/javascript" src="{{asset('js/datatables.min.js')}}"></script>
 {{-- <script type="text/javascript" src="{{asset('js/bootstrap-confirmation.min.js')}}"></script> --}}
-
+<script type="text/javascript" src="{{asset('js/bootstrap-notify.min.js')}}"></script>
 <script type="text/javascript">
 
     $(document).ready(function(){
         $('#StudentTable').dataTable(
+            {
+            "order": [1, 'asc'],
+            "columnDefs": [
+             { "orderable": false, "targets": "nosort" }
+             ]
+
+        }
+        );
+        $('.StudentTable').dataTable(
             {
             "order": [],
             "columnDefs": [
@@ -25,6 +34,7 @@
 
             ]
        });
+
     });
 
     jQuery(document).ready(function($) {
@@ -47,5 +57,6 @@
 	    });
 
 	});
+
 
 </script>

@@ -11,16 +11,11 @@
         <ul class="nav-profile">
 
             <li class="profile dropdown">
-                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                <a class="nav-link" href="#" alt="Profile">
                      <img src="{{asset('storage/avatar/'.Auth::user()->avatar)}}" alt="" class="img">
                     <span class="name"> {{Auth::user()->fname}} {{  Auth::user()->lname}} </span>
                 </a>
-                <div class="dropdown-menu profile-dropdown-menu" aria-labelledby="dropdownMenu1">
-                    <a class="dropdown-item" href="#">
-                        <i class="fa fa-user icon"></i> Profile </a>
-                    <a class="dropdown-item" href="#">
-                        <i class="fa fa-gear icon"></i> Settings </a>
-                </div>
+
             </li>
             <li class="profile">
                 <a class="nav-link" href="#" onclick="event.preventDefault();document.getElementById('logout-form').submit();">

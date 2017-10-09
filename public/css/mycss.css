@@ -32,3 +32,17 @@
 .dropdown-menu .dropdown-item, .dropdown-menu .dropdown-item:hover  {
     text-decoration: none;
 }
+
+.logo i.fa {
+    font-size: 20pt;
+    line-height: normal;
+    display: block;
+    color: #78bd2e;
+}
+
+.green{
+    color:  #4bcf99;
+}
+.red{
+    color: #FF4444;;
+}

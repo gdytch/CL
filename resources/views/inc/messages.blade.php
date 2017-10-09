@@ -1,25 +1,50 @@
-<div class="container" >
 @if(count($errors) > 0)
     @foreach ($errors->all() as $error)
-      <div class="alert alert-dismissible alert-danger">
-          <button type="button" class="close" data-dismiss="alert">×</button>
-        {{$error}}
-      </div>
+        <script type="text/javascript">
+            $.notify({
+            message: "{{$error}}"
+        },{
+            type: 'danger',
+            allow_dismiss: true,
+            placement: {
+                from: "top",
+                align: "center"
+            },
+            offset: 45,
+            
+        });
+        </script>
     @endforeach
 @endif
 
 @if(session('success'))
-    <div class="alert alert-dismissible alert-success">
-        <button type="button" class="close" data-dismiss="alert">×</button>
-      {{session('success')}}
-    </div>
-  </dv>
+    <script type="text/javascript">
+        $.notify({
+        message: "{{session('success')}}"
+    },{
+        type: 'success',
+        allow_dismiss: true,
+        placement: {
+    		from: "top",
+    		align: "center"
+        },
+        offset: 45,
+    });
+    </script>
 @endif
 @if(session('error'))
-  <div class="alert alert-dismissible alert-danger">
-      <button type="button" class="close" data-dismiss="alert">×</button>
-    {{session('error')}}
-  </div>
-@endif
+    <script type="text/javascript">
+        $.notify({
+        message: "{{session('error')}}"
+    },{
+        type: 'danger',
+        allow_dismiss: true,
+        placement: {
+            from: "top",
+            align: "center"
+        },
+        offset: 45,
 
-</div>
+    });
+    </script>
+@endif

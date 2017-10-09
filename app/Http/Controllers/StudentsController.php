@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Hash;
 use Excel;
+use Auth;
 use App\Student;
 use App\Section;
 
@@ -16,10 +18,16 @@ class StudentsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $students = Student::all()->sortByDesc('section');
-        return view('layouts.admin')->with('dashboard_content', 'dashboards.admin.student.index')->with('students', $students);
+        if($request->id == 'all' || $request->id == null)
+            $students = Student::all();
+        else {
+            $students = Student::where('section', $request->id)->get();
+        }
+
+        $sections = Section::all();
+        return view('layouts.admin')->with('dashboard_content', 'dashboards.admin.student.index')->with('students', $students)->with('sections', $sections);
     }
 
     /**
@@ -64,7 +72,7 @@ class StudentsController extends Controller
         {
             File::makeDirectory(public_path().'/'.$section_path.'/'.$path,0777,true);
             File::makeDirectory(public_path().'/'.$section_path.'/'.$path.'/files',0777,true);
-            File::makeDirectory(public_path().'/'.$section_path.'/'.$path.'/recycle_bin',0777,true);
+            File::makeDirectory(public_path().'/'.$section_path.'/'.$path.'/trash',0777,true);
         }
 
         return redirect()->route('student.index')->withSuccess('Student Added');
@@ -89,7 +97,7 @@ class StudentsController extends Controller
            }
        else
            $files = null;
-       
+
         return view('layouts.admin')->with('dashboard_content', 'dashboards.admin.student.show')->with('student', $student)->with('files', $files);
     }
 
@@ -115,9 +123,7 @@ class StudentsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->Validate($request, [
-            'password' => 'confirmed'
-        ]);
+
 
         $student = Student::find($id);
 
@@ -141,7 +147,23 @@ class StudentsController extends Controller
         $student->fname = ucwords(strtolower($request->fname));
         $student->save($request->all());
         return redirect()->route('student.show',$id)->withSuccess('Saved');
+    }
 
+    public function update_password(Request $request, $id){
+        $this->Validate($request, [
+            'password' => 'confirmed|min:5'
+        ]);
+
+        $student = Student::find($id);
+        if(Hash::check($request->old_password, $student->password)){
+            $student->password = $request->password;
+            $student->save();
+
+        }else {
+            return redirect()->back()->withError('Incorrect password');
+        }
+        Auth::logout();
+        return redirect('checkUsers?id='.$student->id)->withSuccess('Enter new password');
     }
 
     /**
@@ -205,7 +227,7 @@ class StudentsController extends Controller
                 {
                     File::makeDirectory(public_path().'/'.$section_path.'/'.$path,0777,true);
                     File::makeDirectory(public_path().'/'.$section_path.'/'.$path.'/files',0777,true);
-                    File::makeDirectory(public_path().'/'.$section_path.'/'.$path.'/recycle_bin',0777,true);
+                    File::makeDirectory(public_path().'/'.$section_path.'/'.$path.'/trash',0777,true);
                 }
             }
             return redirect()->route('student.index')->withSuccess('Successfully Added Students.');

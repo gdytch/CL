@@ -18,5 +18,6 @@
            </div>
        </div>
        @include('inc.scripts')
+       @include('inc.messages')
     </body>
 </html>

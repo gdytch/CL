@@ -3,31 +3,28 @@
         <div class="sidebar-header">
             <div class="brand">
                 <div class="logo">
-                    <span class="l l1"></span>
-                    <span class="l l2"></span>
-                    <span class="l l3"></span>
-                    <span class="l l4"></span>
-                    <span class="l l5"></span>
+                    <i class="fa fa-desktop"></i>
                 </div> Computer Class </div>
         </div>
         <nav class="menu">
             <ul class="sidebar-menu metismenu" id="sidebar-menu">
-                <li class="active">
+                <li {{ (Route::is('home') ? 'class=active' : '') }}>
                     <a href="{{route('home')}}">
                         <i class="fa fa-home"></i> My Files </a>
                 </li>
-                <li>
-                    <a href="#">
+                <li {{ (Route::is('student.profile') ? 'class=active' : '') }}>
+                    <a href="{{route('student.profile')}}">
                         <i class="fa fa-user"></i> Profile
                     </a>
                 </li>
-                <li>
-                    <a href="#">
+                <li {{ (Route::is('student.settings') ? 'class=active' : '') }}>
+                    <a href="{{route('student.settings')}}">
                         <i class="fa fa-gear"></i> Settings
                     </a>
-                </li><li>
-                    <a href="#">
-                        <i class="fa fa-trash"></i> Recycle Bin
+                </li>
+                <li {{ (Route::is('trash') ? 'class=active' : '') }}>
+                    <a href="{{route('trash')}}">
+                        <i class="fa fa-trash"></i> Trash
                     </a>
                 </li>
             </ul>

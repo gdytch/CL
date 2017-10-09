@@ -71,7 +71,7 @@
                 <section class="section">
                     <div class="row">
                         <div class="col">
-                            <table class="table table-striped StudentTable" id="StudentTable">
+                            <table class="table table-striped" id="StudentTable">
                                 <thead>
                                     <tr>
                                         <th>First name</th>
