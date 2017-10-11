@@ -37,9 +37,7 @@
                                 <tr>
                                     <td>Section</td><td><h3>{{$student->sectionTo->name}}</h3></td>
                                 </tr>
-                                <tr>
-                                    <td>Folder</td><td><h3>{{$student->path}}</h3></td>
-                                </tr>
+                            
                             </table>
 
                         </div>
@@ -61,34 +59,38 @@
                 <section class="section">
                     <div class="row">
                         <div class="col-12">
-                            <table class="table table-striped">
-                                <thead>
-                                    <th>Activity</th>
-                                    <th>Date</th>
-                                    <th>Description</th>
-                                    <th>Submitted</th>
-                                </thead>
-                                <tbody>
-                                    @foreach ($student->Sectionto->Activities as $activity)
-                                        <tr>
-                                            <td>{{$activity->name}}</td>
-                                            <td>{{$activity->date}}</td>
-                                            <td>{{$activity->description}}</td>
-                                            <td>
-                                                @foreach ($file_log as $log)
-                                                    @if($activity->name == $log->activity)
-                                                        @if($log->status)
-                                                            <span class="green"><i class="fa fa-check"></i> <b>Yes</b></span>
-                                                        @else
-                                                            <span class="red"><i class="fa fa-close"></i> <b>No</b></span>
+                            @if(count($student->Sectionto->Activities) > 0)
+                                <table class="table table-striped">
+                                    <thead>
+                                        <th>Activity</th>
+                                        <th>Date</th>
+                                        <th>Description</th>
+                                        <th>Submitted</th>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($student->Sectionto->Activities as $activity)
+                                            <tr>
+                                                <td>{{$activity->name}}</td>
+                                                <td>{{$activity->date}}</td>
+                                                <td>{{$activity->description}}</td>
+                                                <td>
+                                                    @foreach ($file_log as $log)
+                                                        @if($activity->name == $log->activity)
+                                                            @if($log->status)
+                                                                <span class="green"><i class="fa fa-check"></i> <b>Yes</b></span>
+                                                            @else
+                                                                <span class="red"><i class="fa fa-close"></i> <b>No</b></span>
+                                                            @endif
                                                         @endif
-                                                    @endif
-                                                @endforeach
-                                            </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
+                                                    @endforeach
+                                                </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                @else
+                                    No Record
+                                @endif
 
                         </div>
                     </div>

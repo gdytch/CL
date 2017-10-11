@@ -51,7 +51,7 @@ class StudentsController extends Controller
     {
         $lname = ucwords(strtolower($request->lname));
         $fname = ucwords(strtolower($request->fname));
-        $path = ''.$lname.', '.$fname.'';
+        $path = ''.$lname.' '.$fname.'';
         $avatar = 'default-avatar.png';
         $password = $request->password;
         $section = $request->section;
@@ -67,13 +67,8 @@ class StudentsController extends Controller
 
         $sect = Section::find($section);
 
-        $section_path = '/storage'.'/'.$sect->path;
-        if (!File::exists(public_path().'/'.$section_path.'/'.$path))
-        {
-            File::makeDirectory(public_path().'/'.$section_path.'/'.$path,0777,true);
-            File::makeDirectory(public_path().'/'.$section_path.'/'.$path.'/files',0777,true);
-            File::makeDirectory(public_path().'/'.$section_path.'/'.$path.'/trash',0777,true);
-        }
+        $folder_path = '/storage'.'/'.$sect->path.'/'.$path;
+        $this->makeFolder($folder_path);
 
         return redirect()->route('student.index')->withSuccess('Student Added');
 
@@ -87,18 +82,27 @@ class StudentsController extends Controller
      */
     public function show($id)
     {
+        $contents = null;
         $student = Student::find($id);
-        $directory = public_path()."\\storage"."\\".$student->sectionTo->path."\\".$student->path."\\";
-        $contents = File::allFiles($directory);
-        if($contents != null)
-            foreach ($contents as $key => $file) {
-               $path = pathinfo((string)$file."");
-               $files[$key] = (object) array('name' => $path['basename'], 'type' => $path['extension'], 'path' => $path['dirname']);
-           }
-       else
-           $files = null;
+        $error = null;
 
-        return view('layouts.admin')->with('dashboard_content', 'dashboards.admin.student.show')->with('student', $student)->with('files', $files);
+        //check if student has a section
+        if($student->section == null){
+            return redirect()->route('student.edit',$student->id)->withError("Student has no section");
+        }
+
+        $files = $this->getFiles($student);
+
+        $file_log = $this->checkActivities($student);
+
+        $variables = array(
+           'dashboard_content' => 'dashboards.admin.student.show',
+           'student' => $student,
+           'files' => $files,
+           'file_log' => $file_log,
+        );
+
+        return view('layouts.admin')->with($variables)->withErrors($error);
     }
 
     /**
@@ -126,18 +130,24 @@ class StudentsController extends Controller
 
 
         $student = Student::find($id);
-
         // Move the student folder if student is moved to a diff section
-        if($student->section != $request->section){
-            $section1 = Section::find($student->section);
+        if($student->section != null){
+            if($student->section != $request->section){
+                $section1 = Section::find($student->section);
+                $newSection = Section::find($request->section);
+                    File::move(public_path()."\\storage\\".$section1->path.'\\'.$student->path, public_path().'\\storage\\'.$newSection->path.'\\'.$student->path);
+            }
+        }
+        else{
             $newSection = Section::find($request->section);
-            File::move(public_path()."\\storage\\".$section1->path.'\\'.$student->path, public_path().'\\storage\\'.$newSection->path.'\\'.$student->path);
+            $folder_path = '/storage'.'/'.$newSection->path.'/'.$student->path;
+            $this->makeFolder($path);
         }
 
         // Rename the student folder if student name is changed
         if(($student->fname != $request->fname)||($student->lname != $request->lname)){
             $section1 = Section::find($request->section);
-            $newPath = ''.ucwords(strtolower($request->lname)).', '.ucwords(strtolower($request->fname)).'';
+            $newPath = ''.ucwords(strtolower($request->lname)).' '.ucwords(strtolower($request->fname)).'';
             $oldPath = $student->path;
             File::move(public_path()."\\storage\\".$section1->path.'\\'.$oldPath, public_path().'\\storage\\'.$section1->path.'\\'.$newPath);
             $student->path = $newPath;
@@ -145,7 +155,9 @@ class StudentsController extends Controller
 
         $student->lname = ucwords(strtolower($request->lname));
         $student->fname = ucwords(strtolower($request->fname));
-        $student->save($request->all());
+        $student->update($request->all());
+        $student->save();
+
         return redirect()->route('student.show',$id)->withSuccess('Saved');
     }
 
@@ -199,7 +211,7 @@ class StudentsController extends Controller
                 $lname = ucwords(strtolower($column->lname));
                 $fname = ucwords(strtolower($column->fname));
                 $section = strtoupper($column->section);
-                $path = ''.$lname.', '.$fname.'';
+                $path = ''.$lname.' '.$fname.'';
                 $sectionid = null;
                 foreach ($sect as $key1 => $s) {
                     if($s->name == $section)
@@ -215,25 +227,84 @@ class StudentsController extends Controller
             foreach ($results as $key => $column) {
                 $lname = ucwords(strtolower($column->lname));
                 $fname = ucwords(strtolower($column->fname));
-                $path = ''.$lname.', '.$fname.'';
+                $path = ''.$lname.' '.$fname.'';
                 $section = strtoupper($column->section);
                 $section_path = null;
                 foreach ($sect as $key1 => $s) {
                     if($s->name == $section)
                         $section_path = $s->path;
                 }
-                $section_path = '/storage'.'/'.$section_path;
-                if (!File::exists(public_path().'/'.$section_path.'/'.$path))
-                {
-                    File::makeDirectory(public_path().'/'.$section_path.'/'.$path,0777,true);
-                    File::makeDirectory(public_path().'/'.$section_path.'/'.$path.'/files',0777,true);
-                    File::makeDirectory(public_path().'/'.$section_path.'/'.$path.'/trash',0777,true);
-                }
+                if($section_path == null)
+                    continue;
+                $section_path = '/storage'.'/'.$section_path.'/'.$path;
+                $this->makeFolder($folder_path);
             }
             return redirect()->route('student.index')->withSuccess('Successfully Added Students.');
         }else{
             return redirect()->back()->withError('No file');
         }
+    }
+
+    public function folder($id)
+    {
+        $student = Student::find($id);
+        $directory = public_path()."\\storage"."\\".$student->sectionTo->path."\\".$student->path."\\files\\";
+        if ((strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') && (file_exists($directory))) {
+            $explorer =  'c:\\windows\\explorer.exe';
+            shell_exec("$explorer /n,/e,$directory");
+            return redirect()->back();
+        } else {
+            $msg = array("Cannot open folder", "This function only works on a local server running in Windows");
+            return redirect()->back()->withErrors($msg);
+        }
+    }
+
+    public function makeFolder($path)
+    {
+        if (!File::exists(public_path().'/'.$path))
+        {
+            File::makeDirectory(public_path().'/'.$path,0777,true);
+            File::makeDirectory(public_path().'/'.$path.'/files',0777,true);
+            File::makeDirectory(public_path().'/'.$path.'/trash',0777,true);
+        }
+    }
+
+    public function checkActivities($student)
+    {
+        $file_log = null;
+        //Check files Submitted
+        $activities = $student->sectionTo->Activities;
+        foreach ($activities as $key => $activity) {
+           $directory = public_path()."\\storage"."\\".$student->sectionTo->path."\\".$student->path."\\files\\".$activity->name."*";
+           $result = File::glob($directory);
+           if($result)
+           $file_log[] = (object) array('activity' => $activity->name, 'status' => true, 'path' => $directory);
+           else
+           $file_log[] = (object) array('activity' => $activity->name, 'status' => false, 'path' => $directory);
+        }
+        return $file_log;
+    }
+
+    public function getFiles($student)
+    {
+        $files = null;
+        // Get student's files
+        $directory = public_path()."\\storage"."\\".$student->sectionTo->path."\\".$student->path."\\files";
+        if(File::exists($directory)){
+            $contents = File::allFiles($directory);
+        }else {
+            $folder_path = '/storage'.'/'.$student->sectionTo->path.'/'.$student->path;
+            $this->makeFolder($folder_path);
+            $error = array("Student folder wasn't found.", 'Generated a folder for student');
+        }
+
+        if($contents != null)
+            foreach ($contents as $key => $file) {
+               $path = pathinfo((string)$file."");
+               $files[$key] = (object) array('name' => $path['filename'], 'type' => $path['extension'], 'path' => $path['dirname']);
+        }
+
+        return $files;
     }
 
 

@@ -11,7 +11,7 @@
         <ul class="nav-profile">
 
             <li class="profile dropdown">
-                <a class="nav-link" href="#" alt="Profile">
+                <a class="nav-link" @if(Auth::guard('web')->check()) href="{{route('student.profile')}}" @else href="#" @endif alt="Profile">
                      <img src="{{asset('storage/avatar/'.Auth::user()->avatar)}}" alt="" class="img">
                     <span class="name"> {{Auth::user()->fname}} {{  Auth::user()->lname}} </span>
                 </a>

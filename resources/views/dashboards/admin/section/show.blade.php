@@ -34,7 +34,7 @@
                                     <td>Status</td><td><h5>@if($section->status)<p class="btn btn-primary">Open</p> @else <p class="btn btn-danger">Close</p>@endif </h5></td>
                                 </tr>
                                 <tr>
-                                    <td>Folder</td><td><h5>{{$section->path}}</h5></td>
+                                    <td></td><td><h5><a href="{{route('section.folder',$section->id)}}" class="btn btn-primary">open folder</a></h5></td>
                                 </tr>
                             </table>
 

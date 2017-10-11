@@ -37,6 +37,9 @@ class FilesController extends Controller
      */
     public function store(Request $request)
     {
+        $this->Validate($request, [
+            'file' => 'max:25000|file',
+        ]);
         $student = Student::find($request->id);
         $directory = "\\public"."\\".$student->sectionTo->path."\\".$student->path."\\files\\";
         $file = $request->file('file');
@@ -132,4 +135,6 @@ class FilesController extends Controller
         }
 
     }
+
+
 }

@@ -1,5 +1,5 @@
 
-<script type="text/javascript" src="{{asset('js/vendor.js')}}"></script>
+<script type="text/javascript" src="{{asset('js/vendor.min.js')}}"></script>
 <script type="text/javascript" src="{{asset('js/app.js')}}"></script>
 {{-- <script type="text/javascript" src="{{asset('js/jquery.min.js')}}"></script> --}}
 {{-- <script type="text/javascript" src="{{asset('js/bootstrap.min.js')}}"></script> --}}

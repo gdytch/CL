@@ -29,18 +29,20 @@ Route::group(['middleware' => 'auth:admin'], function () {
         Route::post('admin/create/batch', 'StudentsController@batch')->name('student.create.batch');
         Route::get('section/status/{id}', 'SectionsController@changeStatus')->name('section.status');
         Route::resource('activity', 'ActivitiesController');
+        Route::get('student/folder/{id}', 'StudentsController@folder')->name('student.folder');
+        Route::get('section/folder/{id}', 'SectionsController@folder')->name('section.folder');
     });
 
 });
 
 
 Route::resource('file', 'FilesController');
-Route::post('/login', 'HomeController@login')->name('login');
-Route::get('/checkUsers', 'HomeController@checkUser')->name('checkUser');
+Route::post('login', 'HomeController@login')->name('login');
+Route::get('checkUsers', 'HomeController@checkUser')->name('checkUser');
 
 //Student
 Route::group(['middleware' => 'auth:web'], function () {
-    Route::get('/home', 'HomeController@index')->name('home');
+    Route::get('home', 'HomeController@index')->name('home');
     Route::prefix('home')->group(function(){
         Route::get('trash', 'HomeController@trash')->name('trash');
         Route::post('update_password/{id}', 'StudentsController@update_password')->name('update.password');

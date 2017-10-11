@@ -1,3 +1,3 @@
 <?php
-header("Location: /cl/public/");
+// header("Location: /cl/public/");
 ?>

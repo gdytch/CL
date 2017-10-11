@@ -7,9 +7,9 @@
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     {{-- <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}"> --}}
     <!-- Place favicon.ico in the root directory -->
-    <link rel="stylesheet" href="{{asset('css/vendor.css')}}">
+    <link rel="stylesheet" href="{{asset('css/vendor.min.css')}}">
     <!-- Theme initialization -->
-    <link rel="stylesheet" href="{{asset('css/app.css')}}">
+    <link rel="stylesheet" href="{{asset('css/app.min.css')}}">
     <link rel="stylesheet" href="{{asset('css/datatables.min.css')}}">
     <link rel="stylesheet" href="{{asset('css/mycss.css')}}">
 </head>

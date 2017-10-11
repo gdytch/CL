@@ -46,3 +46,7 @@
 .red{
     color: #FF4444;;
 }
+
+.btn{
+    text-transform: uppercase;
+}

@@ -113,12 +113,30 @@ class SectionsController extends Controller
     public function changeStatus($id){
         $section = Section::find($id);
 
-        if($section->status)
+        if($section->status){
             $section->status = 0;
-        else
+            $section->save();
+            return redirect()->back()->withError('CLOSED - '.$section->name.'');
+        }
+        else{
             $section->status = 1;
-        $section->save();
-
-        return redirect()->back()->withSuccess($section->name.' status changed');
+            $section->save();
+            return redirect()->back()->withSuccess('OPENED - '.$section->name.'');
+        }
     }
+
+    public function folder($id){
+        $section = Section::find($id);
+        $directory = public_path()."\\storage"."\\".$section->path;
+        if ((strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') && (file_exists($directory))) {
+            $explorer =  'c:\\windows\\explorer.exe';
+            shell_exec("$explorer /n,/e,$directory");
+            return redirect()->back();
+        } else {
+            $msg = array("Cannot open folder", "This function only works on a local server running in Windows");
+            return redirect()->back()->withErrors($msg);
+        }
+    }
+
+
 }

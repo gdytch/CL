@@ -13,7 +13,7 @@
                         <p class="text-center">ENTER YOUR LASTNAME TO CONTINUE</p>
                         <form id="login-form" action="{{route('checkUser')}}" method="GET" novalidate="">
                             <div class="form-group">
-                                <label for="lname">Lastname</label>
+                                <label for="lname">Last name</label>
                                 <input type="text" class="form-control underlined" name="lname" id="lname" placeholder="Your Lastname" required> </div>
 
 
