@@ -14,25 +14,25 @@
             "order": [1, 'asc'],
             "columnDefs": [
              { "orderable": false, "targets": "nosort" }
-             ]
+             ],
+             "paging": false,
+             "bInfo": false,
+             "autowidth": false,
+
 
         }
         );
-        $('.StudentTable').dataTable(
-            {
-            "order": [],
-            "columnDefs": [
-             { "orderable": false, "targets": "nosort" }
-             ]
 
-        }
-        );
        $('#DataTable').DataTable(
            {
            "columnDefs": [
             { "orderable": false, "targets": "nosort" }
 
-            ]
+            ],
+            "paging": false,
+
+
+
        });
 
     });

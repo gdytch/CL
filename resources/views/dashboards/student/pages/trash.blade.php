@@ -6,7 +6,7 @@
                 <div class="card sameheight-item">
                     <div class="card-block">
                         <div class="title-block">
-                            <h4 class="title"> Trash </h4>
+                            <h4 class="card-title text-primary"> Trash </h4>
                             <hr>
                         </div>
                         <div class="col">

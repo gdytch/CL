@@ -1,9 +1,9 @@
 <aside class="sidebar">
     <div class="sidebar-container">
         <div class="sidebar-header">
-            <div class="brand">
+            <div class="brand ">
                 <div class="logo">
-                    <i class="fa fa-desktop"></i>
+                    <i class="fa fa-desktop text-primary"></i>
                 </div> Computer Class </div>
         </div>
         <nav class="menu">
@@ -35,7 +35,7 @@
             <li>
                 <ul>
                     <li class="customize">
-                        <div class="customize-item">
+                        <div class="customize-item" >
                             <div class="row customize-header">
                                 <div class="col-4"> </div>
                                 <div class="col-4">
@@ -51,7 +51,7 @@
                                 </div>
                                 <div class="col-4">
                                     <label>
-                                        <input class="radio" type="radio" name="sidebarPosition" value="sidebar-fixed">
+                                        <input class="radio" type="radio" name="sidebarPosition" value="sidebar-fixed" selected>
                                         <span></span>
                                     </label>
                                 </div>
@@ -74,7 +74,7 @@
                                 </div>
                                 <div class="col-4">
                                     <label>
-                                        <input class="radio" type="radio" name="headerPosition" value="">
+                                        <input class="radio" type="radio" name="headerPosition" value="" selected>
                                         <span></span>
                                     </label>
                                 </div>
@@ -85,13 +85,13 @@
                                 </div>
                                 <div class="col-4">
                                     <label>
-                                        <input class="radio" type="radio" name="footerPosition" value="footer-fixed">
+                                        <input class="radio" type="radio" name="footerPosition" value="footer-fixed" >
                                         <span></span>
                                     </label>
                                 </div>
                                 <div class="col-4">
                                     <label>
-                                        <input class="radio" type="radio" name="footerPosition" value="">
+                                        <input class="radio" type="radio" name="footerPosition" value="" selected>
                                         <span></span>
                                     </label>
                                 </div>
@@ -127,6 +127,6 @@
         </ul>
     </footer> --}}
 </aside>
-{{-- <div class="sidebar-overlay" id="sidebar-overlay"></div>
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
 <div class="sidebar-mobile-menu-handle" id="sidebar-mobile-menu-handle"></div>
-<div class="mobile-menu-handle"></div> --}}
+<div class="mobile-menu-handle"></div>

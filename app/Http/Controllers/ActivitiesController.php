@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Section;
 use App\Student;
 use App\Activity;
+use App\Record;
 
 class ActivitiesController extends Controller
 {
@@ -65,13 +66,26 @@ class ActivitiesController extends Controller
         // student who have are done with the activity
 
         foreach ($students as $key => $student) {
-            $directory = public_path()."\\storage"."\\".$student->sectionTo->path."\\".$student->path."\\files\\".$activity->name."*";
-            $contents = File::glob($directory);
-            if($contents != null)
+            // $directory = public_path()."\\storage"."\\".$student->sectionTo->path."\\".$student->path."\\files\\".$activity->name."*";
+            // $contents = File::glob($directory);
+            // if($contents != null)
+            //     $status = true;
+            // else
+            //     $status = false;
+            // if($student->Record->$activity->id)
+            $result = $student->Records()->where('activity_id', $activity->id)->get()->first();
+            if(count($result)){
                 $status = true;
-           else
+                $submitted_at = date("M d Y", strtotime($result->created_at));
+
+            }
+            else{
                 $status = false;
-           $activity_log[] = (object) array('id' => $student->id, 'name' => $student->lname.', '.$student->fname, 'status' => $status);
+                $submitted_at = null;
+            }
+
+
+            $activity_log[] = (object) array('id' => $student->id, 'name' => $student->lname.', '.$student->fname, 'status' => $status, 'submitted_at' => $submitted_at);
         }
 
         return view('layouts.admin')->with('dashboard_content', 'dashboards.admin.activity.show')->with('activity', $activity)->with('activity_log', $activity_log);

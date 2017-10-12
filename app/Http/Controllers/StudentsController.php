@@ -63,6 +63,7 @@ class StudentsController extends Controller
         $student->avatar = $avatar;
         $student->password = $password;
         $student->section = $section;
+        $student->theme = 'green';
         $student->save();
 
         $sect = Section::find($section);
@@ -217,7 +218,7 @@ class StudentsController extends Controller
                     if($s->name == $section)
                         $sectionid = $s->id;
                 }
-                $students[$key] = ['lname' => $lname, 'fname' => $fname, 'path' => $path, 'avatar' => $avatar, 'password' => $password, 'section' => $sectionid];
+                $students[$key] = ['lname' => $lname, 'fname' => $fname, 'path' => $path, 'avatar' => $avatar, 'password' => $password, 'section' => $sectionid, 'theme' => 'green'];
             }
 
             // Save to database
@@ -277,10 +278,16 @@ class StudentsController extends Controller
         foreach ($activities as $key => $activity) {
            $directory = public_path()."\\storage"."\\".$student->sectionTo->path."\\".$student->path."\\files\\".$activity->name."*";
            $result = File::glob($directory);
-           if($result)
-           $file_log[] = (object) array('activity' => $activity->name, 'status' => true, 'path' => $directory);
+           if($result){
+               $files = null;
+               foreach ($result as $key => $value) {
+                   $path = pathinfo((string)$value."");
+                   $files[] = $path['basename'];
+               }
+               $file_log[] = (object) array('activity' => $activity->name, 'status' => true, 'path' => $directory, 'files' => $files);
+           }
            else
-           $file_log[] = (object) array('activity' => $activity->name, 'status' => false, 'path' => $directory);
+               $file_log[] = (object) array('activity' => $activity->name, 'status' => false, 'path' => $directory, 'files' => null);
         }
         return $file_log;
     }
@@ -305,6 +312,15 @@ class StudentsController extends Controller
         }
 
         return $files;
+    }
+
+    public function theme(Request $request)
+    {
+        $student = Student::find($request->get('id'));
+        $student->theme = $request->get('theme');
+        $student->save();
+
+        return redirect()->back();
     }
 
 

@@ -38,6 +38,10 @@ class Student extends Authenticatable
         return $this->belongsTo('App\Section', 'section', 'id');
     }
 
-    
+    public function Records(){
+        return $this->hasMany('App\Record', 'student_id', 'id');
+    }
+
+
 
 }

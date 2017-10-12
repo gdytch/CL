@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Hash;
 use App\Admin;
 use Auth;
 use App\Student;
+use App\Section;
+use App\Activity;
 
 class AdminsController extends Controller
 {
@@ -97,7 +99,13 @@ class AdminsController extends Controller
     }
 
     public function home(){
-        return view('layouts.admin')->with('dashboard_content', 'dashboards.admin.pages.home');
+
+
+        $variables = array(
+            'dashboard_content' => 'dashboards.admin.pages.home',
+            'stats' => $this->stats(),
+        );
+        return view('layouts.admin')->with($variables);
     }
 
     public function login(Request $request){
@@ -121,5 +129,19 @@ class AdminsController extends Controller
         return 'username';
     }
 
-    
+    public function stats(){
+        $students = Student::all();
+        $sections = Section::all();
+        $activities = Activity::all();
+        $activity_submits = 0;
+        foreach ($students as $student) {
+            $activity_submits += count($student->Records);
+        }
+
+        $stats = (object) array('total_students' => count($students), 'total_sections' => count($sections), 'total_activities' => count($activities), 'activity_submits' => $activity_submits);
+
+        return $stats;
+    }
+
+
 }

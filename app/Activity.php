@@ -13,4 +13,8 @@ class Activity extends Model
    public function SectionTo(){
        return $this->belongsTo('App\Section', 'section_id', 'id');
    }
+
+   public function Records(){
+       return $this->hasMany('App\Record', 'activity_id', 'id');
+   }
 }

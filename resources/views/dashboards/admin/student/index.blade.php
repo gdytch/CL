@@ -3,15 +3,14 @@
 <section class="section">
     <div class="row sameheight-container">
         <div class="col col-12 ">
-            <div class=" sameheight-item stats" data-exclude="xs">
+            <div class="card sameheight-item stats" data-exclude="xs">
                 <div class="card-block">
                     <div class="title-block">
-                        <h1 class="title"> Student List </h1>
-                        <br>
-                        <div class="sub-title">
-                            <a href="{{route('student.create')}}" class="btn btn-primary">Add Student</a>
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#batchModal">Batch Add</button>
-                        </div>
+                        <h1 class="card-title text-primary"> Student List
+                        </h1>
+                        <hr>
+                            <a href="{{route('student.create')}}" class="btn btn-secondary">Add Student</a>
+                            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#batchModal">Batch Add</button>
                     </div>
                     <section class="section">
                         <div class="row">
@@ -27,7 +26,7 @@
                                 <br><br>
                                 </h4>
                             </div>
-                            <div class="col-12 card" style="padding: 30px;">
+                            <div class="col col-12" style="padding: 30px;">
                                 <table class="table table-striped" id="StudentTable">
                                     <thead>
                                         <tr>
@@ -35,17 +34,17 @@
                                             <th>Last name</th>
                                             <th>Section</th>
                                             <th class="nosort">Folder</th>
-                                            <th class="nosort"></th>
+                                            <th>Activities</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($students as $student)
                                             <tr>
-                                                <td>{{$student->fname}}</td>
-                                                <td>{{$student->lname}}</td>
-                                                <td>{{$student->sectionTo->name}}</td>
-                                                <td>{{$student->path}}</td>
-                                                <td><a href="{{route('student.show',$student->id)}}" class="btn btn-sm btn-info">View</a></td>
+                                                <td><a href="{{route('student.show',$student->id)}}">{{$student->fname}}</a></td>
+                                                <td><a href="{{route('student.show',$student->id)}}">{{$student->lname}}</a></td>
+                                                <td><a href="{{route('section.show',$student->sectionTo->id)}}">{{$student->sectionTo->name}}</a></td>
+                                                <td><a href="{{route('student.folder',$student->id)}}" class="">OPEN FOLDER</a></td>
+                                                <td>{{count($student->Records()->distinct()->get(['activity_id']))}}/{{count($student->sectionTo->Activities)}}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -81,4 +80,5 @@
         </div>
     </div>
 </div>
+
 @endsection

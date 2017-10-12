@@ -18,7 +18,7 @@
         <div class="col col-12 ">
             <div class="card card-block sameheight-item" >
                 <div class="title-block">
-                    <h4>Profile</h4>
+                    <h4 class="card-title text-primary"> Profile</h4>
                     <hr>
                 </div>
                 <section class="section">
@@ -37,7 +37,7 @@
                                 <tr>
                                     <td>Section</td><td><h3>{{$student->sectionTo->name}}</h3></td>
                                 </tr>
-                            
+
                             </table>
 
                         </div>
@@ -53,7 +53,7 @@
         <div class="col col-12 ">
             <div class="card card-block sameheight-item" >
                 <div class="title-block">
-                    <h4>Activities</h4>
+                    <h4 class="card-title text-primary"> Activities</h4>
                     <hr>
                 </div>
                 <section class="section">
@@ -66,6 +66,7 @@
                                         <th>Date</th>
                                         <th>Description</th>
                                         <th>Submitted</th>
+                                        <th>Files</th>
                                     </thead>
                                     <tbody>
                                         @foreach ($student->Sectionto->Activities as $activity)
@@ -80,6 +81,17 @@
                                                                 <span class="green"><i class="fa fa-check"></i> <b>Yes</b></span>
                                                             @else
                                                                 <span class="red"><i class="fa fa-close"></i> <b>No</b></span>
+                                                            @endif
+                                                        @endif
+                                                    @endforeach
+                                                </td>
+                                                <td>
+                                                    @foreach($file_log as $log)
+                                                        @if($activity->name == $log->activity)
+                                                            @if($log->files != null)
+                                                                @foreach ($log->files as $value)
+                                                                    {{$value}}<br>
+                                                                @endforeach
                                                             @endif
                                                         @endif
                                                     @endforeach

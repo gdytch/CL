@@ -37,7 +37,6 @@
     font-size: 20pt;
     line-height: normal;
     display: block;
-    color: #78bd2e;
 }
 
 .green{
@@ -49,4 +48,14 @@
 
 .btn{
     text-transform: uppercase;
+}
+
+.card-title{
+    font-weight: 600;
+    font-size: 16pt;
+}
+
+#StudentTable, table.dataTable {
+    border-collapse: collapse !important;
+
 }

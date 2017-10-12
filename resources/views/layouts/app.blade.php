@@ -3,7 +3,7 @@
     @include('inc.header')
     <body>
         <div class="main-wrapper">
-            <div class="app" id="app">
+            <div class="app fixed-sidebar" id="app">
                 @yield('content')
             </div>
         </div>

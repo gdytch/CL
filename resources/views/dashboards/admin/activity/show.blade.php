@@ -18,7 +18,7 @@
         <div class="col col-12 ">
             <div class="card card-block sameheight-item" >
                 <div class="title-block">
-                    <h4>Activity</h4>
+                    <h4 class="card-title text-primary">Activity</h4>
                     <hr>
                 </div>
                 <section class="section">
@@ -52,7 +52,7 @@
         <div class="col col-12 ">
             <div class="card card-block sameheight-item" >
                 <div class="title-block">
-                    <h4>Students</h4>
+                    <h4 class="card-title text-primary">Submissions</h4>
                 </div>
                 <section class="section">
                     <div class="row">
@@ -61,15 +61,15 @@
                                     <thead>
                                         <th>Student</th>
                                         <th>Submitted</th>
+                                        <th>Submitted on</th>
                                     </thead>
                                     <tbody>
                                         @foreach ($activity_log as $log)
                                             @if($log->status)
                                             <tr>
                                                 <td>{{$log->name}}</td>
-                                                <td>
-                                                        <span class="green"><i class="fa fa-check"></i> <b>Yes</b></span>
-                                                </td>
+                                                <td><span class="green"><i class="fa fa-check"></i> <b>Yes</b></span></td>
+                                                <td>{{$log->submitted_at}}</td>
                                             </tr>
                                             @endif
                                         @endforeach

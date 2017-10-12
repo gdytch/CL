@@ -50,42 +50,7 @@
         </div>
     </div>
     <div class="row ">
-        <div class="col col-md-6 col-6 ">
-            <div class="card sameheight-item">
-                <div class="card-block">
-                    <div class="title-block">
-                        <h4 class="title"> Files </h4>
-                        <hr>
-                    </div>
-                    <div class="col">
-                        <div class="row files">
-                            @if($files != null)
-                                @foreach ($files as $key => $file)
-                                    <div class="file-container">
-                                        <div class="dropdown ">
-                                          <a id='dropDown{{$key}}' data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-offset="0">
-                                              <div class="file">
-                                                  <img src="@if(file_exists($file->path)){{asset('img/icons/'.$file->type.'.png')}} @else {{asset('img/icons/file.png')}}@endif" alt="" class="file-icon">
-                                                  <p class="file-name">{{$file->name}}</p>
-                                              </div>
-
-                                            </div>
-                                        </a>
-
-
-                                        </div>
-
-                                @endforeach
-                            @else
-                                <p>No Files</p>
-                            @endif
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col col-md-6 col-6">
+        <div class="col col-md-12 col-12">
             <div class="card card-block sameheight-item" >
                 <div class="title-block">
                     <h4>Activities</h4>
@@ -101,6 +66,7 @@
                                         <th>Date</th>
                                         <th>Description</th>
                                         <th>Submitted</th>
+                                        <th>Files</th>
                                     </thead>
                                     <tbody>
                                         @foreach ($student->Sectionto->Activities as $activity)
@@ -115,6 +81,17 @@
                                                                 <span class="green"><i class="fa fa-check"></i> <b>Yes</b></span>
                                                             @else
                                                                 <span class="red"><i class="fa fa-close"></i> <b>No</b></span>
+                                                            @endif
+                                                        @endif
+                                                    @endforeach
+                                                </td>
+                                                <td>
+                                                    @foreach($file_log as $log)
+                                                        @if($activity->name == $log->activity)
+                                                            @if($log->files != null)
+                                                                @foreach ($log->files as $value)
+                                                                    {{$value}}<br>
+                                                                @endforeach
                                                             @endif
                                                         @endif
                                                     @endforeach

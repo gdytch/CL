@@ -3,7 +3,7 @@
         <div class="sidebar-header">
             <div class="brand">
                 <div class="logo">
-                    <i class="fa fa-desktop"></i>
+                    <i class="fa fa-desktop text-primary"></i>
                 </div> ComputerClass </div>
         </div>
         <nav class="menu">
@@ -27,7 +27,7 @@
             </ul>
         </nav>
     </div>
-    <footer class="sidebar-footer">
+    {{-- <footer class="sidebar-footer">
         <ul class="sidebar-menu metismenu" id="customize-menu">
             <li>
                 <ul>
@@ -122,7 +122,7 @@
                     <i class="fa fa-cog"></i> Customize </a>
             </li>
         </ul>
-    </footer>
+    </footer> --}}
 </aside>
 <div class="sidebar-overlay" id="sidebar-overlay"></div>
 <div class="sidebar-mobile-menu-handle" id="sidebar-mobile-menu-handle"></div>

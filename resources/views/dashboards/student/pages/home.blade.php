@@ -6,7 +6,7 @@
                 <div class="card sameheight-item">
                     <div class="card-block">
                         <div class="title-block">
-                            <h4 class="title">My Files </h4>
+                            <h5 class="card-title text-primary"> My Files </h5>
                             <hr>
                         </div>
                         <div class="col">
@@ -17,7 +17,7 @@
                                             <div class="dropdown ">
                                               <a id='dropDown{{$key}}' data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-offset="0">
                                                   <div class="file">
-                                                      <img src="@if(file_exists($file->path)){{asset('img/icons/'.$file->type.'.png')}} @else {{asset('img/icons/file.png')}}@endif" alt="" class="file-icon">
+                                                      <img src="@if(file_exists(public_path('img/icons/'.$file->type.'.png'))){{asset('img/icons/'.$file->type.'.png')}} @else {{asset('img/icons/file.png')}}@endif" alt="" class="file-icon">
                                                       <p class="file-name">{{$file->name}}.{{$file->type}}</p>
                                                   </div>
                                                   <div class="dropdown-menu file-dropdown pull-menu-right" aria-labelledby="dropDown{{$key}}">
@@ -105,7 +105,7 @@
 
                           <select name="activity" class="select form-control" id="inlineFormCustomSelect">
                             @foreach ($student->SectionTo->Activities as $activity)
-                                <option value="{{$activity->name}}">{{$activity->name}} {{$activity->description}}</option>
+                                <option value="{{$activity->id}}">{{$activity->name}} {{$activity->description}}</option>
 
                             @endforeach
                           </select>

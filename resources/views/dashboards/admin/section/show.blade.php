@@ -18,7 +18,8 @@
         <div class="col-md-4">
             <div class="card card-block sameheight-item" >
                 <div class="title-block">
-                    <h3>Details <a href="{{route('section.edit', $section->id)}}" class="btn btn-warning">Edit</a></h3>
+                    <h3 class="card-title text-primary">Details</h3>
+                    <hr>
                 </div>
                 <section class="section">
                     <div class="row">
@@ -36,6 +37,9 @@
                                 <tr>
                                     <td></td><td><h5><a href="{{route('section.folder',$section->id)}}" class="btn btn-primary">open folder</a></h5></td>
                                 </tr>
+                                <tr>
+                                    <td></td><td><a href="{{route('section.edit', $section->id)}}" class="btn btn-warning">Edit</a></td>
+                                </tr>
                             </table>
 
                         </div>
@@ -47,7 +51,8 @@
         <div class="col-md-8">
             <div class="card card-block sameheight-item" >
                 <div class="title-block">
-                    <h3>Report </h3>
+                    <h4 class="card-title text-primary">Stats </h4>
+                    <hr>
                 </div>
                 <section class="section">
                     <div class="row">
@@ -66,7 +71,8 @@
         <div class="col-md-12">
             <div class="card card-block sameheight-item" >
                 <div class="title-block">
-                    <h3>Students</h3>
+                    <h4 class="card-title text-primary">Students</h4>
+                    <hr>
                 </div>
                 <section class="section">
                     <div class="row">
@@ -76,19 +82,15 @@
                                     <tr>
                                         <th>First name</th>
                                         <th>Last name</th>
-                                        <th>Section</th>
                                         <th class="nosort">Folder</th>
-                                        <th class="nosort"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($section->Students as $student)
                                         <tr>
-                                            <td>{{$student->fname}}</td>
-                                            <td>{{$student->lname}}</td>
-                                            <td>{{$student->sectionTo->name}}</td>
-                                            <td>{{$student->path}}</td>
-                                            <td><a href="{{route('student.show',$student->id)}}" class="btn btn-sm btn-info">View</a></td>
+                                            <td><a href="{{route('student.show',$student->id)}}">{{$student->fname}}</a></td>
+                                            <td><a href="{{route('student.show',$student->id)}}">{{$student->lname}}</a></td>
+                                            <td><a href="{{route('student.folder',$student->id)}}" class="btn btn-sm btn-primary">OPEN FOLDER</a></td>
                                         </tr>
                                     @endforeach
                                 </tbody>

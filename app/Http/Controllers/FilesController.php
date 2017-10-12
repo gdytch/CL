@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Http\Request;
 use App\Student;
+use App\Activity;
+use App\Record;
 
 class FilesController extends Controller
 {
@@ -38,22 +40,27 @@ class FilesController extends Controller
     public function store(Request $request)
     {
         $this->Validate($request, [
-            'file' => 'max:25000|file',
+            'file' => 'max:30000',
         ]);
         $student = Student::find($request->id);
+        $activity = Activity::find($request->activity);
         $directory = "\\public"."\\".$student->sectionTo->path."\\".$student->path."\\files\\";
         $file = $request->file('file');
         $extension = $file->getClientOriginalExtension();
-        $file = $request->activity." - ".$student->lname.".".$extension;
+        $file = $activity->name." - ".$student->lname.".".$extension;
+
+        //if filename already exist add numbers at the end of the filename
         if(File::exists(public_path()."\\storage"."\\".$student->sectionTo->path."\\".$student->path."\\files\\".$file)){
             $x = 2;
-            while (File::exists(public_path()."\\storage"."\\".$student->sectionTo->path."\\".$student->path."\\files\\".$request->activity." - ".$student->lname." (".$x.").".$extension)) {
+            while (File::exists(public_path()."\\storage"."\\".$student->sectionTo->path."\\".$student->path."\\files\\".$activity->name." - ".$student->lname." (".$x.").".$extension)) {
                 $x++;
             }
-            $request->file('file')->storeAs($directory, $request->activity." - ".$student->lname." (".$x.").".$extension);
+            $request->file('file')->storeAs($directory, $activity->name." - ".$student->lname." (".$x.").".$extension);
         }else{
-            $request->file('file')->storeAs($directory, $request->activity." - ".$student->lname.".".$extension);
+            $request->file('file')->storeAs($directory, $activity->name." - ".$student->lname.".".$extension);
         }
+
+        $this->recordFile($activity->id, $student->id, $file);
 
         return redirect()->route('home')->withSuccess('File Submitted');
 
@@ -136,5 +143,18 @@ class FilesController extends Controller
 
     }
 
+    public function recordFile($activity_id, $student_id, $file)
+    {
+        $record = new Record();
+        $record->student_id = $student_id;
+        $record->activity_id = $activity_id;
+        $record->filename = $file;
+        $record->save();
+    }
+
+    public function deleteRecord()
+    {
+
+    }
 
 }

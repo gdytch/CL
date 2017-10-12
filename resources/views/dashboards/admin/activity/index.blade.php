@@ -39,9 +39,9 @@
                                                             <thead>
                                                                 <tr>
                                                                     <th>Activity</th>
-                                                                    <th>Date</th>
                                                                     <th>Description</th>
-                                                                    <th class="nosort">Status</th>
+                                                                    <th>Published</th>
+                                                                    <th class="nosort">Submissions</th>
                                                                     <th class="nosort"></th>
                                                                 </tr>
                                                             </thead>
@@ -49,9 +49,9 @@
                                                             @foreach ($section->Activities as $activity)
                                                                 <tr>
                                                                     <td>{{$activity->name}}</td>
-                                                                    <td>{{$activity->date}}</td>
                                                                     <td>{{$activity->description}}</td>
-                                                                    <td>{{$activity->status}}</td>
+                                                                    <td>{{$activity->date}}</td>
+                                                                    <td>{{count($activity->Records()->distinct()->get(['student_id']))}}/{{count($section->Students)}}</td>
                                                                     <td><a href="{{route('activity.show',$activity->id)}}" class="btn btn-sm btn-info">View</a></td>
                                                                 </tr>
                                                             @endforeach

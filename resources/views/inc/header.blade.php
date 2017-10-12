@@ -9,7 +9,14 @@
     <!-- Place favicon.ico in the root directory -->
     <link rel="stylesheet" href="{{asset('css/vendor.min.css')}}">
     <!-- Theme initialization -->
-    <link rel="stylesheet" href="{{asset('css/app.min.css')}}">
+
+    @if(!isset(Auth::user()->theme) || Auth::user()->theme == null)
+        <link rel="stylesheet" href="{{asset('css/app.min.css')}}">
+    @else
+        <link rel="stylesheet" href='{{asset('css/_themes/'.$student->theme.'-theme.min.css')}}'>
+    @endif
+
     <link rel="stylesheet" href="{{asset('css/datatables.min.css')}}">
     <link rel="stylesheet" href="{{asset('css/mycss.css')}}">
+
 </head>

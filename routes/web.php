@@ -48,6 +48,7 @@ Route::group(['middleware' => 'auth:web'], function () {
         Route::post('update_password/{id}', 'StudentsController@update_password')->name('update.password');
         Route::get('settings', 'HomeController@settings')->name('student.settings');
         Route::get('profile', 'HomeController@profile')->name('student.profile');
+        Route::get('theme', 'StudentsController@theme')->name('student.theme');
     });
 });
 
