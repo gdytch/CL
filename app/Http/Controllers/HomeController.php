@@ -56,10 +56,11 @@ class HomeController extends Controller
         if(Auth::guard('web')->check())
             return redirect('home');
 
-        if($request->lname != null)
+        if($request->lname != null){
             $lname = ucwords(strtolower($request->lname));
             $users = Student::where('lname' , $request->lname)->get()->except('password');
-        else if($request->id != null){
+        }
+        if($request->id != null){
             $users = Student::where('id' , $request->id)->get()->except('password');
         }
 
