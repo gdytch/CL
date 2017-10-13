@@ -18,7 +18,7 @@ Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 // Admin
 Route::get('/admin/login', 'AdminsController@showLoginForm')->name('admin.login.form');
 Route::post('/admin/login', 'AdminsController@login')->name('admin.login');
-Route::post('/admin/store', 'AdminsController@store')->name('admin.store');
+Route::post('/admin/store_first', 'AdminsController@store_first')->name('admin.store_first');
 
 
 Route::group(['middleware' => 'auth:admin'], function () {

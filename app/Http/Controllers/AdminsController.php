@@ -14,7 +14,7 @@ class AdminsController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:admin')->except('showLoginForm','login','store');
+        // $this->middleware('auth:admin')->except('showLoginForm','login','store_first');
     }
     /**
      * Display a listing of the resource.
@@ -44,6 +44,12 @@ class AdminsController extends Controller
      */
     public function store(Request $request)
     {
+
+
+    }
+
+    public function store_first(Request $request)
+    {
         $this->Validate($request, [
             'password' => 'confirmed|max:5'
         ]);
@@ -52,7 +58,6 @@ class AdminsController extends Controller
         $admin->theme = 'green';
         $admin->save();
         return redirect()->route('admin.login.form');
-
     }
 
     /**

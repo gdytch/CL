@@ -11,7 +11,7 @@
                     </header>
                     <div class="auth-content">
                         <h4>Register Admin</h4>
-                        <form class="form-horizontal" method="POST" action="{{ route('admin.store') }}">
+                        <form class="form-horizontal" method="POST" action="{{ route('admin.store_first') }}">
                             {{ csrf_field() }}
 
                             <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
@@ -19,12 +19,6 @@
 
                                 <div class="col-md-12">
                                     <input id="username" type="text" class="form-control underlined" name="username" value="{{ old('username') }}" required autofocus>
-
-                                    @if ($errors->has('name'))
-                                        <span class="help-block">
-                                            <strong>{{ $errors->first('name') }}</strong>
-                                        </span>
-                                    @endif
                                 </div>
                             </div>
 
