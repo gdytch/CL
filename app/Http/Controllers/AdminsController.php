@@ -14,7 +14,7 @@ class AdminsController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:admin')->except('showLoginForm','login');
+        $this->middleware('auth:admin')->except('showLoginForm','login','store');
     }
     /**
      * Display a listing of the resource.
@@ -33,7 +33,7 @@ class AdminsController extends Controller
      */
     public function create()
     {
-        //
+        // return view('auth.register');
     }
 
     /**
@@ -44,7 +44,15 @@ class AdminsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->Validate($request, [
+            'password' => 'confirmed|max:5'
+        ]);
+        $admin = new Admin($request->all());
+        $admin->avatar = 'default-avatar.png';
+        $admin->theme = 'green';
+        $admin->save();
+        return redirect()->route('admin.login.form');
+
     }
 
     /**
@@ -93,6 +101,10 @@ class AdminsController extends Controller
     }
 
     public function showLoginForm(){
+        $admins = Admin::all();
+        if(count($admins) == 0)
+            return view('auth.register');
+
         if(Auth::guard('admin')->check())
             return redirect('admin');
         return view('dashboards.admin.pages.login');
@@ -109,6 +121,8 @@ class AdminsController extends Controller
     }
 
     public function login(Request $request){
+
+
 
       //Validate the form data
       $this->validate($request, [

@@ -18,6 +18,8 @@ Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 // Admin
 Route::get('/admin/login', 'AdminsController@showLoginForm')->name('admin.login.form');
 Route::post('/admin/login', 'AdminsController@login')->name('admin.login');
+Route::post('/admin/store', 'AdminsController@store')->name('admin.store');
+
 
 Route::group(['middleware' => 'auth:admin'], function () {
     // All my routes that needs a logged in admin
