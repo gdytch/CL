@@ -58,12 +58,13 @@ class FilesController extends Controller
             while (File::exists(public_path()."/storage"."/".$student->sectionTo->path."/".$student->path."/files/".$activity->name." - ".$student->lname." (".$x.").".$extension)) {
                 $x++;
             }
-            File::put($directory."/".$activity->name." - ".$student->lname." (".$x.").".$extension, $activity->name." - ".$student->lname." (".$x.").".$extension,777,true);
-            // $request->file('file')->storeAs($directory, $activity->name." - ".$student->lname." (".$x.").".$extension);
+            // File::put($directory."/".$activity->name." - ".$student->lname." (".$x.").".$extension, $request->file('file'));
+            //  File::put($directory."/".$activity->name." - ".$student->lname." (".$x.").".$extension,file_get_contents( $request->file('file')->getRealPath()));
+            $request->file('file')->storeAs($directory, $activity->name." - ".$student->lname." (".$x.").".$extension);
         }else{
-            File::put($directory."/".$file, $file, 777,true);
+            // File::put($directory."/".$file, $request->file('file'));
 
-            // $request->file('file')->storeAs($directory, $activity->name." - ".$student->lname.".".$extension);
+            $request->file('file')->storeAs($directory, $activity->name." - ".$student->lname.".".$extension);
         }
 
         $this->recordFile($activity->id, $student->id, $file);
