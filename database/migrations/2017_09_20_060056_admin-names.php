@@ -16,6 +16,7 @@ class AdminNames extends Migration
         Schema::table('admins', function ($table){
             $table->string('fname');
             $table->string('lname');
+            $table->string('avatar');
             $table->string('theme')->nullable();
 
         });
