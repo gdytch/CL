@@ -19,7 +19,7 @@ class Activities extends Migration
             $table->integer('section_id')->unsigned()->nullable();
             $table->date('date')->nullable();
             $table->string('description')->nullable();
-            $table->foreign('section_id')->references('id')->on('sections')->onDelete('delete');
+            $table->foreign('section_id')->references('id')->on('sections')->onDelete('cascade');
             $table->timestamps();
 
         });
