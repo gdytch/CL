@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
+
 use Illuminate\Support\Facades\Input;
 use Illuminate\Http\Request;
 use App\Student;
@@ -45,7 +47,7 @@ class FilesController extends Controller
         ]);
         $student = Student::find($request->id);
         $activity = Activity::find($request->activity);
-        $directory = "/public"."/".$student->sectionTo->path."/".$student->path."/files";
+        $directory = public_path()."\\storage\\".$student->sectionTo->path."\\".$student->path."\\files";
         $file = $request->file('file');
         $extension = $file->getClientOriginalExtension();
         $file = $activity->name." - ".$student->lname.".".$extension;
@@ -56,9 +58,12 @@ class FilesController extends Controller
             while (File::exists(public_path()."/storage"."/".$student->sectionTo->path."/".$student->path."/files/".$activity->name." - ".$student->lname." (".$x.").".$extension)) {
                 $x++;
             }
-            $request->file('file')->storeAs($directory, $activity->name." - ".$student->lname." (".$x.").".$extension);
+            File::put($directory."/".$activity->name." - ".$student->lname." (".$x.").".$extension, $activity->name." - ".$student->lname." (".$x.").".$extension,777,true);
+            // $request->file('file')->storeAs($directory, $activity->name." - ".$student->lname." (".$x.").".$extension);
         }else{
-            $request->file('file')->storeAs($directory, $activity->name." - ".$student->lname.".".$extension);
+            File::put($directory."/".$file, $file, 777,true);
+
+            // $request->file('file')->storeAs($directory, $activity->name." - ".$student->lname.".".$extension);
         }
 
         $this->recordFile($activity->id, $student->id, $file);
