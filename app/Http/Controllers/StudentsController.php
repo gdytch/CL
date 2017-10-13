@@ -297,7 +297,9 @@ class StudentsController extends Controller
     public function getFiles($student)
     {
         $files = null;
+        $contents = null;
         // Get student's files
+
         $directory = public_path()."\\storage"."\\".$student->sectionTo->path."\\".$student->path."\\files";
         if(File::exists($directory)){
             $contents = File::allFiles($directory);

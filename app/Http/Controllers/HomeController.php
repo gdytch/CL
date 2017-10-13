@@ -58,7 +58,7 @@ class HomeController extends Controller
 
         if($request->lname != null){
             $lname = ucwords(strtolower($request->lname));
-            $users = Student::where('lname' , $request->lname)->get()->except('password');
+            $users = Student::where('lname' , $lname)->get()->except('password');
         }
         if($request->id != null){
             $users = Student::where('id' , $request->id)->get()->except('password');
