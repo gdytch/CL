@@ -17,7 +17,6 @@ class AdminNames extends Migration
             $table->string('fname');
             $table->string('lname');
             $table->string('theme')->nullable();
-            $table->timestamps();
 
         });
     }
