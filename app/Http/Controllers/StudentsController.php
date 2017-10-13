@@ -223,7 +223,7 @@ class StudentsController extends Controller
             // Create folders for students
             foreach ($students as $key => $student) {
                 $section_path = null;
-                $section_path = $student->sectionTo->path;
+                $section_path = $student->sectionTo->$section->path;
                 if($section_path == null)
                     continue;
                 $folder_path = 'storage'.'/'.$section_path.'/'.$student->path;
