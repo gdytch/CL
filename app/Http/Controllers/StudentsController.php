@@ -221,12 +221,21 @@ class StudentsController extends Controller
             Student::insert($students);
 
             // Create folders for students
-            foreach ($students as $key => $student) {
+            foreach ($results as $key => $column) {
                 $section_path = null;
-                $section_path = $student->sectionTo->$section->path;
+                if($column->fname == null)
+                    $column->fname = 'fname';
+                $lname = ucwords(strtolower($column->lname));
+                $fname = ucwords(strtolower($column->fname));
+                $section = strtoupper($column->section);
+                $path = ''.$lname.' '.$fname.'';
+                foreach ($sect as $key1 => $s) {
+                    if($s->name == $section)
+                        $section_path = $s->name;
+                }
                 if($section_path == null)
                     continue;
-                $folder_path = 'storage'.'/'.$section_path.'/'.$student->path;
+                $folder_path = 'storage'.'/'.$section_path.'/'.$path;
                 $this->makeFolder($folder_path);
             }
             return redirect()->route('student.index')->withSuccess('Successfully Added Students.');
