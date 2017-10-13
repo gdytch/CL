@@ -41,6 +41,7 @@ class FilesController extends Controller
     {
         $this->Validate($request, [
             'file' => 'max:30000',
+            'activity' => 'required'
         ]);
         $student = Student::find($request->id);
         $activity = Activity::find($request->activity);

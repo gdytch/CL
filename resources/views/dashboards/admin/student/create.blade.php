@@ -18,7 +18,7 @@
                 <form role="form" action="{{route('student.store')}}" method="POST">
                 <div class="row">
                     <div class=" col-md-2" style="text-align: right">
-                        <img src="{{asset('img/default-avatar.png')}}" alt="" class="student_avatar">
+                        <img src="{{asset('storage/avatar/default-avatar.png')}}" alt="" class="student_avatar">
                         <a href="#" class="btn btn-info" style="width: 100%; ">Select Avatar</a>
                     </div>
                     <div class="col-md-6">

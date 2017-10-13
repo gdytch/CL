@@ -129,7 +129,8 @@ class AdminsController extends Controller
         return 'username';
     }
 
-    public function stats(){
+    public function stats()
+    {
         $students = Student::all();
         $sections = Section::all();
         $activities = Activity::all();
@@ -142,6 +143,26 @@ class AdminsController extends Controller
 
         return $stats;
     }
+
+    public function settings()
+    {
+
+        // app('App\Http\Controllers\HomeController')->theme(Auth::user()->id, )
+        $variables = array(
+            'dashboard_content' => 'dashboards.admin.pages.settings',
+        );
+        return view('layouts.admin')->with($variables);
+    }
+
+    public function theme(Request $request)
+    {
+        $admin = Admin::find(Auth::user()->id);
+        $admin->theme = $request->get('theme');
+        $admin->save();
+
+        return redirect()->back();
+    }
+
 
 
 }

@@ -31,6 +31,9 @@ Route::group(['middleware' => 'auth:admin'], function () {
         Route::resource('activity', 'ActivitiesController');
         Route::get('student/folder/{id}', 'StudentsController@folder')->name('student.folder');
         Route::get('section/folder/{id}', 'SectionsController@folder')->name('section.folder');
+        Route::get('settings', 'AdminsController@settings')->name('admin.settings');
+        Route::get('theme', 'AdminsController@theme')->name('admin.theme');
+        Route::get('activity/status/{id}', 'ActivitiesController@changeStatus')->name('activity.status');
     });
 
 });
@@ -38,7 +41,7 @@ Route::group(['middleware' => 'auth:admin'], function () {
 
 Route::resource('file', 'FilesController');
 Route::post('login', 'HomeController@login')->name('login');
-Route::get('checkUsers', 'HomeController@checkUser')->name('checkUser');
+Route::get('checkUser', 'HomeController@checkUser')->name('checkUser');
 
 //Student
 Route::group(['middleware' => 'auth:web'], function () {
@@ -49,6 +52,7 @@ Route::group(['middleware' => 'auth:web'], function () {
         Route::get('settings', 'HomeController@settings')->name('student.settings');
         Route::get('profile', 'HomeController@profile')->name('student.profile');
         Route::get('theme', 'StudentsController@theme')->name('student.theme');
+        Route::get('activity', 'HomeController@activity')->name('student.activity');
     });
 });
 

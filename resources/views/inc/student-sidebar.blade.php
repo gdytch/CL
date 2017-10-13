@@ -10,7 +10,11 @@
             <ul class="sidebar-menu metismenu" id="sidebar-menu">
                 <li {{ (Route::is('home') ? 'class=active' : '') }}>
                     <a href="{{route('home')}}">
-                        <i class="fa fa-home"></i> My Files </a>
+                        <i class="fa fa-file"></i> My Files </a>
+                </li>
+                <li {{ (Route::is('student.activity') ? 'class=active' : '') }}>
+                    <a href="{{route('student.activity')}}">
+                        <i class="fa fa-book"></i> Activities </a>
                 </li>
                 <li {{ (Route::is('student.profile') ? 'class=active' : '') }}>
                     <a href="{{route('student.profile')}}">

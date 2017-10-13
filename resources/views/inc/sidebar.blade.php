@@ -24,6 +24,10 @@
                    <a href="{{route('activity.index')}}">
                        <i class="fa fa-book"></i> Activity Manager </a>
                </li>
+               <li {{ (Route::is('admin.settings') ? 'class=active' : '') }}>
+                  <a href="{{route('admin.settings')}}">
+                      <i class="fa fa-gear"></i> Settings </a>
+              </li>
             </ul>
         </nav>
     </div>

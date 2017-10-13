@@ -13,7 +13,7 @@
     @if(!isset(Auth::user()->theme) || Auth::user()->theme == null)
         <link rel="stylesheet" href="{{asset('css/app.min.css')}}">
     @else
-        <link rel="stylesheet" href='{{asset('css/_themes/'.$student->theme.'-theme.min.css')}}'>
+        <link rel="stylesheet" href='{{asset('css/_themes/'.Auth::user()->theme.'-theme.min.css')}}'>
     @endif
 
     <link rel="stylesheet" href="{{asset('css/datatables.min.css')}}">

@@ -29,8 +29,15 @@ class HomeController extends Controller
         $student = Student::find(Auth::user()->id);
 
         $files = app('App\Http\Controllers\StudentsController')->getFiles($student);
+        $activities = $student->SectionTo->Activities()->where('active', true)->orderBy('date', 'desc')->get();
 
-        return view('layouts.student')->with('dashboard_content', 'dashboards.student.pages.home')->with('student', $student)->with('files', $files);
+        $variables = array(
+            'dashboard_content' => 'dashboards.student.pages.home',
+            'student' => $student,
+            'files' => $files,
+            'activities' => $activities,
+        );
+        return view('layouts.student')->with($variables);
     }
 
     public function login(Request $request){
@@ -57,7 +64,7 @@ class HomeController extends Controller
 
         if(count($users) == 0 )
             return back()->withError('Last name not found');
-            
+
         return view('auth.login')->with('users', $users);
     }
 
@@ -92,13 +99,30 @@ class HomeController extends Controller
     }
 
     public function profile(){
-        $student = Student::find(Auth::user()->id);
+        $student = Auth::user();
 
+        $table_item = app('App\Http\Controllers\StudentsController')->checkActivities($student);
 
-        $file_log = app('App\Http\Controllers\StudentsController')->checkActivities($student);
+        $variables = array(
+           'dashboard_content' => 'dashboards.student.pages.profile',
+           'student' => $student,
+           'table_item' => $table_item,
 
-        return view('layouts.student')->with('dashboard_content', 'dashboards.student.pages.profile')->with('student', $student)->with('file_log', $file_log);
+        );
 
+        return view('layouts.student')->with($variables);
+
+    }
+
+    public function activity()
+    {
+        $student = Auth::user();
+        $activities = $student->sectionTo->Activities()->orderBy('date', 'desc')->get();
+        $variables = array(
+            'dashboard_content' => 'dashboards.student.pages.activity',
+            'activities' => $activities,
+        );
+        return view('layouts.student')->with($variables);
     }
 
 }

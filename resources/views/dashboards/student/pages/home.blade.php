@@ -103,8 +103,8 @@
                         <div class="col">
                          <label class="control-label col-md-4">Activity </label>
 
-                          <select name="activity" class="select form-control" id="inlineFormCustomSelect">
-                            @foreach ($student->SectionTo->Activities as $activity)
+                          <select name="activity" class="select form-control" id="inlineFormCustomSelect" required>
+                            @foreach ($activities as $activity)
                                 <option value="{{$activity->id}}">{{$activity->name}} {{$activity->description}}</option>
 
                             @endforeach

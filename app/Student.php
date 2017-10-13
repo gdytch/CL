@@ -42,6 +42,9 @@ class Student extends Authenticatable
         return $this->hasMany('App\Record', 'student_id', 'id');
     }
 
-
+    public function RecordsOf($activity_id)
+    {
+        return $this->hasMany('App\Record', 'student_id', 'id')->where('activity_id', $activity_id)->get();
+    }
 
 }

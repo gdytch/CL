@@ -3,28 +3,25 @@
 <section class="section">
     <div class="row sameheight-container">
         <div class="col col-12 ">
-            <div class="card sameheight-item stats" data-exclude="xs">
+            <div class="sameheight-item stats" data-exclude="xs">
                 <div class="card-block">
                     <div class="title-block">
                         <h1 class="card-title text-primary"> Student List
                         </h1>
-                        <hr>
                             <a href="{{route('student.create')}}" class="btn btn-secondary">Add Student</a>
                             <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#batchModal">Batch Add</button>
-                    </div>
+                        </div>
                     <section class="section">
-                        <div class="row">
-                            <div class="col-12">
+                        <div class="card row">
+                            <div class="col col-12">
 
-                                <?php if(!isset($_GET['id'])) $_GET['id']='all'; ?>
-                                <h4>Sections
+                                @php if(!isset($_GET['id'])) $_GET['id']='all'; @endphp
+                                <br>
+                                <h4 class="card-title">Sections</h4>
                                 <a href="{{url('admin/student?id=all')}}" class="btn @if($_GET['id'] == 'all')  btn-primary @else  btn-secondary @endif" >All</a>
                                 @foreach ($sections as $key => $section)
                                     <a href="{{url('admin/student?id='.$section->id)}}" class="btn @if($_GET['id'] == $section->id)  btn-primary @else  btn-secondary @endif">{{$section->name}}</a>
-
                                 @endforeach
-                                <br><br>
-                                </h4>
                             </div>
                             <div class="col col-12" style="padding: 30px;">
                                 <table class="table table-striped" id="StudentTable">

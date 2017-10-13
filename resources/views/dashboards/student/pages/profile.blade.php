@@ -59,42 +59,43 @@
                 <section class="section">
                     <div class="row">
                         <div class="col-12">
-                            @if(count($student->Sectionto->Activities) > 0)
+                            @if($table_item != null)
                                 <table class="table table-striped">
                                     <thead>
                                         <th>Activity</th>
                                         <th>Date</th>
                                         <th>Description</th>
                                         <th>Submitted</th>
+                                        <th>Date Submitted</th>
                                         <th>Files</th>
                                     </thead>
                                     <tbody>
-                                        @foreach ($student->Sectionto->Activities as $activity)
+                                        @foreach ($table_item as $activity)
                                             <tr>
                                                 <td>{{$activity->name}}</td>
                                                 <td>{{$activity->date}}</td>
                                                 <td>{{$activity->description}}</td>
                                                 <td>
-                                                    @foreach ($file_log as $log)
-                                                        @if($activity->name == $log->activity)
-                                                            @if($log->status)
-                                                                <span class="green"><i class="fa fa-check"></i> <b>Yes</b></span>
-                                                            @else
-                                                                <span class="red"><i class="fa fa-close"></i> <b>No</b></span>
-                                                            @endif
-                                                        @endif
-                                                    @endforeach
+
+                                                    @if($activity->submitted)
+                                                        <span class="green"><i class="fa fa-check"></i> <b>Yes</b></span>
+                                                    @else
+                                                        <span class="red"><i class="fa fa-close"></i> <b>No</b></span>
+                                                    @endif
                                                 </td>
                                                 <td>
-                                                    @foreach($file_log as $log)
-                                                        @if($activity->name == $log->activity)
-                                                            @if($log->files != null)
-                                                                @foreach ($log->files as $value)
-                                                                    {{$value}}<br>
-                                                                @endforeach
-                                                            @endif
-                                                        @endif
-                                                    @endforeach
+                                                    @if($activity->submitted)
+                                                        @foreach ($activity->files as $result)
+                                                            {{$result->date_submitted}}<br>
+                                                        @endforeach
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    @if($activity->submitted)
+                                                        @foreach ($activity->files as $result)
+                                                            {{$result->filename}}<br>
+                                                        @endforeach
+                                                    @endif
                                                 </td>
                                                 </tr>
                                             @endforeach
@@ -114,3 +115,53 @@
 </section>
 
 @endsection
+{{--
+@if(count($student->Sectionto->Activities) > 0)
+    <table class="table table-striped">
+        <thead>
+            <th>Activity</th>
+            <th>Date</th>
+            <th>Description</th>
+            <th>Submitted</th>
+            <th>Date Submitted</th>
+            <th>File(s)</th>
+        </thead>
+        <tbody>
+            @foreach ($student->Sectionto->Activities()->orderBy('name', 'desc')->get() as $activity)
+                <tr>
+                    <td>{{$activity->name}}</td>
+                    <td>{{$activity->date}}</td>
+                    <td>{{$activity->description}}</td>
+                    <td>
+
+                        @if(count($student->RecordsOf($activity->id))>0)
+                            <span class="green"><i class="fa fa-check"></i> <b>Yes</b></span>
+                        @else
+                            <span class="red"><i class="fa fa-close"></i> <b>No</b></span>
+                        @endif
+                    </td>
+                    <td>
+                        @if(count($student->RecordsOf($activity->id))>0)
+                            @foreach ($student->RecordsOf($activity->id) as $result)
+                                {{$result->created_at}}<br>
+                            @endforeach
+
+                        @endif
+                    </td>
+                    <td>
+
+                        @if(count($student->RecordsOf($activity->id))>0)
+                            @foreach ($student->RecordsOf($activity->id) as $result)
+                                {{$result->filename}}<br>
+                            @endforeach
+
+                        @endif
+
+                    </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @else
+        No Record
+    @endif --}}

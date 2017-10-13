@@ -91,10 +91,9 @@ class SectionsController extends Controller
     public function update(Request $request, $id)
     {
         $section = Section::find($id);
-        if($section->path != $request->path){
-            File::move(public_path()."\\storage\\".$section->path, public_path().'\\storage\\'.$request->path);
-
-        }
+        // if($section->path != $request->path){
+        //     File::move(public_path()."\\storage\\".$section->path, public_path().'\\storage\\'.$request->path);
+        // }
         $section->update($request->all());
         return redirect()->route('section.show',$section->id)->withSuccess('Saved');
     }

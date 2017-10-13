@@ -17,11 +17,19 @@ class ActivitiesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $sections = Section::all();
-
-        return view('layouts.admin')->with('dashboard_content', 'dashboards.admin.activity.index')->with('sections', $sections);
+        if($request->get('active'))
+            $active = $request->get('active');
+        else
+            $active = null;
+        $variables = array(
+            'dashboard_content' => 'dashboards.admin.activity.index',
+            'sections' => $sections,
+            'active' => $active,
+        );
+        return view('layouts.admin')->with($variables);
     }
 
     /**
@@ -48,7 +56,7 @@ class ActivitiesController extends Controller
 
         $activity = new Activity($request->all());
         $activity->save();
-        return redirect()->back()->withSuccess('Activity added');
+        return redirect('admin/activity?active='.$request->section_id)->withSuccess('Activity added');
     }
 
     /**
@@ -66,25 +74,14 @@ class ActivitiesController extends Controller
         // student who have are done with the activity
 
         foreach ($students as $key => $student) {
-            // $directory = public_path()."\\storage"."\\".$student->sectionTo->path."\\".$student->path."\\files\\".$activity->name."*";
-            // $contents = File::glob($directory);
-            // if($contents != null)
-            //     $status = true;
-            // else
-            //     $status = false;
-            // if($student->Record->$activity->id)
+            $status = false;
+            $submitted_at = null;
+
             $result = $student->Records()->where('activity_id', $activity->id)->get()->first();
             if(count($result)){
                 $status = true;
                 $submitted_at = date("M d Y", strtotime($result->created_at));
-
             }
-            else{
-                $status = false;
-                $submitted_at = null;
-            }
-
-
             $activity_log[] = (object) array('id' => $student->id, 'name' => $student->lname.', '.$student->fname, 'status' => $status, 'submitted_at' => $submitted_at);
         }
 
@@ -123,5 +120,20 @@ class ActivitiesController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function changeStatus($id){
+        $activity = Activity::find($id);
+
+        if($activity->active){
+            $activity->active = false;
+            $activity->save();
+            return redirect('admin/activity?active='.$activity->SectionTo->id)->withError('Status: INACTIVE - '.$activity->name.'');
+        }
+        else{
+            $activity->active = true;
+            $activity->save();
+            return redirect('admin/activity?active='.$activity->SectionTo->id)->withSuccess('Status: ACTIVE - '.$activity->name.'');
+        }
     }
 }

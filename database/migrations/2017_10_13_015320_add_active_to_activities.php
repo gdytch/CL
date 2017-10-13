@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AdminNames extends Migration
+class AddActiveToActivities extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,8 @@ class AdminNames extends Migration
      */
     public function up()
     {
-        Schema::table('admins', function ($table){
-            $table->string('fname');
-            $table->string('lname');
-            $table->string('theme')->nullable();
-            $table->timestamps();
-
+        Schema::table('activities', function($table){
+            $table->boolean('active')->nullable()->default(true);
         });
     }
 

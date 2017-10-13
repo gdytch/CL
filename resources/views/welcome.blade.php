@@ -11,10 +11,10 @@
                     </header>
                     <div class="auth-content">
                         <p class="text-center">ENTER YOUR LASTNAME TO CONTINUE</p>
-                        <form id="login-form" action="{{route('checkUser')}}" method="GET" novalidate="">
+                        <form id="login-form" action="{{url('checkUser')}}" method="GET" novalidate="">
                             <div class="form-group">
                                 <label for="lname">Last name</label>
-                                <input type="text" class="form-control underlined" name="lname" id="lname" placeholder="Your Lastname" required> </div>
+                                <input type="text" class="form-control underlined" name="lname" id="lname" placeholder="Your Lastname" required autofocus> </div>
 
 
                             <div class="form-group">

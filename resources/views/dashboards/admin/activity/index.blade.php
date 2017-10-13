@@ -1,14 +1,14 @@
 @section('dashboard-content')
+    @php if(!isset($active)) $active = $sections[0]->id; @endphp
 <section class="section">
     <div class="row sameheight-container">
         <div class="col col-12 ">
             <div class=" sameheight-item stats" data-exclude="xs">
                 <div class="card-block">
                     <div class="title-block">
-                        <h1 class="title"> Activity List </h1>
-                        <br>
+                        <h1 class="card-title text-primary"> Activity List </h1>
                         <div class="sub-title">
-                            <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#addModal">Add Activity</a>
+                            <a href="#" class="btn btn-secondary" data-toggle="modal" data-target="#addModal">Add Activity</a>
                         </div>
                     </div>
                     <div class="row row-sm stats-container">
@@ -22,7 +22,7 @@
                                         <ul class="nav nav-tabs nav-tabs-bordered">
                                             @foreach ($sections as $key => $section)
                                                 <li class="nav-item">
-                                                    <a href="#" class="nav-link @if($key == 0)active @endif" data-target="#{{$section->id}}" data-toggle="tab" aria-controls="home" role="tab" aria-expanded="false">{{$section->name}}</a>
+                                                    <a href="#" class="nav-link @if($active == $section->id)active @endif" data-target="#{{$section->id}}" data-toggle="tab" aria-controls="home" role="tab" aria-expanded="false">{{$section->name}}</a>
                                                 </li>
 
                                             @endforeach
@@ -32,7 +32,7 @@
                                         <!-- Tab panes -->
                                         <div class="tab-content tabs-bordered card">
                                             @foreach ($sections as $key => $section)
-                                                <div class="tab-pane @if($key == 0)active show @endif fade in" id="{{$section->id}}" @if($key == 0)aria-expanded="true" @else aria-expanded="false" @endif>
+                                                <div class="tab-pane @if($active == $section->id)active show @endif fade in" id="{{$section->id}}" @if($active == $section->id)aria-expanded="true" @else aria-expanded="false" @endif>
                                                     <br>
                                                     @if(count($section->Activities) > 0)
                                                         <table class="table table-striped" id="StudentTable{{$section->name}}">
@@ -42,16 +42,18 @@
                                                                     <th>Description</th>
                                                                     <th>Published</th>
                                                                     <th class="nosort">Submissions</th>
-                                                                    <th class="nosort"></th>
+                                                                    <th width="100">Status</th>
+                                                                    <th class="nosort" width="50"></th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
-                                                            @foreach ($section->Activities as $activity)
+                                                            @foreach ($section->Activities()->orderBy('name', 'desc')->get() as $activity)
                                                                 <tr>
                                                                     <td>{{$activity->name}}</td>
                                                                     <td>{{$activity->description}}</td>
                                                                     <td>{{$activity->date}}</td>
                                                                     <td>{{count($activity->Records()->distinct()->get(['student_id']))}}/{{count($section->Students)}}</td>
+                                                                    <td>@if($activity->active) <a href="{{route('activity.status',$activity->id)}}" class="btn btn-sm btn-success">Active</a> @else <a href="{{route('activity.status',$activity->id)}}" class="btn btn-sm btn-danger">Inactive</a> @endif </td>
                                                                     <td><a href="{{route('activity.show',$activity->id)}}" class="btn btn-sm btn-info">View</a></td>
                                                                 </tr>
                                                             @endforeach

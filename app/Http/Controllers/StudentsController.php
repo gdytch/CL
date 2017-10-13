@@ -68,7 +68,7 @@ class StudentsController extends Controller
 
         $sect = Section::find($section);
 
-        $folder_path = '/storage'.'/'.$sect->path.'/'.$path;
+        $folder_path = 'storage'.'/'.$sect->path.'/'.$path;
         $this->makeFolder($folder_path);
 
         return redirect()->route('student.index')->withSuccess('Student Added');
@@ -83,27 +83,23 @@ class StudentsController extends Controller
      */
     public function show($id)
     {
-        $contents = null;
         $student = Student::find($id);
-        $error = null;
 
         //check if student has a section
         if($student->section == null){
             return redirect()->route('student.edit',$student->id)->withError("Student has no section");
         }
 
-        $files = $this->getFiles($student);
-
-        $file_log = $this->checkActivities($student);
+        $table_item = $this->checkActivities($student);
 
         $variables = array(
            'dashboard_content' => 'dashboards.admin.student.show',
            'student' => $student,
-           'files' => $files,
-           'file_log' => $file_log,
+           'table_item' => $table_item,
+
         );
 
-        return view('layouts.admin')->with($variables)->withErrors($error);
+        return view('layouts.admin')->with($variables);
     }
 
     /**
@@ -225,19 +221,12 @@ class StudentsController extends Controller
             Student::insert($students);
 
             // Create folders for students
-            foreach ($results as $key => $column) {
-                $lname = ucwords(strtolower($column->lname));
-                $fname = ucwords(strtolower($column->fname));
-                $path = ''.$lname.' '.$fname.'';
-                $section = strtoupper($column->section);
+            foreach ($students as $key => $student) {
                 $section_path = null;
-                foreach ($sect as $key1 => $s) {
-                    if($s->name == $section)
-                        $section_path = $s->path;
-                }
+                $section_path = $student->sectionTo->path;
                 if($section_path == null)
                     continue;
-                $section_path = '/storage'.'/'.$section_path.'/'.$path;
+                $folder_path = 'storage'.'/'.$section_path.'/'.$student->path;
                 $this->makeFolder($folder_path);
             }
             return redirect()->route('student.index')->withSuccess('Successfully Added Students.');
@@ -272,24 +261,28 @@ class StudentsController extends Controller
 
     public function checkActivities($student)
     {
-        $file_log = null;
-        //Check files Submitted
-        $activities = $student->sectionTo->Activities;
-        foreach ($activities as $key => $activity) {
-           $directory = public_path()."\\storage"."\\".$student->sectionTo->path."\\".$student->path."\\files\\".$activity->name."*";
-           $result = File::glob($directory);
-           if($result){
-               $files = null;
-               foreach ($result as $key => $value) {
-                   $path = pathinfo((string)$value."");
-                   $files[] = $path['basename'];
-               }
-               $file_log[] = (object) array('activity' => $activity->name, 'status' => true, 'path' => $directory, 'files' => $files);
-           }
-           else
-               $file_log[] = (object) array('activity' => $activity->name, 'status' => false, 'path' => $directory, 'files' => null);
-        }
-        return $file_log;
+        $table_item = null;
+
+        if(count($student->Sectionto->Activities) > 0)
+            foreach ($student->Sectionto->Activities()->orderBy('name', 'desc')->get() as $activity){
+                $files = null;
+                if(count($student->RecordsOf($activity->id))>0){
+                    $submitted = true;
+                    foreach ($student->RecordsOf($activity->id) as $result)
+                        $files[] = (object) array('filename' => $result->filename,  'date_submitted' => date("M d Y", strtotime($result->created_at)));
+                }else
+                    $submitted = false;
+
+                $table_item[] = (object) array(
+                    'name' => $activity->name,
+                    'date' => date("M d Y", strtotime($activity->date)),
+                    'description' => $activity->description,
+                    'submitted' => $submitted,
+                    'files' => $files,
+                );
+            }
+
+        return $table_item;
     }
 
     public function getFiles($student)
@@ -316,7 +309,7 @@ class StudentsController extends Controller
 
     public function theme(Request $request)
     {
-        $student = Student::find($request->get('id'));
+        $student = Student::find(Auth::user()->id);
         $student->theme = $request->get('theme');
         $student->save();
 

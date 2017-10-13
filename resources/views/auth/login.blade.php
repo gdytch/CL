@@ -4,9 +4,8 @@
     <style>
         .accounts{
             width: 100%;
-            height: 80px;
-            margin-top: 10px;
-            background: #e6e6e6;;
+            padding-top: 5px;
+            margin-bottom: -8px;
             display: block;
         }
         label{
@@ -18,9 +17,9 @@
             margin-right: 20px;
         }
         .radio + span{
-            border-bottom: 1px solid;
+            /*border-bottom: 1px solid;*/
         }
-        .radio:checked + span{
+        .radio:checked  + div.account-block{
             color: #85CE36;
             border-bottom: 1px solid;
         }
@@ -34,12 +33,18 @@
         }
         .user-section{
                 color: #a7a7a7;
-                position: relative;
-                top: -30px;
-                left: 102px;
                 font-style: italic;
                 font-size: 10pt;
                 margin: 0px;
+        }
+        .account-block{
+            background: #e6e6e6;
+            height: 50px;
+            border-bottom: 1px solid;
+
+        }
+        .account-block img{
+            float: left;
         }
     </style>
 
@@ -64,9 +69,11 @@
                                 <div >
                                     <label>
                                         <input class="radio" name="id" type="radio" value="{{$user->id}}" @if(count($users)<2) checked @elseif(old('id') == $user->id) checked @endif @if(!$user->sectionTo->status)disabled @endif>
-
-                                        <span class="accounts"><img src="{{asset('storage/avatar/'.$user->avatar)}}" class="login-img"> {{$user->lname}}, {{$user->fname}}</span>
-                                        <p class="user-section">{{$user->sectionTo->name}} @if(!$user->sectionTo->status)<span style="color:#ff7a7a;"><em>(Closed)</em></span>@endif</p>
+                                        <div class="account-block">
+                                            <img src="{{asset('storage/avatar/'.$user->avatar)}}" class="login-img">
+                                            <span class="accounts"> {{$user->lname}}, {{$user->fname}}</span>
+                                            <span class="user-section">{{$user->sectionTo->name}} @if(!$user->sectionTo->status)<span style="color:#ff7a7a;"><em>(Closed)</em></span>@endif</p>
+                                        </div>
                                     </label>
                                 </div>
                             @endforeach
@@ -88,7 +95,8 @@
                         </div>
 
                     </form>
-                    <a href="#" onclick="document.location.reload(true)" class="btn btn-md btn-secondary">Refresh</a>
+                    <a href="#" onclick="document.location.reload(true)" class="btn btn-md btn-secondary">Refresh</a> <a href="{{route('welcome')}}" class="btn btn-secondary">Back</a>
+
                 </div>
             </div>
         </div>
