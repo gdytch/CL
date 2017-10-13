@@ -132,7 +132,7 @@ class StudentsController extends Controller
             if($student->section != $request->section){
                 $section1 = Section::find($student->section);
                 $newSection = Section::find($request->section);
-                    File::move(public_path()."\\storage\\".$section1->path.'\\'.$student->path, public_path().'\\storage\\'.$newSection->path.'\\'.$student->path);
+                    File::move(public_path()."/storage/".$section1->path.'/'.$student->path, public_path().'/storage/'.$newSection->path.'/'.$student->path);
             }
         }
         else{
@@ -146,7 +146,7 @@ class StudentsController extends Controller
             $section1 = Section::find($request->section);
             $newPath = ''.ucwords(strtolower($request->lname)).' '.ucwords(strtolower($request->fname)).'';
             $oldPath = $student->path;
-            File::move(public_path()."\\storage\\".$section1->path.'\\'.$oldPath, public_path().'\\storage\\'.$section1->path.'\\'.$newPath);
+            File::move(public_path()."/storage/".$section1->path.'/'.$oldPath, public_path().'/storage/'.$section1->path.'/'.$newPath);
             $student->path = $newPath;
         }
 
@@ -247,9 +247,9 @@ class StudentsController extends Controller
     public function folder($id)
     {
         $student = Student::find($id);
-        $directory = public_path()."\\storage"."\\".$student->sectionTo->path."\\".$student->path."\\files\\";
+        $directory = public_path()."/storage"."/".$student->sectionTo->path."/".$student->path."/files";
         if ((strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') && (file_exists($directory))) {
-            $explorer =  'c:\\windows\\explorer.exe';
+            $explorer =  'c:/windows/explorer.exe';
             shell_exec("$explorer /n,/e,$directory");
             return redirect()->back();
         } else {
@@ -300,7 +300,7 @@ class StudentsController extends Controller
         $contents = null;
         // Get student's files
 
-        $directory = public_path()."\\storage"."\\".$student->sectionTo->path."\\".$student->path."\\files";
+        $directory = public_path()."/storage"."/".$student->sectionTo->path."/".$student->path."/files";
         if(File::exists($directory)){
             $contents = File::allFiles($directory);
         }else {

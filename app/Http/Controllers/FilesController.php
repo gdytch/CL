@@ -45,15 +45,15 @@ class FilesController extends Controller
         ]);
         $student = Student::find($request->id);
         $activity = Activity::find($request->activity);
-        $directory = "\\public"."\\".$student->sectionTo->path."\\".$student->path."\\files\\";
+        $directory = "/public"."/".$student->sectionTo->path."/".$student->path."/files";
         $file = $request->file('file');
         $extension = $file->getClientOriginalExtension();
         $file = $activity->name." - ".$student->lname.".".$extension;
 
         //if filename already exist add numbers at the end of the filename
-        if(File::exists(public_path()."\\storage"."\\".$student->sectionTo->path."\\".$student->path."\\files\\".$file)){
+        if(File::exists(public_path()."/storage"."/".$student->sectionTo->path."/".$student->path."/files/".$file)){
             $x = 2;
-            while (File::exists(public_path()."\\storage"."\\".$student->sectionTo->path."\\".$student->path."\\files\\".$activity->name." - ".$student->lname." (".$x.").".$extension)) {
+            while (File::exists(public_path()."/storage"."/".$student->sectionTo->path."/".$student->path."/files/".$activity->name." - ".$student->lname." (".$x.").".$extension)) {
                 $x++;
             }
             $request->file('file')->storeAs($directory, $activity->name." - ".$student->lname." (".$x.").".$extension);
@@ -76,7 +76,7 @@ class FilesController extends Controller
     public function show(Request $request, $id)
     {
         $student = Student::find($id);
-        $directory = public_path()."\\storage"."\\".$student->sectionTo->path."\\".$student->path."\\files\\";
+        $directory = public_path()."/storage"."/".$student->sectionTo->path."/".$student->path."/files";
         $file = $request->file;
         return response()->download($directory."".$file);
     }
@@ -115,28 +115,28 @@ class FilesController extends Controller
         $student = Student::find($id);
         switch ($request->method) {
             case 'recycle':
-                $directory = public_path()."\\storage"."\\".$student->sectionTo->path."\\".$student->path."\\files\\".$request->file;
-                $trash = public_path()."\\storage"."\\".$student->sectionTo->path."\\".$student->path."\\trash\\".$request->file;
+                $directory = public_path()."/storage"."/".$student->sectionTo->path."/".$student->path."/files/".$request->file;
+                $trash = public_path()."/storage"."/".$student->sectionTo->path."/".$student->path."/trash/".$request->file;
                 File::move($directory, $trash);
                 return redirect()->route('home')->withSuccess('File moved to trash');
                 break;
 
             case 'restore':
-                $directory = public_path()."\\storage"."\\".$student->sectionTo->path."\\".$student->path."\\files\\".$request->file;
-                $trash = public_path()."\\storage"."\\".$student->sectionTo->path."\\".$student->path."\\trash\\".$request->file;
+                $directory = public_path()."/storage"."/".$student->sectionTo->path."/".$student->path."/files/".$request->file;
+                $trash = public_path()."/storage"."/".$student->sectionTo->path."/".$student->path."/trash/".$request->file;
                 File::move($trash, $directory);
                 return redirect()->route('trash')->withSuccess('File restored');
                 break;
 
             case 'empty':
-                $trash = public_path()."\\storage"."\\".$student->sectionTo->path."\\".$student->path."\\trash\\";
+                $trash = public_path()."/storage"."/".$student->sectionTo->path."/".$student->path."/trash";
                 File::cleanDirectory($trash);
                 return redirect()->route('trash')->withSuccess('All files deleted');
                 break;
 
                 //delete
             default:
-                $directory = public_path()."\\storage"."\\".$student->sectionTo->path."\\".$student->path."\\trash\\".$request->file;
+                $directory = public_path()."/storage"."/".$student->sectionTo->path."/".$student->path."/trash/".$request->file;
                 File::delete($directory);
                 return redirect()->route('trash')->withSuccess('File deleted');
                 break;
