@@ -53,6 +53,7 @@
 
         </div>
 
+        {{-- TODO: make a filetype settings panel --}}
 
     </section>
 

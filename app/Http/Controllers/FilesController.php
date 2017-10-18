@@ -43,9 +43,11 @@ class FilesController extends Controller
     {
 
         $this->Validate($request, [
-            'file' => 'max:30000',
+            'file' => 'max:30000|mimes:doc,docx,odt,rtf,pdf,xls,xlsx,pptx,ppt',
             'activity' => 'required'
         ]);
+
+        //TODO: make a limit to file type updloads
 
         $student = Student::find($request->id);
         $activity = Activity::find($request->activity);

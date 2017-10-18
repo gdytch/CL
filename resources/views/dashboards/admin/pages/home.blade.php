@@ -1,4 +1,7 @@
 @section('dashboard-content')
+
+    {{-- TODO: storage size stats --}}
+
     <section class="section">
     <div class="row sameheight-container">
         <div class="col col-12 col-sm-12 col-md-6 col-xl-5 stats-col">
@@ -331,7 +334,7 @@
     </section>
     <section class="section map-tasks">
     <div class="row sameheight-container">
-        
+
         <div class="col-md-4">
             <div class="card tasks sameheight-item" data-exclude="xs,sm">
                 <div class="card-header bordered">

@@ -117,6 +117,7 @@
                             <label class="control-label col-md-4">Description</label>
                             <input name="description" type="text" class="form-control underlined" >
                         </div>
+                        {{-- TODO: add a filetype option to limit filetype uploads --}}
                     </div>
                 </div>
             </div>
@@ -128,5 +129,7 @@
         </div>
     </div>
 </div>
+
+
 
 @endsection
