@@ -33,9 +33,7 @@
                                                 </div>
                                                 <!-- Create the editor container -->
                                                 {{-- <div id="editor" type="textarea" name="content"> --}}
-                                                    <textarea  type="text" name="content" style="width: 100%; height: 600px;">
-
-                                                </textarea>
+                                                    <textarea id="content"  type="text" name="content" style="width: 100%; height: 600px;"></textarea>
                                                 {{-- </div> --}}
                                             </div>
                                         </div>
@@ -84,19 +82,20 @@
             </div>
         </div>
 
-   <script src="{{asset('/vendor/unisharp/laravel-ckeditor/ckeditor.js')}}"></script>
-   <script src="{{asset('/vendor/unisharp/laravel-ckeditor/adapters/jquery.js')}}"></script>
-   <script src="//cdn.ckeditor.com/4.6.2/standard/ckeditor.js"></script>
-   <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-   <script>
-        var options = {
-         filebrowserImageBrowseUrl: '/laravel-filemanager?type=Images',
-         filebrowserImageUploadUrl: '/laravel-filemanager/upload?type=Images&_token=',
-         filebrowserBrowseUrl: '/laravel-filemanager?type=Files',
-         filebrowserUploadUrl: '/laravel-filemanager/upload?type=Files&_token='
-       };
-       $('textarea').ckeditor(options);
-       // $('.textarea').ckeditor(); // if class is prefered.
-   </script>
+
+    <script src="{{asset('/vendor/unisharp/laravel-ckeditor/ckeditor.js')}}"></script>
+    <script src="//cdn.ckeditor.com/4.6.2/standard/ckeditor.js"></script>
+
+    <script>
+      var options = {
+        filebrowserImageBrowseUrl: '/laravel-filemanager?type=Images',
+        filebrowserImageUploadUrl: '/laravel-filemanager/upload?type=Images&_token=',
+        filebrowserBrowseUrl: '/laravel-filemanager?type=Files',
+        filebrowserUploadUrl: '/laravel-filemanager/upload?type=Files&_token='
+      };
+    </script>
+    <script>
+    CKEDITOR.replace('content', options);
+    </script>
 
 @endsection
