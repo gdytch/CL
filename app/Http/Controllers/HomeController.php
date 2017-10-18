@@ -110,7 +110,7 @@ class HomeController extends Controller
     {
 
         $student = Student::find(Auth::user()->id);
-        $directory = storage_path()."\\app\\public"."\\".$student->sectionTo->path."\\".$student->path."\\trash\\";
+        $directory = storage_path()."/app/public"."/".$student->sectionTo->path."/".$student->path."/trash/";
         $contents = File::allFiles($directory);
 
         if($contents != null)
