@@ -59,3 +59,16 @@
     border-collapse: collapse !important;
 
 }
+.cke_contents{
+    height: 350px !important;
+}
+
+.post{
+    max-width: 1000px;
+    width: 100%;
+}
+
+.post img{
+    width: 100% !important;
+    height: auto !important;
+}

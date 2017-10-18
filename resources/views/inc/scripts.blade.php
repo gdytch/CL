@@ -1,11 +1,21 @@
 
-<script type="text/javascript" src="{{asset('js/vendor.min.js')}}"></script>
-<script type="text/javascript" src="{{asset('js/app.js')}}"></script>
+<!-- Reference block for JS -->
+<div class="ref" id="ref">
+   <div class="color-primary"></div>
+   <div class="chart">
+       <div class="color-primary"></div>
+       <div class="color-secondary"></div>
+   </div>
+</div>
 {{-- <script type="text/javascript" src="{{asset('js/jquery.min.js')}}"></script> --}}
 {{-- <script type="text/javascript" src="{{asset('js/bootstrap.min.js')}}"></script> --}}
-<script type="text/javascript" src="{{asset('js/datatables.min.js')}}"></script>
 {{-- <script type="text/javascript" src="{{asset('js/bootstrap-confirmation.min.js')}}"></script> --}}
+{{-- <script type="text/javascript" src="{{asset('js/quill.min.js')}}"></script> --}}
+<script type="text/javascript" src="{{asset('js/vendor.min.js')}}"></script>
+<script type="text/javascript" src="{{asset('js/app.js')}}"></script>
 <script type="text/javascript" src="{{asset('js/bootstrap-notify.min.js')}}"></script>
+<script type="text/javascript" src="{{asset('js/datatables.min.js')}}"></script>
+
 <script type="text/javascript">
 
     $(document).ready(function(){

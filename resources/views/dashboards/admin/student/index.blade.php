@@ -3,26 +3,25 @@
 <section class="section">
     <div class="row sameheight-container">
         <div class="col col-12 ">
-            <div class="sameheight-item stats" data-exclude="xs">
                 <div class="card-block">
                     <div class="title-block">
-                        <h1 class="card-title text-primary"> Student List
-                        </h1>
-                            <a href="{{route('student.create')}}" class="btn btn-secondary">Add Student</a>
-                            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#batchModal">Batch Add</button>
-                        </div>
-                    <section class="section">
-                        <div class="card row">
-                            <div class="col col-12">
-
+                        <h1 class="card-title text-primary"> Student List</h1>
+                        <div class="row">
+                            <a href="{{route('student.create')}}" class="btn btn-secondary"><i class="fa fa-plus"></i> Add Student</a>
+                            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#batchModal"><i class="fa fa-plus"></i> Batch Add</button>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 @php if(!isset($_GET['id'])) $_GET['id']='all'; @endphp
                                 <br>
-                                <h4 class="card-title">Sections</h4>
                                 <a href="{{url('admin/student?id=all')}}" class="btn @if($_GET['id'] == 'all')  btn-primary @else  btn-secondary @endif" >All</a>
-                                @foreach ($sections as $key => $section)
-                                    <a href="{{url('admin/student?id='.$section->id)}}" class="btn @if($_GET['id'] == $section->id)  btn-primary @else  btn-secondary @endif">{{$section->name}}</a>
-                                @endforeach
-                            </div>
+                                    @foreach ($sections as $key => $section)
+                                        <a  href="{{url('admin/student?id='.$section->id)}}" class="btn @if($_GET['id'] == $section->id)  btn-primary @else  btn-secondary @endif">{{$section->name}}</a>
+                                        @endforeach
+
+                        </div>
+                    </div>
+                    <section class="section">
+                        <div class="card row">
+
                             <div class="col col-12" style="padding: 30px;">
                                 <table class="table table-striped" id="StudentTable">
                                     <thead>
@@ -50,7 +49,6 @@
                         </div>
                     </section>
                 </div>
-            </div>
         </div>
     </div>
 </section>

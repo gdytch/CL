@@ -65,7 +65,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Asia/Taipei',
 
     /*
     |--------------------------------------------------------------------------
@@ -178,6 +178,9 @@ return [
         App\Providers\RouteServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
         'Bootstrapper\BootstrapperL5ServiceProvider',
+        Unisharp\Ckeditor\ServiceProvider::class,
+        Unisharp\Laravelfilemanager\LaravelFilemanagerServiceProvider::class,
+        Intervention\Image\ImageServiceProvider::class,
 
 
     ],
@@ -229,6 +232,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+         'Image' => Intervention\Image\Facades\Image::class,
 
         //Bootstrapper
         'Accordion' => 'Bootstrapper\Facades\Accordion',
@@ -255,6 +259,7 @@ return [
         'Tabbable' => 'Bootstrapper\Facades\Tabbable',
         'Table' => 'Bootstrapper\Facades\Table',
         'Thumbnail' => 'Bootstrapper\Facades\Thumbnail',
+
 
     ],
 

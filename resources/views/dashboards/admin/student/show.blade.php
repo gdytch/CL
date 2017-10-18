@@ -63,8 +63,8 @@
                                 <table class="table table-striped">
                                     <thead>
                                         <th>Activity</th>
-                                        <th>Date</th>
                                         <th>Description</th>
+                                        <th>Date</th>
                                         <th>Submitted</th>
                                         <th>Date Submitted</th>
                                         <th>Files</th>
@@ -73,8 +73,8 @@
                                         @foreach ($table_item as $activity)
                                             <tr>
                                                 <td>{{$activity->name}}</td>
-                                                <td>{{$activity->date}}</td>
                                                 <td>{{$activity->description}}</td>
+                                                <td>{{$activity->date}}</td>
                                                 <td>
 
                                                     @if($activity->submitted)

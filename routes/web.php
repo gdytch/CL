@@ -36,6 +36,8 @@ Route::group(['middleware' => 'auth:admin'], function () {
         Route::get('settings', 'AdminsController@settings')->name('admin.settings');
         Route::get('theme', 'AdminsController@theme')->name('admin.theme');
         Route::get('activity/status/{id}', 'ActivitiesController@changeStatus')->name('activity.status');
+        Route::get('activity/submission/{id}', 'ActivitiesController@changeSubmissionStatus')->name('activity.submission');
+        Route::resource('post', 'PostsController');
     });
 
 });

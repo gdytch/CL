@@ -25,6 +25,6 @@ class RelationsStudentSection extends Migration
      */
     public function down()
     {
-        //
+        
     }
 }

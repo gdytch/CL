@@ -1,8 +1,38 @@
 @section('dashboard-content')
     <section class="section">
+        @if(count($todays_activity) != 0)
+                <div class="row sameheight-container">
+                    <div class="col col-12 col-sm-12 col-md-12 col-xl-12">
+                        <div class="card">
+                            <div class="card-block">
+                                <div class="title-block">
+                                    <h5 class="card-title text-primary">Today's Activity</h5>
+                                    <hr>
+                                </div>
+                                <div class="section">
+                                    @foreach ($todays_activity as $post)
+                                    <div class="col col-12">
+                                        <div class="card-block">
+                                                <h4 class="card-title"> {{$post->title}}  </h4>
+                                        </div>
+                                        <div class="card-block">
+                                            {!!$post->body !!}
+                                        </div>
+                                    </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                </div>
+        @endif
         <div class="row sameheight-container">
             <div class="col col-12 col-sm-12 col-md-12 col-xl-12">
-                <button type="button" name="button" class="btn btn-lg btn-primary" data-toggle="modal" data-target="#uploadmodal"><i class="fa fa-file"></i> Save/Upload File</button><br><br>
+                <button type="button" name="button" class="btn btn-lg btn-primary" data-toggle="modal" data-target="#uploadmodal"><i class="fa fa-file"></i> Save/Upload File</button>
+
+                <br><br>
+
                 <div class="card sameheight-item">
                     <div class="card-block">
                         <div class="title-block">

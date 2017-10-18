@@ -14,7 +14,7 @@ class LogindateInStudents extends Migration
     public function up()
     {
         Schema::table('students', function($table){
-            $table->date('lastlogin')->nullable();
+            $table->date('last_login')->nullable();
             $table->string('theme')->nullable();
         });
     }

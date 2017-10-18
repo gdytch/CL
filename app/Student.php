@@ -30,21 +30,25 @@ class Student extends Authenticatable
         'password', 'remember_token',
     ];
 
-    public function setPasswordAttribute($value){
+    public function setPasswordAttribute($value)
+    {
         $this->attributes['password'] = bcrypt($value);
     }
 
-    public function sectionTo(){
+    public function sectionTo()
+    {
         return $this->belongsTo('App\Section', 'section', 'id');
     }
 
-    public function Records(){
-        return $this->hasMany('App\Record', 'student_id', 'id');
+    public function Records()
+    {
+        return $this->hasMany('App\Record', 'student_id', 'id')->where('active', true);
     }
 
     public function RecordsOf($activity_id)
     {
-        return $this->hasMany('App\Record', 'student_id', 'id')->where('activity_id', $activity_id)->get();
+        return $this->hasMany('App\Record', 'student_id', 'id')->where(['activity_id' => $activity_id, 'active' => true])->get();
     }
+
 
 }

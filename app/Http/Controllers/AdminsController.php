@@ -105,81 +105,109 @@ class AdminsController extends Controller
         //
     }
 
-    public function showLoginForm(){
+
+
+    public function showLoginForm()
+    {
+
         $admins = Admin::all();
         if(count($admins) == 0)
             return view('auth.register');
 
         if(Auth::guard('admin')->check())
             return redirect('admin');
+
         return view('dashboards.admin.pages.login');
+
     }
 
-    public function home(){
 
+
+    public function home()
+    {
 
         $variables = array(
             'dashboard_content' => 'dashboards.admin.pages.home',
             'stats' => $this->stats(),
         );
+
         return view('layouts.admin')->with($variables);
+
     }
 
-    public function login(Request $request){
 
 
-
+    public function login(Request $request)
+    {
       //Validate the form data
-      $this->validate($request, [
-        'username' => 'required',
-        'password' => 'required'
-      ]);
-      //if validated
-      if(Auth::guard('admin')->attempt(['username' => $request->username, 'password' => $request->password])){
-        return redirect()->intended('admin');
-      }
+        $this->validate($request, [
+            'username' => 'required',
+            'password' => 'required'
+        ]);
+        //if validated
+        if(Auth::guard('admin')->attempt(['username' => $request->username, 'password' => $request->password]))
+            return redirect()->intended('admin');
 
-      return redirect()->back()->withInput($request->only($this->username()))->withErrors('Invalid credentials');
+
+        return redirect()->back()->withInput($request->only($this->username()))->withErrors('Invalid credentials');
 
     }
+
+
 
     public function username()
     {
+
         return 'username';
+
     }
+
+
 
     public function stats()
     {
+
         $students = Student::all();
         $sections = Section::all();
         $activities = Activity::all();
         $activity_submits = 0;
-        foreach ($students as $student) {
+        foreach ($students as $student)
             $activity_submits += count($student->Records);
-        }
 
-        $stats = (object) array('total_students' => count($students), 'total_sections' => count($sections), 'total_activities' => count($activities), 'activity_submits' => $activity_submits);
+        $stats = (object) array(
+            'total_students' => count($students),
+            'total_sections' => count($sections),
+            'total_activities' => count($activities),
+            'activity_submits' => $activity_submits
+        );
 
         return $stats;
     }
 
+
+
     public function settings()
     {
 
-        // app('App\Http\Controllers\HomeController')->theme(Auth::user()->id, )
         $variables = array(
             'dashboard_content' => 'dashboards.admin.pages.settings',
         );
+
         return view('layouts.admin')->with($variables);
+
     }
+
+
 
     public function theme(Request $request)
     {
+
         $admin = Admin::find(Auth::user()->id);
         $admin->theme = $request->get('theme');
         $admin->save();
 
         return redirect()->back();
+        
     }
 
 

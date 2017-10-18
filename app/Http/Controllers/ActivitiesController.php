@@ -19,17 +19,21 @@ class ActivitiesController extends Controller
      */
     public function index(Request $request)
     {
+
         $sections = Section::all();
+        $active = null;
+
         if($request->get('active'))
             $active = $request->get('active');
-        else
-            $active = null;
+
         $variables = array(
             'dashboard_content' => 'dashboards.admin.activity.index',
             'sections' => $sections,
             'active' => $active,
         );
+
         return view('layouts.admin')->with($variables);
+
     }
 
     /**
@@ -50,13 +54,16 @@ class ActivitiesController extends Controller
      */
     public function store(Request $request)
     {
+
         $result = Activity::where(['name' => $request->name, 'section_id' => $request->section_id])->get();
         if(count($result) > 0)
             return redirect()->back()->withError('Activity already exist');
 
         $activity = new Activity($request->all());
         $activity->save();
+
         return redirect('admin/activity?active='.$request->section_id)->withSuccess('Activity added');
+
     }
 
     /**
@@ -67,16 +74,15 @@ class ActivitiesController extends Controller
      */
     public function show($id)
     {
+
         $activity = Activity::find($id);
 
         $students = $activity->SectionTo->Students;
 
         // student who have are done with the activity
-
         foreach ($students as $key => $student) {
             $status = false;
             $submitted_at = null;
-
             $result = $student->Records()->where('activity_id', $activity->id)->get()->first();
             if(count($result)){
                 $status = true;
@@ -85,7 +91,14 @@ class ActivitiesController extends Controller
             $activity_log[] = (object) array('id' => $student->id, 'name' => $student->lname.', '.$student->fname, 'status' => $status, 'submitted_at' => $submitted_at);
         }
 
-        return view('layouts.admin')->with('dashboard_content', 'dashboards.admin.activity.show')->with('activity', $activity)->with('activity_log', $activity_log);
+        $variables = array(
+            'dashboard_content' => 'dashboards.admin.activity.show',
+            'activity' => $activity,
+            'activity_log' => $activity_log
+        );
+
+        return view('layouts.admin')->with($variables);
+
     }
 
     /**
@@ -122,18 +135,47 @@ class ActivitiesController extends Controller
         //
     }
 
-    public function changeStatus($id){
+
+
+    public function changeStatus($id)
+    {
+
         $activity = Activity::find($id);
 
-        if($activity->active){
+        if($activity->active)
+        {
             $activity->active = false;
             $activity->save();
             return redirect('admin/activity?active='.$activity->SectionTo->id)->withError('Status: INACTIVE - '.$activity->name.'');
         }
-        else{
+        else
+        {
             $activity->active = true;
             $activity->save();
             return redirect('admin/activity?active='.$activity->SectionTo->id)->withSuccess('Status: ACTIVE - '.$activity->name.'');
         }
+
+    }
+
+
+
+    public function changeSubmissionStatus($id)
+    {
+
+        $activity = Activity::find($id);
+
+        if($activity->submission)
+        {
+            $activity->submission = false;
+            $activity->save();
+            return redirect('admin/activity?active='.$activity->SectionTo->id)->withError('Submission: CLOSED - '.$activity->name.'');
+        }
+        else
+        {
+            $activity->submission = true;
+            $activity->save();
+            return redirect('admin/activity?active='.$activity->SectionTo->id)->withSuccess('Submission: OPEN - '.$activity->name.'');
+        }
+        
     }
 }

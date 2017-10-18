@@ -41,31 +41,28 @@ class FilesController extends Controller
      */
     public function store(Request $request)
     {
+
         $this->Validate($request, [
             'file' => 'max:30000',
             'activity' => 'required'
         ]);
+
         $student = Student::find($request->id);
         $activity = Activity::find($request->activity);
-        $directory = public_path()."\\storage\\".$student->sectionTo->path."\\".$student->path."\\files";
+        $directory = "\\public\\".$student->sectionTo->path."\\".$student->path."\\files";
         $file = $request->file('file');
         $extension = $file->getClientOriginalExtension();
         $file = $activity->name." - ".$student->lname.".".$extension;
 
         //if filename already exist add numbers at the end of the filename
-        if(File::exists(public_path()."/storage"."/".$student->sectionTo->path."/".$student->path."/files/".$file)){
+        if(File::exists(storage_path()."/app/public"."/".$student->sectionTo->path."/".$student->path."/files/".$file)){
             $x = 2;
-            while (File::exists(public_path()."/storage"."/".$student->sectionTo->path."/".$student->path."/files/".$activity->name." - ".$student->lname." (".$x.").".$extension)) {
+            while (File::exists(storage_path()."/app/public"."/".$student->sectionTo->path."/".$student->path."/files/".$activity->name." - ".$student->lname." (".$x.").".$extension))
                 $x++;
-            }
-            // File::put($directory."/".$activity->name." - ".$student->lname." (".$x.").".$extension, $request->file('file'));
-            //  File::put($directory."/".$activity->name." - ".$student->lname." (".$x.").".$extension,file_get_contents( $request->file('file')->getRealPath()));
-            $request->file('file')->storeAs($directory, $activity->name." - ".$student->lname." (".$x.").".$extension);
-        }else{
-            // File::put($directory."/".$file, $request->file('file'));
 
-            $request->file('file')->storeAs($directory, $activity->name." - ".$student->lname.".".$extension);
+            $file = $activity->name." - ".$student->lname." (".$x.").".$extension;
         }
+        $request->file('file')->storeAs($directory, $file);
 
         $this->recordFile($activity->id, $student->id, $file);
 
@@ -81,10 +78,13 @@ class FilesController extends Controller
      */
     public function show(Request $request, $id)
     {
+
         $student = Student::find($id);
-        $directory = public_path()."/storage"."/".$student->sectionTo->path."/".$student->path."/files";
+        $directory = storage_path()."/app/public"."/".$student->sectionTo->path."/".$student->path."/files/";
         $file = $request->file;
+
         return response()->download($directory."".$file);
+
     }
 
     /**
@@ -118,49 +118,61 @@ class FilesController extends Controller
      */
     public function destroy(Request $request, $id)
     {
+
         $student = Student::find($id);
-        switch ($request->method) {
+
+        $directory = storage_path()."/app/public"."/".$student->sectionTo->path."/".$student->path."/files/".$request->file;
+        $trash = storage_path()."/app/public"."/".$student->sectionTo->path."/".$student->path."/trash/".$request->file;
+
+        switch ($request->method)
+        {
             case 'recycle':
-                $directory = public_path()."/storage"."/".$student->sectionTo->path."/".$student->path."/files/".$request->file;
-                $trash = public_path()."/storage"."/".$student->sectionTo->path."/".$student->path."/trash/".$request->file;
                 File::move($directory, $trash);
+                $record = Record::where(['filename' => $request->file, 'active' => true])->get()->first();
+                $record->active = false;
+                $record->update();
                 return redirect()->route('home')->withSuccess('File moved to trash');
                 break;
 
             case 'restore':
-                $directory = public_path()."/storage"."/".$student->sectionTo->path."/".$student->path."/files/".$request->file;
-                $trash = public_path()."/storage"."/".$student->sectionTo->path."/".$student->path."/trash/".$request->file;
                 File::move($trash, $directory);
+                $record = Record::where(['filename' => $request->file, 'active' => false])->get()->last();
+                $record->active = true;
+                $record->update();
                 return redirect()->route('trash')->withSuccess('File restored');
                 break;
 
             case 'empty':
-                $trash = public_path()."/storage"."/".$student->sectionTo->path."/".$student->path."/trash";
+                $trash = storage_path()."/app/public"."/".$student->sectionTo->path."/".$student->path."/trash";
                 File::cleanDirectory($trash);
+                $record = Record::where(['student_id' => $student->id, 'active' => false]);
+                $record->delete();
                 return redirect()->route('trash')->withSuccess('All files deleted');
                 break;
 
                 //delete
             default:
-                $directory = public_path()."/storage"."/".$student->sectionTo->path."/".$student->path."/trash/".$request->file;
-                File::delete($directory);
+
+                File::delete($trash);
+                $record = Record::where(['filename' => $request->file, 'active' => false]);
+                $record->delete();
                 return redirect()->route('trash')->withSuccess('File deleted');
                 break;
         }
 
     }
 
+
+
     public function recordFile($activity_id, $student_id, $file)
     {
+
         $record = new Record();
         $record->student_id = $student_id;
         $record->activity_id = $activity_id;
         $record->filename = $file;
+        $record->date = date("Y-m-d", time());
         $record->save();
-    }
-
-    public function deleteRecord()
-    {
 
     }
 

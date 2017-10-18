@@ -28,6 +28,7 @@ class Avatar extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('students');
+
     }
 }

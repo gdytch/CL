@@ -4,9 +4,7 @@
             <i class="fa fa-bars"></i>
         </button>
     </div>
-    <div class="header-block">
-            @if(Auth::guard('web')->check())<h5 style="margin: 20px">{{Auth::user()->sectionTo->name}}</h5>@endif
-    </div>
+
     <div class="header-block header-block-nav">
         <ul class="nav-profile">
 
@@ -15,6 +13,10 @@
                      <img src="{{asset('storage/avatar/'.Auth::user()->avatar)}}" alt="" class="img">
                     <span class="name"> {{Auth::user()->fname}} {{  Auth::user()->lname}} </span>
                 </a>
+
+            </li>
+            <li>
+                @if(Auth::guard('web')->check())<h6 style="margin: 20px"><strong>{{Auth::user()->sectionTo->name}}</strong></h6>@endif
 
             </li>
             <li class="profile">

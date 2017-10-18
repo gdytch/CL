@@ -8,7 +8,7 @@
                     <div class="title-block">
                         <h1 class="card-title text-primary"> Activity List </h1>
                         <div class="sub-title">
-                            <a href="#" class="btn btn-secondary" data-toggle="modal" data-target="#addModal">Add Activity</a>
+                            <a href="#" class="btn btn-secondary" data-toggle="modal" data-target="#addModal"><i class="fa fa-plus"></i> Add Activity</a>
                         </div>
                     </div>
                     <div class="row row-sm stats-container">
@@ -43,6 +43,7 @@
                                                                     <th>Published</th>
                                                                     <th class="nosort">Submissions</th>
                                                                     <th width="100">Status</th>
+                                                                    <th width="100">Submission</th>
                                                                     <th class="nosort" width="50"></th>
                                                                 </tr>
                                                             </thead>
@@ -54,6 +55,7 @@
                                                                     <td>{{$activity->date}}</td>
                                                                     <td>{{count($activity->Records()->distinct()->get(['student_id']))}}/{{count($section->Students)}}</td>
                                                                     <td>@if($activity->active) <a href="{{route('activity.status',$activity->id)}}" class="btn btn-sm btn-success">Active</a> @else <a href="{{route('activity.status',$activity->id)}}" class="btn btn-sm btn-danger">Inactive</a> @endif </td>
+                                                                    <td>@if($activity->submission) <a href="{{route('activity.submission',$activity->id)}}" class="btn btn-sm btn-success">Open</a> @else <a href="{{route('activity.submission',$activity->id)}}" class="btn btn-sm btn-danger">Close</a> @endif </td>
                                                                     <td><a href="{{route('activity.show',$activity->id)}}" class="btn btn-sm btn-info">View</a></td>
                                                                 </tr>
                                                             @endforeach

@@ -12,7 +12,7 @@ return [
 
     // Middlewares which should be applied to all package routes.
     // For laravel 5.1 and before, remove 'web' from the array.
-    'middlewares' => ['web', 'auth'],
+    'middlewares' => ['web', 'auth:admin'],
 
     // The url to this package. Change it if necessary.
     'prefix' => 'laravel-filemanager',
@@ -69,7 +69,7 @@ return [
     */
 
     // If true, the uploaded file will be renamed to uniqid() + file extension.
-    'rename_file' => false,
+    'rename_file' => true,
 
     // If rename_file set to false and this set to true, then non-alphanumeric characters in filename will be replaced.
     'alphanumeric_filename' => false,

@@ -7,7 +7,7 @@
                     <div class="title-block">
                         <h1 class="card-title text-primary"> Section List </h1>
                         <div class="sub-title">
-                            <a href="{{route('section.create')}}" class="btn btn-secondary">Add section</a>
+                            <a href="{{route('section.create')}}" class="btn btn-secondary"><i class="fa fa-plus"></i> Add section</a>
                         </div>
                     </div>
                     <div class="card row row-sm stats-container">
@@ -17,8 +17,8 @@
                                     <tr>
                                         <th>Name</th>
                                         <th class="nosort">Folder</th>
-                                        <th class="nosort">Change Status</th>
-                                        <th class="nosort"></th>
+                                        <th class="nosort" width="150">Login Status</th>
+                                        <th class="nosort" width="100"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -26,7 +26,7 @@
 
                                         <tr>
                                             <td>{{$section->name}}</td>
-                                            <td>{{$section->path}}</td>
+                                            <td><a href="{{route('section.folder',$section->id)}}">{{$section->path}}</a></td>
                                             <td><a href="{{route('section.status', $section->id)}}" class="btn btn-sm @if($section->status) btn-success @else btn-danger @endif" >@if($section->status)Open @else Close @endif</a></td>
                                                 <td><a href="{{route('section.show',$section->id)}}" class="btn btn-sm btn-info">View</a></td>
                                             </tr>

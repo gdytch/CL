@@ -16,8 +16,16 @@ class SectionsController extends Controller
      */
     public function index()
     {
+
         $sections = Section::all();
+
+        $variables = array(
+            'dashboard_content' => 'dashboards.admin.section.index',
+            'sections' => $sections
+        );
+
         return view('layouts.admin')->with('dashboard_content', 'dashboards.admin.section.index')->with('sections', $sections);
+
     }
 
     /**
@@ -27,7 +35,9 @@ class SectionsController extends Controller
      */
     public function create()
     {
+
         return view('layouts.admin')->with('dashboard_content' ,'dashboards.admin.section.create');
+
     }
 
     /**
@@ -38,6 +48,7 @@ class SectionsController extends Controller
      */
     public function store(Request $request)
     {
+
         $this->Validate($request, [
             'name' => 'unique:sections'
         ]);
@@ -50,11 +61,10 @@ class SectionsController extends Controller
 
         $path = '/storage'.'/'.$section->path;
         if (!File::exists(public_path().'/'.$path))
-        {
             File::makeDirectory(public_path().'/'.$path,0777,true);
-        }
 
         return redirect()->route('section.index')->withSuccess('Section Added.');
+
     }
 
     /**
@@ -65,8 +75,15 @@ class SectionsController extends Controller
      */
     public function show($id)
     {
+
         $section = Section::find($id);
-        return view('layouts.admin')->with('dashboard_content', 'dashboards.admin.section.show')->with('section', $section);
+
+        $variables = array(
+            'dashboard_content' => 'dashboards.admin.section.show',
+            'section' => $section
+        );
+        return view('layouts.admin')->with($variables);
+
     }
 
     /**
@@ -77,8 +94,15 @@ class SectionsController extends Controller
      */
     public function edit($id)
     {
+
         $section = Section::find($id);
-        return view('layouts.admin')->with('dashboard_content', 'dashboards.admin.section.edit')->with('section', $section);
+
+        $variables = array(
+            'dashboard_content' => 'dashboards.admin.section.edit',
+            'section' => $section
+        );
+        return view('layouts.admin')->with($variables);
+
     }
 
     /**
@@ -90,12 +114,14 @@ class SectionsController extends Controller
      */
     public function update(Request $request, $id)
     {
+
         $section = Section::find($id);
         // if($section->path != $request->path){
         //     File::move(public_path()."\\storage\\".$section->path, public_path().'\\storage\\'.$request->path);
         // }
         $section->update($request->all());
         return redirect()->route('section.show',$section->id)->withSuccess('Saved');
+
     }
 
     /**
@@ -109,7 +135,11 @@ class SectionsController extends Controller
         //
     }
 
-    public function changeStatus($id){
+
+
+    public function changeStatus($id)
+    {
+
         $section = Section::find($id);
 
         if($section->status){
@@ -122,19 +152,27 @@ class SectionsController extends Controller
             $section->save();
             return redirect()->back()->withSuccess('OPENED - '.$section->name.'');
         }
+
     }
 
-    public function folder($id){
+
+
+    public function folder($id)
+    {
+
         $section = Section::find($id);
         $directory = public_path()."\\storage"."\\".$section->path;
-        if ((strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') && (file_exists($directory))) {
-            $explorer =  'c:\\windows\\explorer.exe';
-            shell_exec("$explorer /n,/e,$directory");
-            return redirect()->back();
-        } else {
+
+        if (!(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') && !(file_exists($directory))) {
             $msg = array("Cannot open folder", "This function only works on a local server running in Windows");
             return redirect()->back()->withErrors($msg);
         }
+
+        $explorer =  'c:\\windows\\explorer.exe';
+        shell_exec("$explorer /n,/e,$directory");
+
+        return redirect()->back();
+
     }
 
 

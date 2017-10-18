@@ -45,7 +45,7 @@
                                 <div class="value">{{$stats->activity_submits}} </div>
                                 <div class="name"> Submitted Activities </div>
                             </div>
-                            
+
                         </div>
                     </div>
                 </div>
@@ -331,18 +331,7 @@
     </section>
     <section class="section map-tasks">
     <div class="row sameheight-container">
-        <div class="col-md-8">
-            <div class="card sameheight-item" data-exclude="xs,sm">
-                <div class="card-header">
-                    <div class="header-block">
-                        <h3 class="title"> Sales by countries </h3>
-                    </div>
-                </div>
-                <div class="card-block">
-                    <div id="dashboard-sales-map" style="width: 100%; height: 400px;"></div>
-                </div>
-            </div>
-        </div>
+        
         <div class="col-md-4">
             <div class="card tasks sameheight-item" data-exclude="xs,sm">
                 <div class="card-header bordered">

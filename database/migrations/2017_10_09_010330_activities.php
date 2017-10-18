@@ -18,6 +18,7 @@ class Activities extends Migration
             $table->string('name');
             $table->integer('section_id')->unsigned()->nullable();
             $table->date('date')->nullable();
+            $table->boolean('submission')->nullable()->default(true);
             $table->string('description')->nullable();
             $table->foreign('section_id')->references('id')->on('sections')->onDelete('cascade');
             $table->timestamps();
