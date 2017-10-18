@@ -1,6 +1,6 @@
 # ComputerClass
 
-[![demo](https://github.com/gdytch/CL/tree/master/resources/assets/images/demo.png)]
+![demo](https://github.com/gdytch/CL/blob/master/resources/assets/images/demo.PNG)
 
 A web application that manages the laboratory activities of students... blah blah blah (to be continued)...
 
