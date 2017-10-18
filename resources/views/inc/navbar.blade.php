@@ -8,10 +8,10 @@
     <div class="header-block header-block-nav">
         <ul class="nav-profile">
 
-            <li class="profile dropdown">
+            <li class="profile">
                 <a class="nav-link" @if(Auth::guard('web')->check()) href="{{route('student.profile')}}" @else href="#" @endif alt="Profile">
                      <img src="{{asset('storage/avatar/'.Auth::user()->avatar)}}" alt="" class="img">
-                    <span class="name"> {{Auth::user()->fname}} {{  Auth::user()->lname}} </span>
+                    <span class=""> <strong> {{Auth::user()->fname}} {{  Auth::user()->lname}} </strong> </span>
                 </a>
 
             </li>

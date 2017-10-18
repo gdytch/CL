@@ -16,7 +16,7 @@ class PostsController extends Controller
     public function index()
     {
 
-        $posts = Post::all();
+        $posts = Post::orderBy('created_at', 'desc')->get();
 
         $variables = array(
             'dashboard_content' => 'dashboards.admin.post.index',
@@ -85,6 +85,7 @@ class PostsController extends Controller
      */
     public function show($id)
     {
+
         $post = Post::find($id);
 
         $variables = array(
@@ -93,6 +94,7 @@ class PostsController extends Controller
         );
 
         return view('layouts.admin')->with($variables);
+
     }
 
     /**
@@ -103,6 +105,7 @@ class PostsController extends Controller
      */
     public function edit($id)
     {
+
         $post = Post::find($id);
         $checked_activities = $post->Activities()->orderBy('name', 'asc')->get();
         $unchecked_activities = Activity::where('post_id', null)->orderBy('name', 'asc')->get();
@@ -116,6 +119,7 @@ class PostsController extends Controller
         );
 
         return view('layouts.admin')->with($variables);
+
     }
 
     /**
@@ -127,6 +131,7 @@ class PostsController extends Controller
      */
     public function update(Request $request, $id)
     {
+
         $post = Post::find($id);
         $post->title = $request->title;
         $post->body = $request->content;

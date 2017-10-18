@@ -71,4 +71,19 @@
 .post img{
     width: 100% !important;
     height: auto !important;
+    max-width: 700px !important;
+}
+.student_avatar{
+    width: 100%;
+    border-radius: 12px;
+    max-width: 160px !important;
+    margin: 0px 20px 20px 20px;
+}
+
+.app{
+    background-color: #e4e9ef;
+}
+
+.header{
+    background-color: #c6ced8;
 }

@@ -1,10 +1,7 @@
 @section('dashboard-content')
 <section class="section">
     <style>
-            .student_avatar{
-            width: 80%;
-            border-radius: 12px;
-        }
+
         .StudentTable{
             width: 100%;
 
@@ -23,7 +20,7 @@
                 </div>
                 <section class="section">
                     <div class="row">
-                        <div class=" col-md-2" style="text-align: right">
+                        <div class=" col-md-2" style="">
                             <img src="{{asset('storage/avatar/'.$student->avatar)}}" alt="" class="student_avatar">
                         </div>
                         <div class="col">

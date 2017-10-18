@@ -1,4 +1,4 @@
-@if(count($errors) > 0)
+@if(isset($errors) && count($errors) > 0)
     @foreach ($errors->all() as $error)
         <script type="text/javascript">
             $.notify({
@@ -11,7 +11,7 @@
                 align: "center"
             },
             offset: 45,
-            
+
         });
         </script>
     @endforeach

@@ -7,7 +7,7 @@
                     <div class="title-block">
                         <h1 class="card-title text-primary"> Section List </h1>
                         <div class="sub-title">
-                            <a href="{{route('section.create')}}" class="btn btn-secondary"><i class="fa fa-plus"></i> Add section</a>
+                            <button type="button" data-toggle="modal" data-target="#addmodal" class="btn btn-secondary"><i class="fa fa-plus"></i> Add section</button>
                         </div>
                     </div>
                     <div class="card row row-sm stats-container">
@@ -43,4 +43,39 @@
     </div>
 </section>
 
+<div class="modal fade" id="addmodal" tabindex="-1" role="dialog" aria-labelledby="batchModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add Student</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form role="form" action="{{route('section.store')}}" method="POST">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group" >
+                            {{csrf_field()}}
+                            <label class="control-label col-md-4">Section Name</label>
+                            <input name="name" type="text" class="form-control underlined" required="">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Folder</label>
+                            <input name="path" type="text" class="form-control underlined" required="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="form-group">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" name="submit" class="btn btn-primary">Save</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection

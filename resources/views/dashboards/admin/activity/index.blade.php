@@ -40,7 +40,7 @@
                                                                 <tr>
                                                                     <th>Activity</th>
                                                                     <th>Description</th>
-                                                                    <th>Published</th>
+                                                                    <th>Added</th>
                                                                     <th class="nosort">Submissions</th>
                                                                     <th width="100">Status</th>
                                                                     <th width="100">Submission</th>
@@ -48,7 +48,7 @@
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
-                                                            @foreach ($section->Activities()->orderBy('name', 'desc')->get() as $activity)
+                                                            @foreach ($section->Activities()->orderBy('created_at', 'desc')->get() as $activity)
                                                                 <tr>
                                                                     <td>{{$activity->name}}</td>
                                                                     <td>{{$activity->description}}</td>

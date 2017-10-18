@@ -20,7 +20,7 @@
             /*border-bottom: 1px solid;*/
         }
         .radio:checked  + div.account-block{
-            color: #85CE36;
+            color: #52BCD3;
             border-bottom: 1px solid;
         }
 

@@ -75,6 +75,7 @@ class HomeController extends Controller
         if(Auth::guard('web')->check())
             return redirect('home');
 
+
         if($request->lname != null){
             $lname = ucwords(strtolower($request->lname));
             $users = Student::where('lname' , $lname)->get()->except('password');
@@ -97,6 +98,8 @@ class HomeController extends Controller
     {
         if(Auth::guard('web')->check())
             return redirect('home');
+        if(Auth::guard('admin')->check())
+            return redirect('admin');
 
         return view('welcome');
     }
@@ -107,7 +110,7 @@ class HomeController extends Controller
     {
 
         $student = Student::find(Auth::user()->id);
-        $directory = public_path()."\\storage"."\\".$student->sectionTo->path."\\".$student->path."\\trash\\";
+        $directory = storage_path()."\\app\\public"."\\".$student->sectionTo->path."\\".$student->path."\\trash\\";
         $contents = File::allFiles($directory);
 
         if($contents != null)
@@ -169,7 +172,7 @@ class HomeController extends Controller
     {
 
         $student = Auth::user();
-        $activities = $student->sectionTo->Activities()->where('active', true)->orderBy('name', 'desc')->get();
+        $activities = $student->sectionTo->Activities()->where('active', true)->orderBy('created_at', 'desc')->get();
 
         $variables = array(
             'dashboard_content' => 'dashboards.student.pages.activity',

@@ -15,8 +15,8 @@
         }
     </style>
     <div class="row ">
-        <div class="col col-12 ">
-            <div class="card card-block sameheight-item" >
+        <div class="col-6 ">
+            <div class="card card-block" >
                 <div class="title-block">
                     <h4 class="card-title text-primary">Activity</h4>
                     <hr>
@@ -46,17 +46,34 @@
             </div>
 
         </div>
-    </div>
+        <div class="col-6 ">
+            <div class="card card-block" >
+                <div class="title-block">
+                    <h4 class="card-title text-primary">Activity Stats</h4>
+                    <hr>
+                </div>
+                <section class="section">
+                    <div class="row">
+                        <div class="col">
+                        Activity stats
+                        </div>
 
-    <div class="row ">
-        <div class="col col-12 ">
-            <div class="card card-block sameheight-item" >
+                    </div>
+                </section>
+            </div>
+
+        </div>
+    </div>
+    <div class="row">
+
+        <div class="col col-6 ">
+            <div class="card card-block" >
                 <div class="title-block">
                     <h4 class="card-title text-primary">Submissions</h4>
                 </div>
                 <section class="section">
                     <div class="row">
-                            <div class="col-6 col-md-6 col-sm-6">
+                            <div class="col-12 col-md-12 col-sm-12">
                                 <table class="table table-striped">
                                     <thead>
                                         <th>Student</th>
@@ -67,29 +84,21 @@
                                         @foreach ($activity_log as $log)
                                             @if($log->status)
                                             <tr>
-                                                <td>{{$log->name}}</td>
+                                                <td><a href="{{route('student.show',$log->id)}}">{{$log->name}}</a></td>
                                                 <td><span class="green"><i class="fa fa-check"></i> <b>Yes</b></span></td>
                                                 <td>{{$log->submitted_at}}</td>
                                             </tr>
                                             @endif
                                         @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="col-6 col-md-6 col-sm-6">
-                                <table class="table table-striped">
-                                    <thead>
-                                        <th>Student</th>
-                                        <th>Submitted</th>
-                                    </thead>
-                                    <tbody>
+
                                         @foreach ($activity_log as $log)
                                             @if(!$log->status)
                                             <tr>
-                                                <td>{{$log->name}}</td>
+                                                <td><a href="{{route('student.show',$log->id)}}">{{$log->name}}</a></td>
                                                 <td>
                                                         <span class="red"><i class="fa fa-close"></i> <b>No</b></span>
                                                 </td>
+                                                <td></td>
                                             </tr>
                                             @endif
                                         @endforeach
@@ -98,12 +107,32 @@
 
                             </div>
                         </div>
-                    </div>
-                </section>
+                    </section>
+                </div>
             </div>
 
+            @if($post != null || count($post) != 0)
+                <div class="col col-6">
+                    <div class="card card-block">
+                        <div class="title-block">
+                            <h4 class="card-title text-primary">
+                                Post: {{$post->title}}
+                            </h4>
+                            <hr>
+
+                        </div>
+                        <div class="content-block">
+                            <div class="col col-12">
+                                    <div class="card-block post ">
+                                        {!!$post->body!!}
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
         </div>
-    </div>
 </section>
 
 @endsection

@@ -1,14 +1,6 @@
 @section('dashboard-content')
 <section class="section">
-<style>
 
-    .student_avatar{
-        width: 100%;
-        border-radius: 12px;
-        margin-bottom: 10px;
-    }
-
-</style>
     <div class="row sameheight-container">
         <div class="col col-12 ">
             <div class="card card-block sameheight-item" style="height: 708px;">

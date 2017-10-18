@@ -7,7 +7,7 @@
                     <div class="title-block">
                         <h1 class="card-title text-primary"> Student List</h1>
                         <div class="row">
-                            <a href="{{route('student.create')}}" class="btn btn-secondary"><i class="fa fa-plus"></i> Add Student</a>
+                            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#addmodal"><i class="fa fa-plus"></i> Add Student</button>
                             <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#batchModal"><i class="fa fa-plus"></i> Batch Add</button>
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 @php if(!isset($_GET['id'])) $_GET['id']='all'; @endphp
@@ -70,6 +70,62 @@
             <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
                     <button type="submit" name="submit" class="btn btn-primary">Yes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addmodal" tabindex="-1" role="dialog" aria-labelledby="batchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add Student</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form role="form" action="{{route('student.store')}}" method="POST">
+                <div class="row">
+                    <div class=" col-md-4" style="text-align: right">
+                        <img src="{{asset('storage/avatar/default-avatar.png')}}" alt="" class="student_avatar">
+                        <a href="#" class="btn btn-info" style="width: 100%; ">Select Avatar</a>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="form-group" >
+                            {{csrf_field()}}
+                            <label class="control-label col-md-4">First Name</label>
+                            <input name="fname" type="text" class="form-control underlined" required="">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Last Name</label>
+                            <input name="lname" type="text" class="form-control underlined" required="">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Password</label>
+                            <input name="password" type="password" class="form-control underlined" required="">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Section</label>
+
+                            <select class="form-control " name="section" required="">
+                                @foreach ($sections as $section)
+                                    <option value="{{$section->id}}">{{$section->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="form-group">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" name="submit" class="btn btn-primary">Save</button>
+                </div>
                 </form>
             </div>
         </div>

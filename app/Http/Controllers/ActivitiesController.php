@@ -77,8 +77,8 @@ class ActivitiesController extends Controller
 
         $activity = Activity::find($id);
 
-        $students = $activity->SectionTo->Students;
-
+        $students = $activity->SectionTo->Students()->orderBy('lname', 'asc')->get();
+        $post = $activity->Post;
         // student who have are done with the activity
         foreach ($students as $key => $student) {
             $status = false;
@@ -94,7 +94,8 @@ class ActivitiesController extends Controller
         $variables = array(
             'dashboard_content' => 'dashboards.admin.activity.show',
             'activity' => $activity,
-            'activity_log' => $activity_log
+            'activity_log' => $activity_log,
+            'post' => $post,
         );
 
         return view('layouts.admin')->with($variables);
@@ -176,6 +177,6 @@ class ActivitiesController extends Controller
             $activity->save();
             return redirect('admin/activity?active='.$activity->SectionTo->id)->withSuccess('Submission: OPEN - '.$activity->name.'');
         }
-        
+
     }
 }

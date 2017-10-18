@@ -1,7 +1,7 @@
 @section('dashboard-content')
     <section class="section">
         @if(count($todays_activity) != 0)
-                <div class="row sameheight-container">
+                <div class="row ">
                     <div class="col col-12 col-sm-12 col-md-12 col-xl-12">
                         <div class="card">
                             <div class="card-block">
@@ -15,7 +15,7 @@
                                         <div class="card-block">
                                                 <h4 class="card-title"> {{$post->title}}  </h4>
                                         </div>
-                                        <div class="card-block">
+                                        <div class="card-block post">
                                             {!!$post->body !!}
                                         </div>
                                     </div>
@@ -27,9 +27,9 @@
                     <br>
                 </div>
         @endif
-        <div class="row sameheight-container">
+        <div class="row ">
             <div class="col col-12 col-sm-12 col-md-12 col-xl-12">
-                <button type="button" name="button" class="btn btn-lg btn-primary" data-toggle="modal" data-target="#uploadmodal"><i class="fa fa-file"></i> Save/Upload File</button>
+                <button type="button" name="button" class="btn btn-lg btn-primary" data-toggle="modal" data-target="#uploadmodal"><i class="fa fa-file"></i> Submit File</button>
 
                 <br><br>
 

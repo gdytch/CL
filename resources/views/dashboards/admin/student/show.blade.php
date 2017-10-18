@@ -1,10 +1,7 @@
 @section('dashboard-content')
 <section class="section">
     <style>
-            .student_avatar{
-            width: 100%;
-            border-radius: 12px;
-        }
+
         .StudentTable{
             width: 100%;
 
@@ -18,12 +15,12 @@
         <div class="col col-12 ">
             <div class="card card-block sameheight-item" >
                 <div class="title-block">
-                    <h1>Student  <a href="{{route('student.edit',$student->id)}}" class="btn btn-warning">Edit</a></h1>
+                    <h1>Student  <a href="{{route('student.edit',$student->id)}}" class="btn btn-secondary" style="float:right">Edit</a></h1>
                     <hr>
                 </div>
                 <section class="section">
                     <div class="row">
-                        <div class=" col-md-2" style="text-align: right">
+                        <div class=" col-md-2" style="">
                             <img src="{{asset('storage/avatar/'.$student->avatar)}}" alt="" class="student_avatar">
                         </div>
                         <div class="col">

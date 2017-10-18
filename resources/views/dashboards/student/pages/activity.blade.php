@@ -15,7 +15,7 @@
                             <hr>
                         </div>
                         <div class="card-content col">
-                                <div class="card-block">
+                                <div class="card-block post">
                                     {!!$activity->Post->body !!}
                                 </div>
                         </div>

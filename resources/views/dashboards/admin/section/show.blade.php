@@ -38,7 +38,7 @@
                                     <td></td><td><h5><a href="{{route('section.folder',$section->id)}}" class="btn btn-primary">open folder</a></h5></td>
                                 </tr>
                                 <tr>
-                                    <td></td><td><a href="{{route('section.edit', $section->id)}}" class="btn btn-warning">Edit</a></td>
+                                    <td></td><td><a href="{{route('section.edit', $section->id)}}" class="btn btn-secondary">Edit</a></td>
                                 </tr>
                             </table>
 

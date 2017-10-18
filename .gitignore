@@ -3,6 +3,7 @@
 /public/storage
 /public/photos
 /public/files
+/storage
 /storage/*.key
 /public/vendor
 /vendor
