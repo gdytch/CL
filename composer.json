@@ -12,7 +12,8 @@
         "maatwebsite/excel": "~2.1.0",
         "patricktalmadge/bootstrapper": "^5.10",
         "unisharp/laravel-ckeditor": "^4.6",
-        "unisharp/laravel-filemanager": "v1.8.2.1"
+        "unisharp/laravel-filemanager": "v1.8.2.1",
+        "intervention/image": "^2.4.1"
     },
     "require-dev": {
         "filp/whoops": "~2.0",
