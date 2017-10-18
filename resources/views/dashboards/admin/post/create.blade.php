@@ -84,10 +84,9 @@
             </div>
         </div>
 
-    <script src="{{asset('vendor/unisharp/laravel-ckeditor/ckeditor.js')}}"></script>
+   <script src="{{asset('/vendor/unisharp/laravel-ckeditor/ckeditor.js')}}"></script>
+   <script src="//cdn.ckeditor.com/4.6.2/standard/ckeditor.js"></script>
    <script src="{{asset('/vendor/unisharp/laravel-ckeditor/adapters/jquery.js')}}"></script>
-   <script src="../vendor/unisharp/laravel-ckeditor/ckeditor.js"></script>
-  <script src="../vendor/unisharp/laravel-ckeditor/adapters/jquery.js"></script>
    <script>
         var options = {
          filebrowserImageBrowseUrl: '/laravel-filemanager?type=Images',

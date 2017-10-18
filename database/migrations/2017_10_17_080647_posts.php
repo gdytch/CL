@@ -22,7 +22,7 @@ class Posts extends Migration
         });
         Schema::table('activities', function($table){
             $table->integer('post_id')->unsigned()->nullable();
-            $table->foreign('post_id')->references('id')->on('posts')->onDelete('cascade');
+            $table->foreign('post_id')->references('id')->on('posts')->onDelete('set null');
         });
     }
 

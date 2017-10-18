@@ -76,7 +76,7 @@ class ActivitiesController extends Controller
     {
 
         $activity = Activity::find($id);
-
+        $sections = Section::all();
         $students = $activity->SectionTo->Students()->orderBy('lname', 'asc')->get();
         $post = $activity->Post;
         // student who have are done with the activity
@@ -96,6 +96,7 @@ class ActivitiesController extends Controller
             'activity' => $activity,
             'activity_log' => $activity_log,
             'post' => $post,
+            'sections' => $sections,
         );
 
         return view('layouts.admin')->with($variables);
@@ -122,7 +123,15 @@ class ActivitiesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+
+        $result = Activity::where(['name' => $request->name, 'section_id' => $request->section_id])->get()->first();
+        if(count($result) > 0 && $id != $result->id)
+            return redirect()->back()->withError('Activity name already exist');
+
+        $activity =  Activity::find($id);
+        $activity->update($request->all());
+
+        return redirect()->back()->withSuccess('Acitivity updated');
     }
 
     /**
@@ -133,7 +142,12 @@ class ActivitiesController extends Controller
      */
     public function destroy($id)
     {
-        //
+
+        $activity = Activity::find($id);
+        $activity->delete();
+
+        return redirect('admin/activity?active='.$activity->SectionTo->id)->withSuccess('Activity deleted');
+
     }
 
 

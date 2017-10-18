@@ -66,13 +66,21 @@
 .post{
     max-width: 1000px;
     width: 100%;
+    padding: 20px;
 }
 
 .post img{
     width: 100% !important;
     height: auto !important;
-    max-width: 700px !important;
+    max-width: 800px !important;
 }
+
+.post-container{
+    margin: 0px auto;
+    max-width: 1000px;
+    margin-bottom: 50px;
+}
+
 .student_avatar{
     width: 100%;
     border-radius: 12px;

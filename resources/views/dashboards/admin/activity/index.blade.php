@@ -115,7 +115,7 @@
                         </div>
                         <div class="form-group">
                             <label class="control-label col-md-4">Description</label>
-                            <input name="description" type="text" class="form-control date" >
+                            <input name="description" type="text" class="form-control underlined" >
                         </div>
                     </div>
                 </div>

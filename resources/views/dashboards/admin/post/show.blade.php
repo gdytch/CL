@@ -3,7 +3,7 @@
     <section class="section">
         <div class="row sameheight-container">
             <div class="col col-12 ">
-                    <div class="card">
+                    <div class="card post-container">
                             <div class="card-block">
                                     <h4 class="card-title text-primary">
                                         {{$post->title}}

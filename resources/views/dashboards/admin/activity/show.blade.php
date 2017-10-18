@@ -18,7 +18,7 @@
         <div class="col-6 ">
             <div class="card card-block" >
                 <div class="title-block">
-                    <h4 class="card-title text-primary">Activity</h4>
+                    <h4 class="card-title text-primary">Activity    <button type="button" data-target="#deletemodal" data-toggle="modal" class="btn btn-danger" style="float:right">Delete</button>&nbsp;<button type="button" data-target="#editModal" data-toggle="modal" class="btn btn-secondary" style="float:right; margin-right: 5px">Edit</button></h4>
                     <hr>
                 </div>
                 <section class="section">
@@ -134,5 +134,77 @@
 
         </div>
 </section>
+
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="batchModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Edit Activity</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form role="form" action="{{route('activity.update',$activity->id)}}" method="POST">
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group" >
+                            {{csrf_field()}}
+                            <input type="hidden" name="_method" value="put">
+                            <label class="control-label col-md-4">Activity name</label>
+                            <input name="name" type="text" class="form-control underlined" required value="{{$activity->name}}">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Section</label>
+                            <select class="select form-control" name="section_id">
+                                @foreach ($sections as $section)
+                                    <option value="{{$section->id}}" @if($section->id == $activity->section_id) selected @endif>{{$section->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Date</label>
+                            <input name="date" type="date" class="form-control date" required value="{{$activity->date}}">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Description</label>
+                            <input name="description" type="text" class="form-control underlined" value="{{$activity->description}}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" name="submit" class="btn btn-primary">Save</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deletemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">Delete</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body">
+          Are you sure to delete this activity?
+
+      </div>
+      <div class="modal-footer">
+          <form action="{{route('activity.destroy',$activity->id)}}" method="post">
+              {{csrf_field()}}
+              <input type="hidden" name="_method" value="DELETE">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+              <button type="submit" name="submit" class="btn btn-primary">Yes</button>
+          </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 
 @endsection

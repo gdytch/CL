@@ -12,7 +12,7 @@
                     <div class="card-block">
                         @if($posts != null)
                             @foreach($posts as $post)
-                            <div class="row" style="margin-bottom: 50px;">
+                            <div class="row post-container">
                                 <div class="col col-12 col-md-12 col-xs-12" style=" ">
                                     <div class="card">
                                             <div class="card-block">
