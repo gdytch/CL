@@ -21,7 +21,7 @@
 
                                                 <label class="control-label col-12"> Title </label>
                                             <div class="col col-12">
-                                                <input type="text" name="title" class="form-control underlined" placeholder=""> </div>
+                                                <input type="text" name="title" class="form-control underlined" placeholder="" required> </div>
 
                                     </div>
                                     <div class="row form-group">
@@ -83,8 +83,8 @@
         </div>
 
 
-    {{-- <script src="{{asset('/vendor/unisharp/laravel-ckeditor/ckeditor.js')}}"></script> --}}
-    <script src="https://cdn.ckeditor.com/4.7.3/standard/ckeditor.js"></script>
+    <script src="{{asset('/vendor/unisharp/laravel-ckeditor/ckeditor.js')}}"></script>
+    <script src="https://cdn.ckeditor.com/4.6.2/standard/ckeditor.js"></script>
 
     <script>
       var options = {

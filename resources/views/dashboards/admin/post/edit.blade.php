@@ -58,7 +58,7 @@
                                     </div>
                                     <div class="row">
                                             <button type="button" data-toggle="modal" data-target="#deletemodal" class="btn btn-danger">Delete</button>
-                                            &nbsp;  
+                                            &nbsp;
                                             <a href="{{route('post.show',$post->id)}}" class="btn btn-secondary">Preview</a>
                                     </div>
                                 </div>
@@ -122,16 +122,18 @@
           </div>
         </div>
 
-    <script src="/vendor/unisharp/laravel-ckeditor/ckeditor.js"></script>
-   <script src="/vendor/unisharp/laravel-ckeditor/adapters/jquery.js"></script>
-   <script>
-        var options = {
-         filebrowserImageBrowseUrl: '/laravel-filemanager?type=Images',
-         filebrowserImageUploadUrl: '/laravel-filemanager/upload?type=Images&_token=',
-         filebrowserBrowseUrl: '/laravel-filemanager?type=Files',
-         filebrowserUploadUrl: '/laravel-filemanager/upload?type=Files&_token='
-       };
-       $('textarea').ckeditor(options);
-       // $('.textarea').ckeditor(); // if class is prefered.
-   </script>
+        <script src="{{asset('/vendor/unisharp/laravel-ckeditor/ckeditor.js')}}"></script>
+        <script src="https://cdn.ckeditor.com/4.6.2/standard/ckeditor.js"></script>
+
+        <script>
+          var options = {
+            filebrowserImageBrowseUrl: '/laravel-filemanager?type=Images',
+            filebrowserImageUploadUrl: '/laravel-filemanager/upload?type=Images&_token=',
+            filebrowserBrowseUrl: '/laravel-filemanager?type=Files',
+            filebrowserUploadUrl: '/laravel-filemanager/upload?type=Files&_token='
+          };
+        </script>
+        <script>
+        CKEDITOR.replace('content', options);
+        </script>
 @endsection
