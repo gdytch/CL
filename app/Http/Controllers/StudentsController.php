@@ -11,6 +11,7 @@ use Excel;
 use Auth;
 use App\Student;
 use App\Section;
+use App\Record;
 
 class StudentsController extends Controller
 {
@@ -331,7 +332,7 @@ class StudentsController extends Controller
         $table_item = null;
 
         if(count($student->Sectionto->Activities) > 0)
-            foreach ($student->Sectionto->Activities()->orderBy('name', 'desc')->where('active', true)->get() as $activity)
+            foreach ($student->Sectionto->Activities()->orderBy('created_at', 'desc')->where('active', true)->get() as $activity)
             {
                 $files = null;
                 if(count($student->RecordsOf($activity->id))>0)
@@ -361,11 +362,12 @@ class StudentsController extends Controller
     public function getFiles($student)
     {
 
-        $files = null;
-        $contents = null;
         // Get student's files
 
         $directory = "/".$student->sectionTo->path."/".$student->path."/files";
+
+        $this->verifyFileRecords($student);
+
         if(Storage::exists($directory))
             $contents = Storage::allFiles($directory);
         else
@@ -373,14 +375,18 @@ class StudentsController extends Controller
             $folder_path = '/'.$student->sectionTo->path.'/'.$student->path;
             $this->makeFolder($folder_path);
             $error = array("Student folder wasn't found.", 'Generated a folder for student');
+            $contents = null;
         }
 
-        if($contents != null)
-            foreach ($contents as $key => $file)
-            {
-               $path = pathinfo((string)$file."");
-               $files[$key] = (object) array('name' => $path['filename'], 'type' => $path['extension'], 'path' => $path['dirname']);
-            }
+        if($contents == null)
+            return null;
+
+        foreach ($contents as $key => $file1)
+        {
+           $file = pathinfo((string)$file1."");
+           $files[$key] = (object) array('name' => $file['filename'], 'type' => $file['extension'], 'path' => $file['dirname']);
+        }
+
 
         return $files;
 
@@ -396,6 +402,22 @@ class StudentsController extends Controller
         $student->save();
 
         return redirect()->back();
+
+    }
+
+    // Verify if File Records exists in physical storage
+    public function verifyFileRecords($student)
+    {
+
+        $records = Record::where(['student_id' => $student->id, 'active' => true])->get();
+
+        if(count($records) != 0)
+            foreach ($records as $record)
+                if(!Storage::exists($student->sectionTo->path."/".$student->path."/files/".$record->filename))
+                {
+                    $this_record = Record::find($record->id);
+                    $this_record->delete();
+                }
 
     }
 

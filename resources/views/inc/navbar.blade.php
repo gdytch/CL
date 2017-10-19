@@ -11,12 +11,12 @@
             <li class="profile">
                 <a class="nav-link" @if(Auth::guard('web')->check()) href="{{route('student.profile')}}" @else href="#" @endif alt="Profile">
                      <img src="{{asset('storage/avatar/'.Auth::user()->avatar)}}" alt="" class="img">
-                    <span class=""> <strong> {{Auth::user()->fname}} {{  Auth::user()->lname}} </strong> </span>
+                    <span class="name">  {{Auth::user()->fname}} {{  Auth::user()->lname}}  </span>
                 </a>
 
             </li>
-            <li>
-                @if(Auth::guard('web')->check())<h6 style="margin: 20px"><strong>{{Auth::user()->sectionTo->name}}</strong></h6>@endif
+            <li class="profile">
+                @if(Auth::guard('web')->check())<h6 style="margin: 20px" class="name">{{Auth::user()->sectionTo->name}}</h6>@endif
 
             </li>
             <li class="profile">

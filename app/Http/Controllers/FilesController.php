@@ -80,10 +80,11 @@ class FilesController extends Controller
     {
 
         $student = Student::find($id);
-        $directory = "storage/".$student->sectionTo->path."/".$student->path."/files/";
         $file = $request->file;
+        $directory = public_path("/storage/".$student->sectionTo->path."/".$student->path."/files/".$file);
+        // $directory = Storage::disk('public')->url($student->sectionTo->path."/".$student->path."/files/".$file);
 
-        return response()->download(Storage::disk('public')->getDriver()->getAdapter()->applyPathPrefix($file));
+        return response()->download($directory);
         // return Storage::getDriver()->getAdapter()->applyPathPrefix($file);
     }
 
@@ -130,19 +131,22 @@ class FilesController extends Controller
                 if(Storage::exists($trash))
                     Storage::delete($trash);
                 Storage::move($directory, $trash);
-                $record = Record::where(['filename' => $request->file, 'active' => true])->get()->first();
-                $record->active = false;
-                $record->update();
+                if($record = Record::where(['filename' => $request->file, 'active' => true])->get()->first()){
+                    $record->active = false;
+                    $record->update();
+                }
                 return redirect()->route('home')->withSuccess('File moved to trash');
+
                 break;
 
             case 'restore':
                 if(Storage::exists($directory))
                     Storage::delete($directory);
                 Storage::move($trash, $directory);
-                $record = Record::where(['filename' => $request->file, 'active' => false])->get()->last();
-                $record->active = true;
-                $record->update();
+                if($record = Record::where(['filename' => $request->file, 'active' => false])->get()->last()){
+                    $record->active = true;
+                    $record->update();
+                }
                 return redirect()->route('trash')->withSuccess('File restored');
                 break;
 
@@ -150,8 +154,9 @@ class FilesController extends Controller
                 $trash = "/".$student->sectionTo->path."/".$student->path."/trash";
                 Storage::deleteDirectory($trash);
                 Storage::makeDirectory($trash);
-                $record = Record::where(['student_id' => $student->id, 'active' => false]);
-                $record->delete();
+                if($record = Record::where(['student_id' => $student->id, 'active' => false])){
+                    $record->delete();
+                }
                 return redirect()->route('trash')->withSuccess('All files deleted');
                 break;
 
