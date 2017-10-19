@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
 use Excel;
 use Auth;
@@ -158,13 +159,13 @@ class StudentsController extends Controller
             {
                 $section1 = Section::find($student->section);
                 $newSection = Section::find($request->section);
-                File::move(storage_path().'app/public/'.$section1->path.'/'.$student->path, storage_path().'app/public/'.$newSection->path.'/'.$student->path);
+                Storage::move($section1->path.'/'.$student->path, $newSection->path.'/'.$student->path);
             }
         }
         else
         {
             $newSection = Section::find($request->section);
-            $folder_path = '/storage'.'/'.$newSection->path.'/'.$student->path;
+            $folder_path = '/'.$newSection->path.'/'.$student->path;
             $this->makeFolder($path);
         }
 
@@ -174,7 +175,7 @@ class StudentsController extends Controller
             $section1 = Section::find($request->section);
             $newPath = ''.ucwords(strtolower($request->lname)).' '.ucwords(strtolower($request->fname)).'';
             $oldPath = $student->path;
-            File::move(storage_path().'app/public/'.$section1->path.'/'.$oldPath, storage_path().'app/public/'.$section1->path.'/'.$newPath);
+            Storage::move($section1->path.'/'.$oldPath, $section1->path.'/'.$newPath);
             $student->path = $newPath;
         }
 
@@ -222,8 +223,8 @@ class StudentsController extends Controller
         $student = Student::find($id);
         $student->delete();
         $section = Section::find($student->section);
-        $section_path = '/storage'.'/'.$section->path;
-        File::deleteDirectory(storage_path().'/app/public/'.$section_path.'/'.$student->path);
+        $section_path ='/'.$section->path;
+        Storage::deleteDirectory($section_path.'/'.$student->path);
 
         return redirect()->route('student.index')->withSuccess('Account Deleted');
 
@@ -313,11 +314,11 @@ class StudentsController extends Controller
     public function makeFolder($path)
     {
 
-        if (!File::exists(storage_path().'/app/public/'.$path))
+        if (!Storage::exists($path))
         {
-            File::makeDirectory(storage_path().'/app/public/'.$path,0777,true);
-            File::makeDirectory(storage_path().'/app/public/'.$path.'/files',0777,true);
-            File::makeDirectory(storage_path().'/app/public/'.$path.'/trash',0777,true);
+            Storage::makeDirectory($path,0777,true);
+            Storage::makeDirectory($path.'/files',0777,true);
+            Storage::makeDirectory($path.'/trash',0777,true);
         }
 
     }
@@ -364,12 +365,12 @@ class StudentsController extends Controller
         $contents = null;
         // Get student's files
 
-        $directory = storage_path()."/app/public"."/".$student->sectionTo->path."/".$student->path."/files";
-        if(File::exists($directory))
-            $contents = File::allFiles($directory);
+        $directory = "/".$student->sectionTo->path."/".$student->path."/files";
+        if(Storage::exists($directory))
+            $contents = Storage::allFiles($directory);
         else
         {
-            $folder_path = '/storage'.'/'.$student->sectionTo->path.'/'.$student->path;
+            $folder_path = '/'.$student->sectionTo->path.'/'.$student->path;
             $this->makeFolder($folder_path);
             $error = array("Student folder wasn't found.", 'Generated a folder for student');
         }

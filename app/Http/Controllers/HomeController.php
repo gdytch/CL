@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use App\Student;
 use App\Activity;
 use Auth;
@@ -110,8 +110,8 @@ class HomeController extends Controller
     {
 
         $student = Student::find(Auth::user()->id);
-        $directory = storage_path()."/app/public"."/".$student->sectionTo->path."/".$student->path."/trash/";
-        $contents = File::allFiles($directory);
+        $directory = "/".$student->sectionTo->path."/".$student->path."/trash/";
+        $contents = Storage::allFiles($directory);
 
         if($contents != null)
             foreach ($contents as $key => $file) {

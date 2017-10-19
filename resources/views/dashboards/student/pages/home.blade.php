@@ -73,7 +73,7 @@
                                                   <div class="modal-body">
                                                       Are you sure to delete this file?
                                                       <div class="">
-                                                          <img src="@if(file_exists($file->path)){{asset('img/icons/'.$file->type.'.png')}} @else {{asset('img/icons/file.png')}}@endif" alt="" class="file-icon" style="width: 100px">
+                                                          <img src="@if(file_exists(public_path('img/icons/'.$file->type.'.png'))){{asset('img/icons/'.$file->type.'.png')}} @else {{asset('img/icons/file.png')}}@endif" alt="" class="file-icon" style="width: 100px">
                                                           <p class="file-name">{{$file->name}}.{{$file->type}}</p>
                                                       </div>
                                                   </div>
