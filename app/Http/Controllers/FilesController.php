@@ -83,8 +83,8 @@ class FilesController extends Controller
         $directory = "storage/".$student->sectionTo->path."/".$student->path."/files/";
         $file = $request->file;
 
-        return response()->download($directory."".$file);
-
+        return response()->download(Storage::getDriver()->getAdapter()->applyPathPrefix($file));
+        // return Storage::getDriver()->getAdapter()->applyPathPrefix($file);
     }
 
     /**
