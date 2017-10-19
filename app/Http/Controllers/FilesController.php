@@ -80,7 +80,7 @@ class FilesController extends Controller
     {
 
         $student = Student::find($id);
-        $directory = "/".$student->sectionTo->path."/".$student->path."/files/";
+        $directory = "storage/".$student->sectionTo->path."/".$student->path."/files/";
         $file = $request->file;
 
         return response()->download($directory."".$file);
@@ -148,7 +148,8 @@ class FilesController extends Controller
 
             case 'empty':
                 $trash = "/".$student->sectionTo->path."/".$student->path."/trash";
-                Storage::cleanDirectory($trash);
+                Storage::deleteDirectory($trash);
+                Storage::makeDirectory($trash);
                 $record = Record::where(['student_id' => $student->id, 'active' => false]);
                 $record->delete();
                 return redirect()->route('trash')->withSuccess('All files deleted');

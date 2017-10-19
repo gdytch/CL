@@ -296,7 +296,7 @@ class StudentsController extends Controller
     {
 
         $student = Student::find($id);
-        $directory = storage_path()."\\app\\public"."\\".$student->sectionTo->path."\\".$student->path."\\files";
+        $directory = public_path()."\\storage"."\\".$student->sectionTo->path."\\".$student->path."\\files";
         if (!(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') && !(file_exists($directory)))
         {
             $msg = array("Cannot open folder", "This function only works on a local server running in Windows");

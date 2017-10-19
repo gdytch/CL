@@ -85,7 +85,8 @@
         </div>
     </div>
     </section>
-    <section class="section">
+    page under construction... more stats to follow
+    {{-- <section class="section">
     <div class="row sameheight-container">
         <div class="col-xl-8">
             <div class="card sameheight-item items" data-exclude="xs,sm,lg">
@@ -887,5 +888,5 @@
             </div>
         </div>
     </div>
-    </section>
+    </section> --}}
 @endsection

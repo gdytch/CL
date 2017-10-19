@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\File;
-
 use Illuminate\Http\Request;
 use App\Section;
 
@@ -60,8 +58,8 @@ class SectionsController extends Controller
         $section->save();
 
         $path = '/storage'.'/'.$section->path;
-        if (!File::exists(public_path().'/'.$path))
-            File::makeDirectory(public_path().'/'.$path,0777,true);
+        if (!Storage::exists($path))
+            Storage::makeDirectory($path,0777,true);
 
         return redirect()->route('section.index')->withSuccess('Section Added.');
 
