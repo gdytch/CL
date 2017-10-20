@@ -5,7 +5,7 @@
 Beta Demo
 ### Demo [computerclassapp.herokuapp.com](https://computerclassapp.herokuapp.com)
 
-A web application that manages the laboratory activities of students... blah blah blah (to be continued)...
+A web application that manages the laboratory activities of students... (to be continued)...
 
 
 ## Getting Started
@@ -24,8 +24,8 @@ What things you need to install the software and how to install them
 ```
 
 ### Installation
+
 For local machine
-(instructions to follow)
 
 A step by step series of examples that tell you have to get a development env running
 
@@ -56,33 +56,63 @@ php artisan serve
  ```
 php artisan serve --host 0.0.0.0 --port 1334
  ```
-- Go to your browser - localhost:8000
+ - Go to your browser - localhost:8000
 
- (next setup your env variables)
+### Set up Database
 
-## Running the tests
+ - Go to your phpmyadmin and create a database for the app
 
-Explain how to run the automated tests for this system
+### Set up Variables
 
-### Break down into end to end tests
+ - Go to your app folder and open .env file
+ - Set the variables
+ ```
+     APP_NAME=ComputerClass
+     APP_ENV=local
+     APP_KEY=  \\generated key
+     APP_DEBUG=true
+     APP_LOG_LEVEL=debug
+     APP_URL=http://localhost
 
-Explain what these tests test and why
+     DB_CONNECTION=mysql
+     DB_HOST=  \\your db host
+     DB_PORT=3306
+     DB_DATABASE= \\your db
+     DB_USERNAME=  \\your db username
+     DB_PASSWORD=  \\your db password
+ ```
+ - For the APP_ENV variable you need to generate an encrypted key for your app, type the following
+ ```
+ php artisan key:generate
+ ```
+  this will automatically add the key to your .env file
+
+### Migration
+
+ - Migration will create the tables in your database. Be sure you have set the correct values for the DB_ in your .env file
+```
+php artisan migrate
+```
+ - (Optional) Your database tables are empty right now. If you want some initial data in the database you can run
+ ```
+ php artisan db:seed
+ ```
+ this will create admin, students, sections, etc.. For admin = username: admin password:12345
+
+## Getting Started with the App
+
+(will explain how to use the app and how app works)
+(instructions to follow)
 
 ```
 Give an example
 ```
 
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
 
 ## Deployment
 
 Add additional notes about how to deploy this on a live system
+(instructions to follow)
 
 ## Built With
 
