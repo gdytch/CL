@@ -41,7 +41,7 @@ class PostsController extends Controller
         if(env('APP_URL') == 'https://computerclassapp.herokuapp.com/')
             $message_info_per = "The Editor's file manager doesn't work on Heroku, to add images just upload your images in google drive or other cloud storage and paste the image url. ";
         else
-            $message_info = null;
+            $message_info_per = null;
         $variables = array(
             'dashboard_content' => 'dashboards.admin.post.create',
             'activities' => $activities,

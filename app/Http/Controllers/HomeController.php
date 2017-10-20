@@ -38,7 +38,6 @@ class HomeController extends Controller
         }
 
         $files = app('App\Http\Controllers\StudentsController')->getFiles($student);
-        // TODO: check if records still exist in physical storage
 
         $activities = $student->SectionTo->Activities()->where(['active' => true, 'submission' => true])->orderBy('date', 'desc')->get();
 
