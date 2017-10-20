@@ -151,8 +151,10 @@ class AdminsController extends Controller
             'username' => 'required',
             'password' => 'required'
         ]);
+
+        $username =  = ucwords(strtolower($request->username));
         //if validated
-        if(Auth::guard('admin')->attempt(['username' => $request->username, 'password' => $request->password]))
+        if(Auth::guard('admin')->attempt(['username' => $username, 'password' => $request->password]))
             return redirect()->intended('admin');
 
 
