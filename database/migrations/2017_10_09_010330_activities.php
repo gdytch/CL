@@ -35,6 +35,7 @@ class Activities extends Migration
      */
     public function down()
     {
+        Schema::dropIfExists('activities');
         //
     }
 }

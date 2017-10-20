@@ -43,7 +43,6 @@
                     </form>
                 </div>
             </div>
-            @include('inc.messages')
         </div>
     </div>
 </div>

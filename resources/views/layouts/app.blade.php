@@ -10,9 +10,6 @@
                 @yield('content')
             </div>
         </div>
-
-
-
        @include('inc.messages')
     </body>
 </html>

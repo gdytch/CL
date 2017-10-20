@@ -31,6 +31,9 @@ class HomeController extends Controller
 
         $student = Student::find(Auth::user()->id);
         $todays_activity = null;
+        $message_info = null;
+        if(env('APP_URL') !== 'https://computerclassapp.herokuapp.com/')
+            $message_info = "Running in Heroku, file uploads will be deleted in every dyno restart (git push)";
 
         $files = app('App\Http\Controllers\StudentsController')->getFiles($student);
         // TODO: check if records still exist in physical storage
@@ -46,7 +49,8 @@ class HomeController extends Controller
             'student' => $student,
             'files' => $files,
             'activities' => $activities,
-            'todays_activity' => $todays_activity
+            'todays_activity' => $todays_activity,
+            'message_info' => $message_info
         );
         return view('layouts.student')->with($variables);
 
@@ -64,6 +68,8 @@ class HomeController extends Controller
             $this->recordLogin($request->id);
             return redirect()->intended('home');
         }
+
+
 
         return redirect()->back()->withError('Invalid Password')->with('error', 'Invalid password')->withInput();
 
@@ -90,7 +96,13 @@ class HomeController extends Controller
         if(count($users) == 0 )
             return back()->withError('Last name not found');
 
-        return view('auth.login')->with('users', $users);
+        if(env('APP_URL') == 'https://computerclassapp.herokuapp.com/')
+            $message_info = "Heroku demo <br> Select an account<br>Password: <strong>123456</strong>";
+        else
+            $message_info = null;
+
+
+        return view('auth.login')->with('users', $users)->with('message_info', $message_info);
 
     }
 
@@ -103,7 +115,13 @@ class HomeController extends Controller
         if(Auth::guard('admin')->check())
             return redirect('admin');
 
-        return view('welcome');
+        if(env('APP_URL') == 'https://computerclassapp.herokuapp.com/'){
+            $message_infos[0] = "Heroku demo <br> Lastname: <strong>Demo</strong>";
+            $message_infos[1] = "For admin click <a href='/admin'>here</a>";
+        }else
+            $message_infos = null;
+
+        return view('welcome')->with('message_infos', $message_infos);
     }
 
 

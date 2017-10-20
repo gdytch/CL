@@ -117,7 +117,14 @@ class AdminsController extends Controller
         if(Auth::guard('admin')->check())
             return redirect('admin');
 
-        return view('dashboards.admin.pages.login');
+        if(env('APP_URL') == 'https://computerclassapp.herokuapp.com/'){
+            $message_info = "Heroku demo <br> Username: <strong>Admin</strong><br> Password: <strong>12345</strong>";
+        }else {
+            $message_info = null;
+        }
+
+        return view('dashboards.admin.pages.login')->with('message_info', $message_info);
+
 
     }
 
@@ -207,7 +214,7 @@ class AdminsController extends Controller
         $admin->save();
 
         return redirect()->back();
-        
+
     }
 
 
