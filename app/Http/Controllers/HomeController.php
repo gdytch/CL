@@ -33,7 +33,7 @@ class HomeController extends Controller
         $todays_activity = null;
         $message_infos = null;
         if(env('APP_URL') == 'https://computerclassapp.herokuapp.com/'){
-            $message_infos[0] = "Running in Heroku, file uploads will be deleted in every dyno restart (git push)";
+            $message_infos[0] = "Heroku Demo, file uploads will be deleted in every dyno restart (deployment)";
         }
 
         $files = app('App\Http\Controllers\StudentsController')->getFiles($student);
