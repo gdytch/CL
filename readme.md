@@ -40,7 +40,7 @@ c:\xampp\htdocs\ComputerClass
 ```
  - After extracting the files, open CMD and go to your app folder
 ```
-c:\Users\User\ cd c:\xampp\htdocs\computerclass
+c:\Users\User\> cd c:\xampp\htdocs\computerclass
 ```
  - Then run the following
  ```
@@ -53,7 +53,7 @@ php artisan serve
  ```
  or you can specify your host and port
  ```
-php artisan serve --host 0.0.0.0 --port 1334
+php artisan serve --host 0.0.0.0 --port 8000
  ```
  - Go to your browser - localhost:8000
 
@@ -63,7 +63,7 @@ php artisan serve --host 0.0.0.0 --port 1334
 
 ### Set up Variables
 
- - Go to your app folder and open .env file
+ - Go to your app folder and open the .env file
  - Set the variables for your database
  ```
   ...
@@ -79,7 +79,7 @@ php artisan serve --host 0.0.0.0 --port 1334
 
 ### Database Migration
 
- - Migration will create the tables in your database. Be sure you have set the correct values for the DB_ in your .env file, run
+ - Migration will create the tables in your database. Run
 ```
 php artisan migrate
 ```
