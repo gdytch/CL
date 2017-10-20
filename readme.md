@@ -64,31 +64,22 @@ php artisan serve --host 0.0.0.0 --port 1334
 ### Set up Variables
 
  - Go to your app folder and open .env file
- - Set the variables
+ - Set the variables for your database
  ```
-     APP_NAME=ComputerClass
-     APP_ENV=local
-     APP_KEY=  \\generated key
-     APP_DEBUG=true
-     APP_LOG_LEVEL=debug
-     APP_URL=http://localhost
-
+  ...
      DB_CONNECTION=mysql
-     DB_HOST=  \\your db host
+     DB_HOST=             \\your db host
      DB_PORT=3306
-     DB_DATABASE= \\your db
-     DB_USERNAME=  \\your db username
-     DB_PASSWORD=  \\your db password
+     DB_DATABASE=         \\your db
+     DB_USERNAME=         \\your db username
+     DB_PASSWORD=         \\your db password
+  ...
  ```
- - For the APP_ENV variable you need to generate an encrypted key for your app, type the following
- ```
- php artisan key:generate
- ```
-  this will automatically add the key to your .env file
 
-### Migration
 
- - Migration will create the tables in your database. Be sure you have set the correct values for the DB_ in your .env file
+### Database Migration
+
+ - Migration will create the tables in your database. Be sure you have set the correct values for the DB_ in your .env file, run
 ```
 php artisan migrate
 ```
@@ -96,7 +87,8 @@ php artisan migrate
  ```
  php artisan db:seed
  ```
- this will create admin, students, sections, etc.. For admin = username: admin password:12345
+ this will create an admin, students, sections, etc..
+ For admin = username:admin      password:12345
 
 ## Getting Started with the App
 
