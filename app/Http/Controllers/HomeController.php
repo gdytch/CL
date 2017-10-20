@@ -32,7 +32,7 @@ class HomeController extends Controller
         $student = Student::find(Auth::user()->id);
         $todays_activity = null;
         $message_infos = null;
-        if(env('APP_URL') !== 'https://computerclassapp.herokuapp.com/'){
+        if(env('APP_URL') == 'https://computerclassapp.herokuapp.com/'){
             $message_infos[0] = "Running in Heroku, file uploads will be deleted in every dyno restart (git push)";
             $message_infos[1] = "File download doesn't work on Heroku";
         }
