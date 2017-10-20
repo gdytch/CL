@@ -41,7 +41,7 @@ class FilesController extends Controller
     {
 
         $this->Validate($request, [
-            'file' => 'max:30000|mimes:doc,docx,odt,rtf,pdf,xls,xlsx,pptx,ppt',
+            'file' => 'max:30000',
             'activity' => 'required'
         ]);
 

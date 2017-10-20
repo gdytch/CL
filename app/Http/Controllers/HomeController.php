@@ -32,8 +32,10 @@ class HomeController extends Controller
         $student = Student::find(Auth::user()->id);
         $todays_activity = null;
         $message_info = null;
-        if(env('APP_URL') !== 'https://computerclassapp.herokuapp.com/')
-            $message_info = "Running in Heroku, file uploads will be deleted in every dyno restart (git push)";
+        if(env('APP_URL') !== 'https://computerclassapp.herokuapp.com/'){
+            $message_infos[0] = "Running in Heroku, file uploads will be deleted in every dyno restart (git push)";
+            $message_infos[1] = "File download doesn't work on Heroku";
+        }
 
         $files = app('App\Http\Controllers\StudentsController')->getFiles($student);
         // TODO: check if records still exist in physical storage
@@ -50,7 +52,7 @@ class HomeController extends Controller
             'files' => $files,
             'activities' => $activities,
             'todays_activity' => $todays_activity,
-            'message_info' => $message_info
+            'message_infos' => $message_infos
         );
         return view('layouts.student')->with($variables);
 
@@ -116,7 +118,7 @@ class HomeController extends Controller
             return redirect('admin');
 
         if(env('APP_URL') == 'https://computerclassapp.herokuapp.com/'){
-            $message_infos[0] = "Heroku demo <br> Lastname: <strong>Demo</strong>";
+            $message_infos[0] = "Heroku demo <br> Lastname: <strong>Demo, Demo2, Demo3, Demo4, Demo5</strong>";
             $message_infos[1] = "For admin click <a href='/admin'>here</a>";
         }else
             $message_infos = null;

@@ -10,6 +10,7 @@
                 from: "top",
                 align: "center"
             },
+            delay: 15000,
             offset: 45,
 
         });
@@ -28,6 +29,7 @@
     		from: "top",
     		align: "center"
         },
+        delay: 15000,
         offset: 45,
     });
     </script>
@@ -43,6 +45,7 @@
             from: "top",
             align: "center"
         },
+        delay: 15000,
         offset: 45,
 
     });
@@ -60,6 +63,7 @@
     		from: "top",
     		align: "center"
         },
+        delay: 15000,
         offset: 45,
     });
     </script>
@@ -77,6 +81,7 @@
         		from: "top",
         		align: "center"
             },
+            delay: 15000,
             offset: 45,
         });
         </script>
@@ -94,6 +99,7 @@
                 from: "top",
                 align: "center"
             },
+            delay: 15000,
             offset: 45,
         });
         </script>
@@ -111,6 +117,7 @@
                 from: "top",
                 align: "center"
             },
+            delay: 15000,
             offset: 45,
         });
         </script>
