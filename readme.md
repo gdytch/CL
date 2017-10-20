@@ -14,14 +14,13 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
+What things you need to install the software and how to install theme
 
-```
 - XAMPP [https://www.apachefriends.org/index.html](https://www.apachefriends.org/index.html)
 - A text editor (Sublime, Atom, Etc.)
 - Composer (windows installer) [https://getcomposer.org/download/](https://getcomposer.org/download/)
 
-```
+
 
 ### Installation
 
