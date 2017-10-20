@@ -17,30 +17,48 @@ These instructions will get you a copy of the project up and running on your loc
 What things you need to install the software and how to install them
 
 ```
-- XAMPP
+- XAMPP [https://www.apachefriends.org/index.html](https://www.apachefriends.org/index.html)
 - A text editor (Sublime, Atom, Etc.)
-- GIT bash for Windows
+- Composer (windows installer) [https://getcomposer.org/download/](https://getcomposer.org/download/)
+
 ```
 
-### Installing
-
+### Installation
+For local machine
 (instructions to follow)
 
 A step by step series of examples that tell you have to get a development env running
 
-Say what the step will be
-
+ - Install XAMPP and composer
+ - Download the app (Select download -> download as zip)
+ - Go to your htdocs folder found in your xampp installation folder and create a new folder for the app (ex. ComputerClass)
 ```
-Give the example
+c:\xampp\htdocs     \\create a folder     c:\xampp\htdocs\ComputerClass
 ```
-
-And repeat
-
+- Extract the all files from the downloaded zip to the folder you created
 ```
-until finished
+c:\xampp\htdocs\ComputerClass
 ```
+ - After extracting the files, open CMD and go to your app folder
+```
+c:\Users\User\ cd c:\xampp\htdocs\computerclass
+```
+ - Then run the following
+ ```
+composer install
+ ```
+ - This will install the necessary files for the app (internet connection required)
+ - After that, run the app by typing
+ ```
+php artisan serve
+ ```
+ or you can specify your host and port
+ ```
+php artisan serve --host 0.0.0.0 --port 1334
+ ```
+- Go to your browser - localhost:8000
 
-End with an example of getting some data out of the system or using it for a little demo
+ (next setup your env variables)
 
 ## Running the tests
 
