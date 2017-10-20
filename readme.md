@@ -3,7 +3,7 @@
 ![demo](https://github.com/gdytch/CL/blob/master/resources/assets/images/demo.PNG)
 
 Beta Demo
-### [Demo](https://computerclassapp.herokuapp.com)
+### Demo [computerclassapp.herokuapp.com](https://computerclassapp.herokuapp.com)
 
 A web application that manages the laboratory activities of students... blah blah blah (to be continued)...
 
