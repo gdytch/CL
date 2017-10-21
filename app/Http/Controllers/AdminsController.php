@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use App\Admin;
 use Auth;
 use App\Student;
 use App\Section;
 use App\Activity;
 use App\FTRule;
+
 
 class AdminsController extends Controller
 {
@@ -25,6 +27,7 @@ class AdminsController extends Controller
     public function index()
     {
         //
+        //TODO: admin crud
     }
 
     /**
@@ -182,17 +185,76 @@ class AdminsController extends Controller
         $sections = Section::all();
         $activities = Activity::all();
         $activity_submits = 0;
+        $storage_size = 0;
+
         foreach ($students as $student)
             $activity_submits += count($student->Records);
+
+        $all_files = Storage::allfiles();
+
+        foreach ($all_files as $file) {
+            $storage_size += Storage::size($file);
+        }
+
+        $section_storage = $this->getSectionStorage();
 
         $stats = (object) array(
             'total_students' => count($students),
             'total_sections' => count($sections),
             'total_activities' => count($activities),
-            'activity_submits' => $activity_submits
+            'activity_submits' => $activity_submits,
+            'total_storage_size' => $this->bytesToHuman($storage_size),
+            'section_storage' => $section_storage
         );
 
         return $stats;
+
+    }
+
+
+
+    public function getSectionStorage()
+    {
+
+        $all_files = Storage::allfiles();
+        $total_storage_size = 0;
+
+        foreach ($all_files as $file) {
+            $total_storage_size += Storage::size($file);
+        }
+
+        $section_paths = Section::select('path')->distinct()->get();
+        $section_storage = null;
+
+        foreach ($section_paths as $section)
+        {
+            $size = 0;
+            $files = Storage::allfiles($section->path);
+
+            if($files != null)
+                foreach ($files as $file)
+                    $size += Storage::size($file);
+            $percent = ($size / $total_storage_size) * 100;
+
+            $section_storage[] = (object) array('path' => $section->path, 'size' => $this->bytesToHuman($size), 'percent' => round($percent, 0));
+        }
+
+        return $section_storage;
+
+    }
+
+
+    public function bytesToHuman($bytes)
+    {
+
+        $units = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB'];
+
+        for ($i = 0; $bytes > 1024; $i++) {
+            $bytes /= 1024;
+        }
+
+        return round($bytes, 2) . ' ' . $units[$i];
+
     }
 
 
@@ -262,7 +324,7 @@ class AdminsController extends Controller
         $rule->delete();
 
         return redirect()->back()->withSuccess('Rule deleted');
-        
+
     }
 
 

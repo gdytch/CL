@@ -1,6 +1,5 @@
 @section('dashboard-content')
 
-    {{-- TODO: storage size stats --}}
 
     <section class="section">
     <div class="row sameheight-container">
@@ -19,6 +18,9 @@
                                 <div class="value">{{$stats->total_sections}} </div>
                                 <div class="name"> Total Sections </div>
                             </div>
+                            <div class="progress stat-progress">
+                                <div class="progress-bar" style="width: 100%;"></div>
+                            </div>
                         </div>
                         <div class="col-12 col-sm-6  stat-col">
                             <div class="stat-icon">
@@ -28,7 +30,9 @@
                                 <div class="value"> {{$stats->total_students}} </div>
                                 <div class="name"> Total students </div>
                             </div>
-
+                            <div class="progress stat-progress">
+                                <div class="progress-bar" style="width: 100%;"></div>
+                            </div>
                         </div>
                         <div class="col-12 col-sm-6  stat-col">
                             <div class="stat-icon">
@@ -38,7 +42,9 @@
                                 <div class="value"> {{$stats->total_activities}} </div>
                                 <div class="name"> Total Activities </div>
                             </div>
-
+                            <div class="progress stat-progress">
+                                <div class="progress-bar" style="width: 100%;"></div>
+                            </div>
                         </div>
                         <div class="col-12 col-sm-6 stat-col">
                             <div class="stat-icon">
@@ -48,6 +54,23 @@
                                 <div class="value">{{$stats->activity_submits}} </div>
                                 <div class="name"> Submitted Activities </div>
                             </div>
+                            <div class="progress stat-progress">
+                                <div class="progress-bar" style="width: 100%;"></div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 stat-col">
+                            <div class="stat-icon">
+                                <i class="fa fa-hdd-o"></i>
+                            </div>
+                            <div class="stat">
+                                <div class="value">{{$stats->total_storage_size}} </div>
+                                <div class="name"> Storage Size </div>
+
+                            </div>
+                            <div class="progress stat-progress">
+                                <div class="progress-bar" style="width: 100%;"></div>
+                            </div>
+
 
                         </div>
                     </div>
@@ -78,12 +101,58 @@
                         <div role="tabpanel" class="tab-pane fade" id="downloads">
                             <p class="title-description"> Number of downloads last 30 days </p>
                             <div id="dashboard-downloads-chart"></div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="row sameheight-container">
+        <div class="col-xl-4">
+            <div class="card sameheight-item  sales-breakdown" data-exclude="xs,sm,lg">
+                <div class="card-header">
+                    <div class="header-block">
+                        <h3 class="title"> Storage breakdown </h3>
+                    </div>
+                </div>
+                <div class="card-block  stats-container">
+                    <div class="row">
+                        <div class="col-12 col-sm-12">
+                            <div class="dashboard-storage-breakdown-chart" id="dashboard-storage-breakdown-chart"></div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="stats col-6 col-sm-6 stat-col">
+                            <div class="stat-icon">
+                                <i class="fa fa-hdd-o"></i>
+                            </div>
+                            <div class="stat">
+                                <div class="value">{{$stats->total_storage_size}} </div>
+                                <div class="name"> Storage Size </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-sm-6">
+                            <table>
+                                @foreach ($stats->section_storage as $section)
+                                    <tr>
+                                        <td><small><i class="fa fa-folder-o"></i> {{$section->path}} </small></td>
+                                        <td><small>{{$section->size}}</small></td>
+                                    </tr>
+                                @endforeach
+
+                            </table>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+
+
     </section>
     page under construction... more stats to follow
     {{-- <section class="section">
@@ -319,18 +388,7 @@
                 </ul>
             </div>
         </div>
-        <div class="col-xl-4">
-            <div class="card sameheight-item sales-breakdown" data-exclude="xs,sm,lg">
-                <div class="card-header">
-                    <div class="header-block">
-                        <h3 class="title"> Sales breakdown </h3>
-                    </div>
-                </div>
-                <div class="card-block">
-                    <div class="dashboard-sales-breakdown-chart" id="dashboard-sales-breakdown-chart"></div>
-                </div>
-            </div>
-        </div>
+
     </div>
     </section>
     <section class="section map-tasks">
@@ -889,4 +947,48 @@
         </div>
     </div>
     </section> --}}
+
+    <script type="text/javascript">
+    $(function() {
+
+        var $dashboardSalesBreakdownChart = $('#dashboard-storage-breakdown-chart');
+
+        if (!$dashboardSalesBreakdownChart.length) {
+            return false;
+        }
+
+        function drawSalesChart(){
+
+        $dashboardSalesBreakdownChart.empty();
+
+            Morris.Donut({
+                element: 'dashboard-storage-breakdown-chart',
+                data: [
+                    @foreach ($stats->section_storage as $value)
+                        { label: "{!!$value->path!!}", value: {!!$value->percent!!} },
+                    @endforeach
+
+                ],
+                resize: true,
+                colors: [
+                    tinycolor(config.chart.colorPrimary.toString()).lighten(10).toString(),
+                    tinycolor(config.chart.colorPrimary.toString()).darken(8).toString(),
+                    config.chart.colorPrimary.toString()
+                ],
+            });
+
+            var $sameheightContainer = $dashboardSalesBreakdownChart.closest(".sameheight-container");
+
+            setSameHeights($sameheightContainer);
+        }
+
+        drawSalesChart();
+
+        $(document).on("themechange", function(){
+           drawSalesChart();
+        });
+
+    })
+    </script>
+
 @endsection

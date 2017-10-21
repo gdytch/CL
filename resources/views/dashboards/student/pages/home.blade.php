@@ -54,10 +54,10 @@
                                                       <form action="{{route('file.show',$student->id)}}" method="get">
                                                           {{ csrf_field() }}
                                                           <input type="hidden" name="file" value="{{$file->name}}.{{$file->type}}">
-                                                          <button type="submit" name="submit"class="dropdown-item" >Download</button>
+                                                          <button type="submit" name="submit"class="dropdown-item" ><i class="fa fa-download"></i> Download</button>
                                                       </form>
 
-                                                    <a  class="dropdown-item" href="#" data-toggle="modal" data-target="#deletemodal{{$key}}">Delete</a>
+                                                    <a  class="dropdown-item" href="#" data-toggle="modal" data-target="#deletemodal{{$key}}"><i class="fa fa-trash"></i> Delete</a>
                                                   </div>
                                                 </div>
                                             </a>
