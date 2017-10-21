@@ -52,7 +52,7 @@
     </script>
 @endif
 
-@if(isset($message) && count($message) > 0)
+@if(isset($message) )
     <script type="text/javascript">
         $.notify({
         message: "{{$message}}"
@@ -88,7 +88,7 @@
     @endforeach
 @endif
 
-@if(isset($message_info) && count($message_info) > 0)
+@if(isset($message_info))
         <script type="text/javascript">
         $.notify({
             message: "{!!$message_info!!}"

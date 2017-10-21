@@ -9,6 +9,7 @@ use Auth;
 use App\Student;
 use App\Section;
 use App\Activity;
+use App\FTRule;
 
 class AdminsController extends Controller
 {
@@ -53,6 +54,7 @@ class AdminsController extends Controller
         $this->Validate($request, [
             'password' => 'confirmed|max:5'
         ]);
+        $request->username = strtolower($request->username);
         $admin = new Admin($request->all());
         $admin->avatar = 'default-avatar.png';
         $admin->theme = 'green';
@@ -198,8 +200,11 @@ class AdminsController extends Controller
     public function settings()
     {
 
+        $rules = FTRule::all();
+
         $variables = array(
             'dashboard_content' => 'dashboards.admin.pages.settings',
+            'filetype_rules' => $rules
         );
 
         return view('layouts.admin')->with($variables);
@@ -217,6 +222,47 @@ class AdminsController extends Controller
 
         return redirect()->back();
 
+    }
+
+
+
+    public function filetype_rule_store(Request $request)
+    {
+
+        $this->Validate($request, [
+            'name' => 'unique:ftrules'
+        ]);
+        $rule = new FTRule($request->all());
+        $rule->save();
+
+        return redirect()->back()->withSuccess('Rule saved');
+    }
+
+
+
+    public function filetype_rule_update(Request $request, $id)
+    {
+
+        $this->Validate($request, [
+            'name' => 'unique:ftrules,id,'.$id
+        ]);
+
+        $rule = FTRule::find($id);
+        $rule->update($request->all());
+
+        return redirect()->back()->withSuccess('Rule updated');
+
+    }
+
+
+    public function filetype_rule_delete($id)
+    {
+
+        $rule = FTRule::find($id);
+        $rule->delete();
+
+        return redirect()->back()->withSuccess('Rule deleted');
+        
     }
 
 

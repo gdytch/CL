@@ -82,7 +82,7 @@
             </div>
         </div>
 
-    @if(env('APP_ENV') !== 'local')
+    @if(env('APP_ENV') != 'local')
         <script src="https://cdn.ckeditor.com/4.6.2/standard/ckeditor.js"></script>
     @else
         <script src="{{asset('/vendor/unisharp/laravel-ckeditor/ckeditor.js')}}"></script>

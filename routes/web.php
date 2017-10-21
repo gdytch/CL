@@ -38,6 +38,9 @@ Route::group(['middleware' => 'auth:admin'], function () {
         Route::get('activity/status/{id}', 'ActivitiesController@changeStatus')->name('activity.status');
         Route::get('activity/submission/{id}', 'ActivitiesController@changeSubmissionStatus')->name('activity.submission');
         Route::resource('post', 'PostsController');
+        Route::post('filetyperules', 'AdminsController@filetype_rule_store')->name('filetype_rule.store');
+        Route::put('filetyperules/{id}', 'AdminsController@filetype_rule_update')->name('filetype_rule.update');
+        Route::delete('filetyperules/{id}', 'AdminsController@filetype_rule_delete')->name('filetype_rule.delete');
     });
 
 });

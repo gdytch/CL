@@ -24,10 +24,7 @@
                                                 <li class="nav-item">
                                                     <a href="#" class="nav-link @if($active == $section->id)active @endif" data-target="#{{$section->id}}" data-toggle="tab" aria-controls="home" role="tab" aria-expanded="false">{{$section->name}}</a>
                                                 </li>
-
                                             @endforeach
-
-
                                         </ul>
                                         <!-- Tab panes -->
                                         <div class="tab-content tabs-bordered card">
@@ -41,6 +38,7 @@
                                                                     <th>Activity</th>
                                                                     <th>Description</th>
                                                                     <th>Added</th>
+                                                                    <th>File rule</th>
                                                                     <th class="nosort">Submissions</th>
                                                                     <th width="100">Status</th>
                                                                     <th width="100">Submission</th>
@@ -53,9 +51,20 @@
                                                                     <td>{{$activity->name}}</td>
                                                                     <td>{{$activity->description}}</td>
                                                                     <td>{{$activity->date}}</td>
+                                                                    <td>{{$activity->FTRule->extensions}}</td>
                                                                     <td>{{count($activity->Records()->distinct()->get(['student_id']))}}/{{count($section->Students)}}</td>
-                                                                    <td>@if($activity->active) <a href="{{route('activity.status',$activity->id)}}" class="btn btn-sm btn-success">Active</a> @else <a href="{{route('activity.status',$activity->id)}}" class="btn btn-sm btn-danger">Inactive</a> @endif </td>
-                                                                    <td>@if($activity->submission) <a href="{{route('activity.submission',$activity->id)}}" class="btn btn-sm btn-success">Open</a> @else <a href="{{route('activity.submission',$activity->id)}}" class="btn btn-sm btn-danger">Close</a> @endif </td>
+                                                                    <td>
+                                                                        @if($activity->active)
+                                                                            <a href="{{route('activity.status',$activity->id)}}" class="btn btn-sm btn-success">Active</a>
+                                                                            @else <a href="{{route('activity.status',$activity->id)}}" class="btn btn-sm btn-danger">Inactive</a>
+                                                                        @endif
+                                                                    </td>
+                                                                    <td>
+                                                                        @if($activity->submission)
+                                                                            <a href="{{route('activity.submission',$activity->id)}}" class="btn btn-sm btn-success">Open</a>
+                                                                        @else <a href="{{route('activity.submission',$activity->id)}}" class="btn btn-sm btn-danger">Close</a>
+                                                                        @endif
+                                                                    </td>
                                                                     <td><a href="{{route('activity.show',$activity->id)}}" class="btn btn-sm btn-info">View</a></td>
                                                                 </tr>
                                                             @endforeach
@@ -117,7 +126,14 @@
                             <label class="control-label col-md-4">Description</label>
                             <input name="description" type="text" class="form-control underlined" >
                         </div>
-                        {{-- TODO: add a filetype option to limit filetype uploads --}}
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Extension Rule</label>
+                            <select class="form-control" name="ftrule_id">
+                                @foreach ($filetype_rules as $rule)
+                                    <option value="{{$rule->id}}" >{{$rule->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
                 </div>
             </div>

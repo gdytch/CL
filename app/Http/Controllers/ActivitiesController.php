@@ -9,6 +9,7 @@ use App\Section;
 use App\Student;
 use App\Activity;
 use App\Record;
+use App\FTRule;
 
 class ActivitiesController extends Controller
 {
@@ -21,19 +22,21 @@ class ActivitiesController extends Controller
     {
 
         $sections = Section::all();
+        $rules = FTRule::all();
         $active = null;
 
-        if($request->get('active'))
+        if ($request->get('active')) {
             $active = $request->get('active');
+        }
 
         $variables = array(
             'dashboard_content' => 'dashboards.admin.activity.index',
             'sections' => $sections,
             'active' => $active,
+            'filetype_rules' => $rules
         );
 
         return view('layouts.admin')->with($variables);
-
     }
 
     /**
@@ -56,14 +59,14 @@ class ActivitiesController extends Controller
     {
 
         $result = Activity::where(['name' => $request->name, 'section_id' => $request->section_id])->get();
-        if(count($result) > 0)
+        if (count($result) > 0) {
             return redirect()->back()->withError('Activity already exist');
+        }
 
         $activity = new Activity($request->all());
         $activity->save();
 
         return redirect('admin/activity?active='.$request->section_id)->withSuccess('Activity added');
-
     }
 
     /**
@@ -77,6 +80,7 @@ class ActivitiesController extends Controller
 
         $activity = Activity::find($id);
         $sections = Section::all();
+        $rules = FTRule::all();
         $students = $activity->SectionTo->Students()->orderBy('lname', 'asc')->get();
         $post = $activity->Post;
         // student who have are done with the activity
@@ -84,7 +88,7 @@ class ActivitiesController extends Controller
             $status = false;
             $submitted_at = null;
             $result = $student->Records()->where('activity_id', $activity->id)->get()->first();
-            if(count($result)){
+            if (count($result)) {
                 $status = true;
                 $submitted_at = date("M d Y", strtotime($result->created_at));
             }
@@ -97,10 +101,10 @@ class ActivitiesController extends Controller
             'activity_log' => $activity_log,
             'post' => $post,
             'sections' => $sections,
+            'filetype_rules' => $rules
         );
 
         return view('layouts.admin')->with($variables);
-
     }
 
     /**
@@ -125,8 +129,9 @@ class ActivitiesController extends Controller
     {
 
         $result = Activity::where(['name' => $request->name, 'section_id' => $request->section_id])->get()->first();
-        if(count($result) > 0 && $id != $result->id)
+        if (count($result) > 0 && $id != $result->id) {
             return redirect()->back()->withError('Activity name already exist');
+        }
 
         $activity =  Activity::find($id);
         $activity->update($request->all());
@@ -147,7 +152,6 @@ class ActivitiesController extends Controller
         $activity->delete();
 
         return redirect('admin/activity?active='.$activity->SectionTo->id)->withSuccess('Activity deleted');
-
     }
 
 
@@ -157,19 +161,15 @@ class ActivitiesController extends Controller
 
         $activity = Activity::find($id);
 
-        if($activity->active)
-        {
+        if ($activity->active) {
             $activity->active = false;
             $activity->save();
             return redirect('admin/activity?active='.$activity->SectionTo->id)->withError('Status: INACTIVE - '.$activity->name.'');
-        }
-        else
-        {
+        } else {
             $activity->active = true;
             $activity->save();
             return redirect('admin/activity?active='.$activity->SectionTo->id)->withSuccess('Status: ACTIVE - '.$activity->name.'');
         }
-
     }
 
 
@@ -179,18 +179,14 @@ class ActivitiesController extends Controller
 
         $activity = Activity::find($id);
 
-        if($activity->submission)
-        {
+        if ($activity->submission) {
             $activity->submission = false;
             $activity->save();
             return redirect('admin/activity?active='.$activity->SectionTo->id)->withError('Submission: CLOSED - '.$activity->name.'');
-        }
-        else
-        {
+        } else {
             $activity->submission = true;
             $activity->save();
             return redirect('admin/activity?active='.$activity->SectionTo->id)->withSuccess('Submission: OPEN - '.$activity->name.'');
         }
-
     }
 }

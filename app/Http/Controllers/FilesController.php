@@ -45,14 +45,25 @@ class FilesController extends Controller
             'activity' => 'required'
         ]);
 
-        //TODO: make a limit to file type updloads
+
 
         $student = Student::find($request->id);
         $activity = Activity::find($request->activity);
+
+
         $directory = '/'.$student->sectionTo->path."/".$student->path."/files";
         $file = $request->file('file');
         $extension = $file->getClientOriginalExtension();
         $file = $activity->name." - ".$student->lname.".".$extension;
+
+        //check if file uploaded follows the filetype rule
+        if(!$this->checkFileType($activity, $extension))
+        {
+            $errors[] = 'Invalid filetype';
+            $errors[] = 'Allowed files: '.$activity->FTRule->extensions;
+            return redirect()->back()->withErrors($errors);
+        }
+
 
         //if filename already exist add numbers at the end of the filename
         if(Storage::exists("/".$student->sectionTo->path."/".$student->path."/files/".$file)){
@@ -183,6 +194,25 @@ class FilesController extends Controller
         $record->filename = $file;
         $record->date = date("Y-m-d", time());
         $record->save();
+
+    }
+
+
+
+    public function checkFileType($activity, $extension)
+    {
+
+        $rule_extensions = str_replace(' ', '', $activity->FTRule->extensions);
+
+        if($rule_extensions == 'any' || $activity->FTRule->extensions == null || $activity->FTRule->extensions == 'all')
+            return true;
+            
+        $rule_extensions = explode(',', $rule_extensions);
+
+        if(!in_array($extension, $rule_extensions))
+            return false;
+
+        return true;
 
     }
 

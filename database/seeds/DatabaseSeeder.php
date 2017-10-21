@@ -15,7 +15,7 @@ class DatabaseSeeder extends Seeder
         DB::table('admins')->insert(array(
             'username' => 'admin', 'password' => bcrypt('12345'), 'fname' => 'Admin', 'lname' => 'Demo', 'avatar' => 'default-avatar.png', 'theme' => 'green'
         ));
-        
+
         DB::table('sections')->insert(array(
             array('id' => 1,  'name' => "URANUS-A",  'path' => "URANUS",  'created_at' => "2017-10-19 16:35:46",  'updated_at' => "2017-10-19 16:35:49",  'status' => true),
             array('id' => 2,  'name' => "URANUS-B",  'path' => "URANUS",  'created_at' => "2017-10-20 11:07:20",  'updated_at' => "2017-10-20 11:08:41",  'status' => true),
@@ -34,8 +34,8 @@ class DatabaseSeeder extends Seeder
              array('id' => 6, 'fname' => "Student5", 'lname' => "Demo3", 'password' => bcrypt('123456'), 'section' => 3, 'path' => "Demo3 Student5", 'created_at' => "2017-10-20 11:19:42", 'updated_at' => "2017-10-20 11:19:42", 'avatar' => "default-avatar.png", 'last_login' => null, 'theme' => "green"),
              array('id' => 7, 'fname' => "Student6", 'lname' => "Demo4", 'password' => bcrypt('123456'), 'section' => 7, 'path' => "Demo4 Student6", 'created_at' => "2017-10-20 11:20:06", 'updated_at' => "2017-10-20 11:20:06", 'avatar' => "default-avatar.png", 'last_login' => null, 'theme' => "green"),
         ));
-        
-            
+
+
         DB::table('posts')->insert(array(
              array(
              'id' => 1,
@@ -72,22 +72,29 @@ class DatabaseSeeder extends Seeder
            )
         ));
 
+        DB::table('ftrules')->insert(array(
+            array('id' => '1', 'name' => 'Allow all files', 'extensions' => 'any'),
+            array('id' => '2', 'name' => 'Documents', 'extensions' => 'doc, docx'),
+            array('id' => '3', 'name' => 'Spreadsheets', 'extensions' => 'xls, xlsx'),
+            array('id' => '4', 'name' => 'Presentations', 'extensions' => 'ppt, pptx'),
+        ));
+
         DB::table('activities')->insert(array(
-            array('id' => '6', 'name' => 'Activity 2', 'section_id' => '3', 'date' => '2017-10-20', 'submission' => true, 'description' => 'Charts 2', 'created_at' => '2017-10-20 11:12:11', 'updated_at' => '2017-10-20 11:12:11', 'active' => true, 'post_id' => null),
-            array('id' => '7', 'name' => 'Activity 1', 'section_id' => '6', 'date' => '2017-10-19', 'submission' => true, 'description' => 'Charts', 'created_at' => '2017-10-20 11:12:43', 'updated_at' => '2017-10-20 11:12:43', 'active' => true, 'post_id' => null),
-            array('id' => '8', 'name' => 'Activity 2', 'section_id' => '6', 'date' => '2017-10-20', 'submission' => true, 'description' => 'Charts 2', 'created_at' => '2017-10-20 11:13:04', 'updated_at' => '2017-10-20 11:13:04', 'active' => true, 'post_id' => null),
-            array('id' => '9', 'name' => 'Activity 1', 'section_id' => '5', 'date' => '2017-10-19', 'submission' => true, 'description' => 'Charts', 'created_at' => '2017-10-20 11:13:21', 'updated_at' => '2017-10-20 11:13:21', 'active' => true, 'post_id' => null),
-            array('id' => '10', 'name' => 'Activity 2', 'section_id' => '5', 'date' => '2017-10-20', 'submission' => true, 'description' => 'Charts 2', 'created_at' => '2017-10-20 11:13:51', 'updated_at' => '2017-10-20 11:13:51', 'active' => true, 'post_id' => null),
-            array('id' => '15', 'name' => 'Activity 1', 'section_id' => '4', 'date' => '2017-10-19', 'submission' => true, 'description' => 'Charts', 'created_at' => '2017-10-20 11:15:55', 'updated_at' => '2017-10-20 11:15:55', 'active' => true, 'post_id' => null),
-            array('id' => '16', 'name' => 'Activity 2', 'section_id' => '4', 'date' => '2017-10-20', 'submission' => true, 'description' => 'Charts 2', 'created_at' => '2017-10-20 11:16:13', 'updated_at' => '2017-10-20 11:16:13', 'active' => true, 'post_id' => null),
-            array('id' => '1', 'name' => 'Activity 1', 'section_id' => '1', 'date' => '2017-10-19', 'submission' => true, 'description' => 'Getting Started with Spreadsheets', 'created_at' => '2017-10-19 16:36:57', 'updated_at' => '2017-10-20 11:16:41', 'active' => true, 'post_id' => '1'),
-            array('id' => '11', 'name' => 'Activity 1', 'section_id' => '7', 'date' => '2017-10-19', 'submission' => true, 'description' => 'Getting Started with Spreadsheets', 'created_at' => '2017-10-20 11:14:07', 'updated_at' => '2017-10-20 11:16:41', 'active' => true, 'post_id' => '1'),
-            array('id' => '13', 'name' => 'Activity 1', 'section_id' => '8', 'date' => '2017-10-19', 'submission' => true, 'description' => 'Getting Started with Spreadsheets', 'created_at' => '2017-10-20 11:14:46', 'updated_at' => '2017-10-20 11:16:41', 'active' => true, 'post_id' => '1'),
-            array('id' => '3', 'name' => 'Activity 1', 'section_id' => '2', 'date' => '2017-10-19', 'submission' => true, 'description' => 'Getting Started with Spreadsheets', 'created_at' => '2017-10-20 11:10:25', 'updated_at' => '2017-10-20 11:16:41', 'active' => true, 'post_id' => '1'),
-            array('id' => '2', 'name' => 'Activity 2', 'section_id' => '1', 'date' => '2017-10-19', 'submission' => true, 'description' => 'Creating Spreadsheets', 'created_at' => '2017-10-19 17:20:29', 'updated_at' => '2017-10-20 11:17:06', 'active' => true, 'post_id' => '2'),
-            array('id' => '12', 'name' => 'Activity 2', 'section_id' => '7', 'date' => '2017-10-20', 'submission' => true, 'description' => 'Creating Spreadsheets', 'created_at' => '2017-10-20 11:14:30', 'updated_at' => '2017-10-20 11:17:06', 'active' => true, 'post_id' => '2'),
-            array('id' => '14', 'name' => 'Activity 2', 'section_id' => '8', 'date' => '2017-10-20', 'submission' => true, 'description' => 'Creating Spreadsheets', 'created_at' => '2017-10-20 11:15:03', 'updated_at' => '2017-10-20 11:17:06', 'active' => true, 'post_id' => '2'),
-            array('id' => '4', 'name' => 'Activity 2', 'section_id' => '2', 'date' => '2017-10-20', 'submission' => true, 'description' => 'Creating Spreadsheets', 'created_at' => '2017-10-20 11:10:55', 'updated_at' => '2017-10-20 11:17:06', 'active' => true, 'post_id' => '2'),
+            array('id' => '6', 'name' => 'Activity 2', 'section_id' => '3', 'date' => '2017-10-20', 'submission' => true, 'ftrule_id' => '3' , 'description' => 'Charts 2', 'created_at' => '2017-10-20 11:12:11', 'updated_at' => '2017-10-20 11:12:11', 'active' => true, 'post_id' => null),
+            array('id' => '7', 'name' => 'Activity 1', 'section_id' => '6', 'date' => '2017-10-19', 'submission' => true, 'ftrule_id' => '3' , 'description' => 'Charts', 'created_at' => '2017-10-20 11:12:43', 'updated_at' => '2017-10-20 11:12:43', 'active' => true, 'post_id' => null),
+            array('id' => '8', 'name' => 'Activity 2', 'section_id' => '6', 'date' => '2017-10-20', 'submission' => true, 'ftrule_id' => '3' , 'description' => 'Charts 2', 'created_at' => '2017-10-20 11:13:04', 'updated_at' => '2017-10-20 11:13:04', 'active' => true, 'post_id' => null),
+            array('id' => '9', 'name' => 'Activity 1', 'section_id' => '5', 'date' => '2017-10-19', 'submission' => true, 'ftrule_id' => '3' , 'description' => 'Charts', 'created_at' => '2017-10-20 11:13:21', 'updated_at' => '2017-10-20 11:13:21', 'active' => true, 'post_id' => null),
+            array('id' => '10', 'name' => 'Activity 2', 'section_id' => '5', 'date' => '2017-10-20', 'submission' => true, 'ftrule_id' => '3' , 'description' => 'Charts 2', 'created_at' => '2017-10-20 11:13:51', 'updated_at' => '2017-10-20 11:13:51', 'active' => true, 'post_id' => null),
+            array('id' => '15', 'name' => 'Activity 1', 'section_id' => '4', 'date' => '2017-10-19', 'submission' => true, 'ftrule_id' => '3' , 'description' => 'Charts', 'created_at' => '2017-10-20 11:15:55', 'updated_at' => '2017-10-20 11:15:55', 'active' => true, 'post_id' => null),
+            array('id' => '16', 'name' => 'Activity 2', 'section_id' => '4', 'date' => '2017-10-20', 'submission' => true, 'ftrule_id' => '3' , 'description' => 'Charts 2', 'created_at' => '2017-10-20 11:16:13', 'updated_at' => '2017-10-20 11:16:13', 'active' => true, 'post_id' => null),
+            array('id' => '1', 'name' => 'Activity 1', 'section_id' => '1', 'date' => '2017-10-19', 'submission' => true, 'ftrule_id' => '3' , 'description' => 'Getting Started with Spreadsheets', 'created_at' => '2017-10-19 16:36:57', 'updated_at' => '2017-10-20 11:16:41', 'active' => true, 'post_id' => '1'),
+            array('id' => '11', 'name' => 'Activity 1', 'section_id' => '7', 'date' => '2017-10-19', 'submission' => true, 'ftrule_id' => '3' , 'description' => 'Getting Started with Spreadsheets', 'created_at' => '2017-10-20 11:14:07', 'updated_at' => '2017-10-20 11:16:41', 'active' => true, 'post_id' => '1'),
+            array('id' => '13', 'name' => 'Activity 1', 'section_id' => '8', 'date' => '2017-10-19', 'submission' => true, 'ftrule_id' => '3' , 'description' => 'Getting Started with Spreadsheets', 'created_at' => '2017-10-20 11:14:46', 'updated_at' => '2017-10-20 11:16:41', 'active' => true, 'post_id' => '1'),
+            array('id' => '3', 'name' => 'Activity 1', 'section_id' => '2', 'date' => '2017-10-19', 'submission' => true, 'ftrule_id' => '3' , 'description' => 'Getting Started with Spreadsheets', 'created_at' => '2017-10-20 11:10:25', 'updated_at' => '2017-10-20 11:16:41', 'active' => true, 'post_id' => '1'),
+            array('id' => '2', 'name' => 'Activity 2', 'section_id' => '1', 'date' => '2017-10-19', 'submission' => true, 'ftrule_id' => '3' , 'description' => 'Creating Spreadsheets', 'created_at' => '2017-10-20 17:20:29', 'updated_at' => '2017-10-20 11:17:06', 'active' => true, 'post_id' => '2'),
+            array('id' => '12', 'name' => 'Activity 2', 'section_id' => '7', 'date' => '2017-10-20', 'submission' => true, 'ftrule_id' => '3' , 'description' => 'Creating Spreadsheets', 'created_at' => '2017-10-20 11:14:30', 'updated_at' => '2017-10-20 11:17:06', 'active' => true, 'post_id' => '2'),
+            array('id' => '14', 'name' => 'Activity 2', 'section_id' => '8', 'date' => '2017-10-20', 'submission' => true, 'ftrule_id' => '3' , 'description' => 'Creating Spreadsheets', 'created_at' => '2017-10-20 11:15:03', 'updated_at' => '2017-10-20 11:17:06', 'active' => true, 'post_id' => '2'),
+            array('id' => '4', 'name' => 'Activity 2', 'section_id' => '2', 'date' => '2017-10-20', 'submission' => true, 'ftrule_id' => '3' , 'description' => 'Creating Spreadsheets', 'created_at' => '2017-10-20 11:10:55', 'updated_at' => '2017-10-20 11:17:06', 'active' => true, 'post_id' => '2'),
         ));
 
     }
