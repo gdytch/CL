@@ -310,6 +310,10 @@ class AdminsController extends Controller
         ]);
 
         $rule = FTRule::find($id);
+
+        if($rule->name == 'Default')
+            return redirect()->back()->withErrors('Default rule is locked');
+
         $rule->update($request->all());
 
         return redirect()->back()->withSuccess('Rule updated');
@@ -321,6 +325,16 @@ class AdminsController extends Controller
     {
 
         $rule = FTRule::find($id);
+        if($rule->name == 'Default')
+            return redirect()->back()->withErrors('Default rule is locked');
+
+        $activities = $rule->Activities;
+        $default = FTRule::where('name', 'Default')->get()->first();
+        if(count($activities) != 0)
+            foreach ($activities as $activity) {
+                $activity->ftrule_id = $default->id;
+                $activity->update();
+            }
         $rule->delete();
 
         return redirect()->back()->withSuccess('Rule deleted');

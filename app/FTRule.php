@@ -15,5 +15,8 @@ class FTRule extends Model
 
     public $timestamps = false;
 
-
+    public function Activities()
+    {
+        return $this->hasMany('App\Activity', 'ftrule_id', 'id');
+    }
 }

@@ -73,8 +73,10 @@
                                                 <span class="">{{$rule->extensions}}</span>
                                             </td>
                                             <td>
-                                                <button type="button" data-target="#editRule{{$rule->id}}" data-toggle="modal" class="btn btn-sm btn-secondary " name="button">Edit</button>
-                                                <button type="button" data-target="#deleteRule{{$rule->id}}" data-toggle="modal" class="btn btn-sm btn-danger " name="button">Delete</button>
+                                                @if($rule->name != 'Default')
+                                                    <button type="button" data-target="#editRule{{$rule->id}}" data-toggle="modal" class="btn btn-sm btn-secondary " name="button">Edit</button>
+                                                    <button type="button" data-target="#deleteRule{{$rule->id}}" data-toggle="modal" class="btn btn-sm btn-danger " name="button">Delete</button>
+                                                @endif
                                             </td>
                                         </tr>
                                         <div class="modal fade" id="editRule{{$rule->id}}" tabindex="-1" role="dialog" aria-labelledby="batchModalLabel" aria-hidden="true">
@@ -97,7 +99,7 @@
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label class="control-label col-md-4">File extensions</label>
-                                                                    <input name="extensions" type="text" class="form-control underlined" placeholder='Separate extensions by comma, type "Any" for all files' required value="{{$rule->extensions}}">
+                                                                    <input name="extensions" type="text" class="form-control underlined" placeholder='Separate extensions by comma' required value="{{$rule->extensions}}">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -123,7 +125,7 @@
                                                         </button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        Are you sure to delete this rule?
+                                                        Are you sure to delete '{{$rule->name}}' rule?
                                                     </div>
                                                     <div class="modal-footer">
                                                         <form role="form" action="{{route('filetype_rule.update',$rule->id)}}" method="POST">
@@ -166,7 +168,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-md-4">File extensions</label>
-                                    <input name="extensions" type="text" class="form-control underlined" placeholder='Separate extensions by comma, type "Any" for all files' required>
+                                    <input name="extensions" type="text" class="form-control underlined" placeholder='Separate extensions by comma' required>
                                 </div>
                             </div>
                         </div>
