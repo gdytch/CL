@@ -132,14 +132,16 @@ class HomeController extends Controller
         $student = Student::find(Auth::user()->id);
         $directory = "/".$student->sectionTo->path."/".$student->path."/trash/";
         $contents = Storage::allFiles($directory);
+        $files = null;
 
         if($contents != null)
             foreach ($contents as $key => $file) {
-               $path = pathinfo((string)$file."");
-               $files[$key] = (object) array('name' => $path['filename'], 'type' => $path['extension'], 'path' => $path['dirname']);
+               $file = pathinfo((string)$file."");
+               $temp = explode("id=", $file['filename']);
+               $file_id = $temp[1];
+               $file['filename'] = $temp[0];
+               $files[$key] = (object) array('name' => $file['filename'], 'type' => $file['extension'], 'path' => $file['dirname'], 'id' => $file_id, 'basename' => $file['basename']);
            }
-        else
-           $files = null;
 
         $variables = array(
             'dashboard_content' => 'dashboards.student.pages.trash',

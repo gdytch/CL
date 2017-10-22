@@ -53,7 +53,7 @@
                                                   <div class="dropdown-menu file-dropdown pull-menu-right" aria-labelledby="dropDown{{$key}}">
                                                       <form action="{{route('file.show',$student->id)}}" method="get">
                                                           {{ csrf_field() }}
-                                                          <input type="hidden" name="file" value="{{$file->name}}.{{$file->type}}">
+                                                          <input type="hidden" name="file" value="{{$file->basename}}">
                                                           <button type="submit" name="submit"class="dropdown-item" ><i class="fa fa-download"></i> Download</button>
                                                       </form>
 
@@ -82,7 +82,8 @@
                                                           {{csrf_field()}}
                                                           <input type="hidden" name="_method" value="DELETE">
                                                           <input type="hidden" name="method" value="recycle">
-                                                          <input type="hidden" name="file" value="{{$file->name}}.{{$file->type}}">
+                                                          <input type="hidden" name="file" value="{{$file->basename}}">
+                                                          <input type="hidden" name="file_id" value="{{$file->id}}">
                                                           <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
                                                           <button type="submit" name="submit" class="btn btn-primary">Yes</button>
                                                       </form>

@@ -11,6 +11,7 @@ use App\Student;
 use App\Section;
 use App\Activity;
 use App\FTRule;
+use App\Record;
 
 
 class AdminsController extends Controller
@@ -28,6 +29,7 @@ class AdminsController extends Controller
     {
         //
         //TODO: admin crud
+
     }
 
     /**
@@ -181,21 +183,34 @@ class AdminsController extends Controller
     public function stats()
     {
 
+        //TODO: active now stats
+        //TODO: logged in today(attendance)
+
         $students = Student::all();
         $sections = Section::all();
         $activities = Activity::all();
         $activity_submits = 0;
         $storage_size = 0;
+        $today = date("Y-m-d", time());
 
+        //get today's total number of student logins
+        $logins_today = count(Student::where('last_login', $today)->distinct()->get(['id']));
+        // get today's activities
+        $todays_activities = Activity::where('date', $today)->get();
+        foreach ($todays_activities as $key => $activity) {
+            $todays_activities[$key]['total_submits'] = count(Record::where('activity_id', $activity->id)->distinct()->get(['student_id']));
+        }
+
+        //get total activity submits
         foreach ($students as $student)
             $activity_submits += count($student->Records);
 
         $all_files = Storage::allfiles();
-
+        //get total storage size
         foreach ($all_files as $file) {
             $storage_size += Storage::size($file);
         }
-
+        //get total storage size per section
         $section_storage = $this->getSectionStorage();
 
         $stats = (object) array(
@@ -204,7 +219,9 @@ class AdminsController extends Controller
             'total_activities' => count($activities),
             'activity_submits' => $activity_submits,
             'total_storage_size' => $this->bytesToHuman($storage_size),
-            'section_storage' => $section_storage
+            'section_storage' => $section_storage,
+            'logins_today' => $logins_today,
+            'todays_activities' => $todays_activities
         );
 
         return $stats;

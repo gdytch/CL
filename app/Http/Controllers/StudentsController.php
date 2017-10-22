@@ -384,9 +384,11 @@ class StudentsController extends Controller
         foreach ($contents as $key => $file1)
         {
            $file = pathinfo((string)$file1."");
-           $files[$key] = (object) array('name' => $file['filename'], 'type' => $file['extension'], 'path' => $file['dirname']);
+           $temp = explode("id=", $file['filename']);
+           $file_id = $temp[1];
+           $file['filename'] = $temp[0];
+           $files[$key] = (object) array('name' => $file['filename'], 'type' => $file['extension'], 'path' => $file['dirname'], 'id' => $file_id, 'basename' => $file['basename']);
         }
-
 
         return $files;
 
@@ -413,7 +415,7 @@ class StudentsController extends Controller
 
         if(count($records) != 0)
             foreach ($records as $record)
-                if(!Storage::exists($student->sectionTo->path."/".$student->path."/files/".$record->filename))
+                if(!Storage::exists($student->sectionTo->path."/".$student->path."/files/".$record->basename))
                 {
                     $this_record = Record::find($record->id);
                     $this_record->delete();

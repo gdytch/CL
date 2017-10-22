@@ -18,6 +18,7 @@ class Records extends Migration
             $table->integer('student_id')->unsigned();
             $table->integer('activity_id')->unsigned();
             $table->string('filename')->nullable();
+            $table->string('basename')->nullable();
             $table->boolean('active')->default(true);
             $table->date('date');
             $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');

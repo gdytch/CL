@@ -24,7 +24,8 @@
                                                       <form action="{{route('file.destroy',$student->id)}}" method="post">
                                                           {{csrf_field()}}
                                                           <input type="hidden" name="_method" value="DELETE">
-                                                          <input type="hidden" name="file" value="{{$file->name}}.{{$file->type}}">
+                                                          <input type="hidden" name="file_id" value="{{$file->id}}">
+                                                          <input type="hidden" name="file" value="{{$file->basename}}">
                                                           <input type="hidden" name="method" value="restore">
                                                           <button type="submit" name="submit" class="dropdown-item">Restore</button>
                                                       </form>
@@ -53,7 +54,8 @@
                                                           {{csrf_field()}}
                                                           <input type="hidden" name="_method" value="DELETE">
                                                           <input type="hidden" name="method" value="delete">
-                                                          <input type="hidden" name="file" value="{{$file->name}}.{{$file->type}}">
+                                                          <input type="hidden" name="file" value="{{$file->basename}}">
+                                                          <input type="hidden" name="file_id" value="{{$file->id}}">
                                                           <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
                                                           <button type="submit" name="submit" class="btn btn-primary">Yes</button>
                                                       </form>

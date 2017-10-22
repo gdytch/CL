@@ -45,16 +45,11 @@ class FilesController extends Controller
             'activity' => 'required'
         ]);
 
-
-
         $student = Student::find($request->id);
         $activity = Activity::find($request->activity);
-
-
         $directory = '/'.$student->sectionTo->path."/".$student->path."/files";
         $file = $request->file('file');
         $extension = $file->getClientOriginalExtension();
-        $file = $activity->name." - ".$student->lname.".".$extension;
 
         //check if file uploaded follows the filetype rule
         if(!$this->checkFileType($activity, $extension))
@@ -64,18 +59,10 @@ class FilesController extends Controller
             return redirect()->back()->withErrors($errors);
         }
 
+        $filename = $this->getFilename($student, $activity, $file);
+        $basename = $this->recordFile($activity->id, $student->id, $filename, $extension);
 
-        //if filename already exist add numbers at the end of the filename
-        if(Storage::exists("/".$student->sectionTo->path."/".$student->path."/files/".$file)){
-            $x = 2;
-            while (Storage::exists("/".$student->sectionTo->path."/".$student->path."/files/".$activity->name." - ".$student->lname." (".$x.").".$extension))
-                $x++;
-
-            $file = $activity->name." - ".$student->lname." (".$x.").".$extension;
-        }
-        $request->file('file')->storeAs($directory, $file);
-
-        $this->recordFile($activity->id, $student->id, $file);
+        $request->file('file')->storeAs($directory, $basename);
 
         return redirect()->route('home')->withSuccess('File Submitted');
 
@@ -142,7 +129,7 @@ class FilesController extends Controller
                 if(Storage::exists($trash))
                     Storage::delete($trash);
                 Storage::move($directory, $trash);
-                if($record = Record::where(['filename' => $request->file, 'active' => true])->get()->first()){
+                if($record = Record::find($request->file_id)){
                     $record->active = false;
                     $record->update();
                 }
@@ -154,7 +141,7 @@ class FilesController extends Controller
                 if(Storage::exists($directory))
                     Storage::delete($directory);
                 Storage::move($trash, $directory);
-                if($record = Record::where(['filename' => $request->file, 'active' => false])->get()->last()){
+                if($record = Record::find($request->file_id)){
                     $record->active = true;
                     $record->update();
                 }
@@ -175,8 +162,8 @@ class FilesController extends Controller
             default:
 
                 Storage::delete($trash);
-                $record = Record::where(['filename' => $request->file, 'active' => false]);
-                $record->delete();
+                if($record = Record::find($request->file_id))
+                    $record->delete();
                 return redirect()->route('trash')->withSuccess('File deleted');
                 break;
         }
@@ -185,15 +172,19 @@ class FilesController extends Controller
 
 
 
-    public function recordFile($activity_id, $student_id, $file)
+    public function recordFile($activity_id, $student_id, $filename, $extension)
     {
 
         $record = new Record();
         $record->student_id = $student_id;
         $record->activity_id = $activity_id;
-        $record->filename = $file;
+        $record->filename = $filename;
         $record->date = date("Y-m-d", time());
         $record->save();
+
+        $record->basename = $filename." id=". $record->id .".".$extension;
+        $record->update();
+        return $record->basename;
 
     }
 
@@ -213,6 +204,24 @@ class FilesController extends Controller
             return false;
 
         return true;
+
+    }
+
+
+
+    public function getFilename($student, $activity, $file)
+    {
+
+        $extension = $file->getClientOriginalExtension();
+        $filename = $activity->name." - ".$student->lname;
+        $x = 0;
+        while(count(Record::where(['filename' => $filename, 'student_id' => $student->id])->get()) != 0)
+        {
+            $x++;
+            $filename = $activity->name." - ".$student->lname." (".$x.")";
+        }
+
+        return $filename;
 
     }
 

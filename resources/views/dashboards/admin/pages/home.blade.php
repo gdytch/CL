@@ -3,7 +3,7 @@
 
     <section class="section">
     <div class="row sameheight-container">
-        <div class="col col-12 col-sm-12 col-md-6 col-xl-5 stats-col">
+        <div class="col col-12 col-sm-12 col-md-6 col-xl-6 stats-col">
             <div class="card sameheight-item stats" data-exclude="xs">
                 <div class="card-block">
                     <div class="title-block">
@@ -65,20 +65,62 @@
                             <div class="stat">
                                 <div class="value">{{$stats->total_storage_size}} </div>
                                 <div class="name"> Storage Size </div>
-
                             </div>
                             <div class="progress stat-progress">
                                 <div class="progress-bar" style="width: 100%;"></div>
                             </div>
-
-
                         </div>
+
                     </div>
                 </div>
             </div>
         </div>
+
+        <div class="col-md-6 col-sm-12 col-xs-12">
+            <div class="card sameheight-item " data-exclude="xs" id="dashboard-history">
+                <div class="card-header card-header-sm bordered">
+                    <div class="header-block">
+                        <h3 class="title">Today's Activity</h3>
+                    </div>
+                    @if(count($stats->todays_activities) != 0)
+                    <ul class="nav nav-tabs pull-right" role="tablist">
+                        @foreach ($stats->todays_activities as $key => $activity)
+                        <li class="nav-item">
+                            <a class="nav-link @if($key == 0) active @endif" href="#activity_tab{{$activity->id}}" role="tab" data-toggle="tab">{{$activity->name}} {{$activity->SectionTo->name}}</a>
+                        </li>
+                        @endforeach
+                    </ul>
+                    @endif
+                </div>
+                <div class="card-block">
+                    <div class="tab-content">
+                        @if(count($stats->todays_activities) != 0)
+                            @foreach ($stats->todays_activities as $key => $activity)
+                                <div role="tabpanel" class=" stats tab-pane fade  @if($key == 0) active show @endif" id="activity_tab{{$activity->id}}">
+                                    <p class="title-description"> {{$activity->name}} {{$activity->description}}</p>
+                                        <div class="col-4 col-sm-4 col-xs-12 stat-col">
+                                            <div class="stat-icon">
+                                                <i class="fa fa-list-alt"></i>
+                                            </div>
+                                            <div class="stat">
+                                                <div class="value">{{$activity->total_submits}} </div>
+                                                <div class="name"> Submitted Activities </div>
+                                            </div>
+                                            <div class="progress stat-progress">
+                                                <div class="progress-bar" style="width: 100%;"></div>
+                                            </div>
+                                        </div>
+                                </div>
+                            @endforeach
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row sameheight-container">
         <div class="col col-12 col-sm-12 col-md-6 col-xl-7 history-col">
-            <div class="card sameheight-item" data-exclude="xs" id="dashboard-history">
+            <div class="card sameheight-item " data-exclude="xs" id="dashboard-history">
                 <div class="card-header card-header-sm bordered">
                     <div class="header-block">
                         <h3 class="title">History</h3>
@@ -108,10 +150,8 @@
             </div>
         </div>
 
-    </div>
-    <div class="row sameheight-container">
         <div class="col-xl-4">
-            <div class="card sameheight-item  sales-breakdown" data-exclude="xs,sm,lg">
+            <div class="card sameheight-item   sales-breakdown" data-exclude="xs,sm,lg">
                 <div class="card-header">
                     <div class="header-block">
                         <h3 class="title"> Storage breakdown </h3>
@@ -158,7 +198,7 @@
     {{-- <section class="section">
     <div class="row sameheight-container">
         <div class="col-xl-8">
-            <div class="card sameheight-item items" data-exclude="xs,sm,lg">
+            <div class="card sameheight-item  items" data-exclude="xs,sm,lg">
                 <div class="card-header bordered">
                     <div class="header-block">
                         <h3 class="title"> Items </h3>
@@ -395,7 +435,7 @@
     <div class="row sameheight-container">
 
         <div class="col-md-4">
-            <div class="card tasks sameheight-item" data-exclude="xs,sm">
+            <div class="card tasks " data-exclude="xs,sm">
                 <div class="card-header bordered">
                     <div class="header-block">
                         <h3 class="title"> Tasks </h3>
