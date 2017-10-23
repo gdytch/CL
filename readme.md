@@ -54,9 +54,6 @@ php artisan vendor:publish --tag=ckeditor
 ### Set up Database
 
  - Go to your phpmyadmin and create a database for the app
-
-### Set up Database
-
  - Go to your app folder and open the .env file
  - Set the variables for your database
  ```
