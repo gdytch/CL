@@ -42,26 +42,20 @@ c:\xampp\htdocs\ComputerClass
 ```
 c:\Users\User\> cd c:\xampp\htdocs\computerclass
 ```
- - Then run the following
+ - Then run the following:
  ```
 composer install
+php artisan vendor:publish --tag=lfm_public
+php artisan vendor:publish --tag=ckeditor
  ```
  - This will install the necessary files for the app (internet connection required)
- - After that, run the app by typing
- ```
-php artisan serve
- ```
- or you can specify your host and port
- ```
-php artisan serve --host 0.0.0.0 --port 8000
- ```
- - Go to your browser - localhost:8000
+
 
 ### Set up Database
 
  - Go to your phpmyadmin and create a database for the app
 
-### Set up Variables
+### Set up Database
 
  - Go to your app folder and open the .env file
  - Set the variables for your database
@@ -76,7 +70,6 @@ php artisan serve --host 0.0.0.0 --port 8000
   ...
  ```
 
-
 ### Database Migration
 
  - Migration will create the tables in your database. Run
@@ -89,6 +82,18 @@ php artisan migrate
  ```
  this will create an admin, students, sections, etc..
  For admin = username:admin      password:12345
+
+## Run
+To start the PHP built-in server
+```
+php artisan serve
+```
+or you can specify your host and port
+```
+php artisan serve --host 0.0.0.0 --port 8000
+```
+- You can now browse the app at [http://localhost:8000/](http://localhost:8000/)
+
 
 ## Getting Started with the App
 
