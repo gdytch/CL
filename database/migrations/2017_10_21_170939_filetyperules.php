@@ -23,7 +23,9 @@ class Filetyperules extends Migration
             $table->foreign('ftrule_id')->references('id')->on('ftrules')->onDelete('set null');
         });
 
-
+        DB::table('ftrules')->insert(array(
+            'id' => '1', 'name' => 'Default', 'extensions' => 'any'
+        ));
 
     }
 

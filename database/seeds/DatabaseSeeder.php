@@ -73,7 +73,6 @@ class DatabaseSeeder extends Seeder
         ));
 
         DB::table('ftrules')->insert(array(
-            array('id' => '1', 'name' => 'Default', 'extensions' => 'any'),
             array('id' => '2', 'name' => 'Documents', 'extensions' => 'doc, docx'),
             array('id' => '3', 'name' => 'Spreadsheets', 'extensions' => 'xls, xlsx'),
             array('id' => '4', 'name' => 'Presentations', 'extensions' => 'ppt, pptx'),

@@ -119,7 +119,7 @@
         </div>
     </div>
     <div class="row sameheight-container">
-        <div class="col col-12 col-sm-12 col-md-6 col-xl-7 history-col">
+        <div class="col col-12 col-sm-12 col-md-12 col-xl-8 history-col">
             <div class="card sameheight-item " data-exclude="xs" id="dashboard-history">
                 <div class="card-header card-header-sm bordered">
                     <div class="header-block">
