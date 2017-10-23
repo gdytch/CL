@@ -5,7 +5,7 @@
 /public/files
 
 /storage/*.key
-/public/vendor
+
 /vendor
 /.idea
 /.vagrant
