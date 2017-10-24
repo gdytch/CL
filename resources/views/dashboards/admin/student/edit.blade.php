@@ -38,23 +38,24 @@
                             <label class="control-label col-md-4">Last Name</label>
                             <input name="lname" type="text" class="form-control underlined" required="" value="{{$student->lname}}">
                         </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Section</label>
 
-                    <div class="form-group">
-                        <label class="control-label col-md-4">Section</label>
-
-                        <select class="form-control" name="section" required="">
-                            @foreach ($sections as $section)
-                                <option value="{{$section->id}}" @if($section->id == $student->section) selected @endif>{{$section->name}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#passwordModal">
-                      Change password
-                    </button>
-                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal">
-                      Delete
-                    </button>
-                    <input type="hidden" name="_method" value="PUT">
+                            <select class="form-control" name="section" required="">
+                                @foreach ($sections as $section)
+                                    <option value="{{$section->id}}" @if($section->id == $student->section) selected @endif>{{$section->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#passwordModal">
+                              Change password
+                            </button>
+                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal">
+                              Delete
+                            </button>
+                        </div>
+                        <input type="hidden" name="_method" value="PUT">
                 </div>
                 <div class="row">
                     <div class="form-group col"><br><br>

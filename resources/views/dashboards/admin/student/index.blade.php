@@ -23,7 +23,7 @@
                         <div class="card row">
 
                             <div class="col col-12" style="padding: 30px;">
-                                <table class="table table-striped" id="StudentTable">
+                                <table class="table table-striped table-responsive" id="StudentTable">
                                     <thead>
                                         <tr>
                                             <th>First name</th>
@@ -86,11 +86,11 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form role="form" action="{{route('student.store')}}" method="POST">
+                <form role="form" action="{{route('student.store')}}" method="POST"  enctype="multipart/form-data">
                 <div class="row">
                     <div class=" col-md-4" style="text-align: right">
-                        <img src="{{asset('storage/avatar/default-avatar.png')}}" alt="" class="student_avatar">
-                        <a href="#" class="btn btn-info" style="width: 100%; ">Select Avatar</a>
+                        <img src="{{asset('storage/avatar/default-avatar.png')}}" alt="" id="avatar" class="student_avatar">
+                        <input type="file" name="avatar_file" value="" onchange="readURL(this);" class="form-control">
                     </div>
                     <div class="col-md-8">
                         <div class="form-group" >
@@ -132,4 +132,18 @@
     </div>
 </div>
 
+<script type="text/javascript">
+function readURL(input) {
+   if (input.files && input.files[0]) {
+       var reader = new FileReader();
+
+       reader.onload = function (e) {
+           $('#avatar')
+               .attr('src', e.target.result)
+       };
+
+       reader.readAsDataURL(input.files[0]);
+   }
+}
+</script>
 @endsection

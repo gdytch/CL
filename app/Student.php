@@ -35,6 +35,16 @@ class Student extends Authenticatable
         $this->attributes['password'] = bcrypt($value);
     }
 
+    public function setLnameAttribute($value)
+    {
+        $this->attributes['lname'] = ucwords(strtolower($value));
+    }
+
+    public function setFnameAttribute($value)
+    {
+        $this->attributes['fname'] = ucwords(strtolower($value));
+    }
+
     public function sectionTo()
     {
         return $this->belongsTo('App\Section', 'section', 'id');

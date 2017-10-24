@@ -57,7 +57,7 @@
                     <div class="row">
                         <div class="col-12">
                             @if($table_item != null)
-                                <table class="table table-striped">
+                                <table class="table table-striped table-responsive">
                                     <thead>
                                         <th>Activity</th>
                                         <th>Description</th>

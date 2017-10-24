@@ -13,85 +13,95 @@
                     <form name="item" method="post" action="{{route('post.update',$post->id)}}">
                         {{ csrf_field() }}
                         <input type="hidden" name="_method" value="put">
-                    <div class="row">
-                        <div class="card col-8" style="margin: 10px;">
-                            <div class="card-block">
-                                <h3 class="card-title">Post</h3>
+                        <div class="row">
+                            <div class="col-md-8 col-lg-8 col-sm-12 col-xs-12">
+                                <div class="card col">
+                                    <div class="card-block">
+                                        <h3 class="card-title">Post</h3>
 
-                                <div class="row form-group">
+                                        <div class="row form-group">
 
-                                            <label class="control-label col-12"> Title </label>
-                                        <div class="col col-12">
-                                            <input type="text" name="title" class="form-control underlined" value="{{$post->title}}"> </div>
+                                                    <label class="control-label col-12"> Title </label>
+                                                <div class="col col-12">
+                                                    <input type="text" name="title" class="form-control underlined" value="{{$post->title}}"> </div>
 
+                                        </div>
+                                        <div class="row form-group">
+                                            <label class="col-12 control-label"> Content </label>
+                                            <div class="col-sm-12">
+                                                <div id="wyswyg">
+                                                    <div id="toolbar">
+
+                                                    </div>
+                                                    <!-- Create the editor container -->
+                                                    {{-- <div id="editor" type="textarea" name="content"> --}}
+                                                        <textarea  type="text" name="content" style="width: 100%; height: 600px;">
+                                                            {!!$post->body!!}
+                                                        </textarea>
+                                                    {{-- </div> --}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="row form-group">
-                                    <label class="col-12 control-label"> Content </label>
-                                    <div class="col-sm-12">
-                                        <div id="wyswyg">
-                                            <div id="toolbar">
+                            </div>
+                            <div class="col-md-4 col-sm-12 col-xs-12">
+                                <div class="row">
+                                    <div class="card col">
+                                        <div class="card-block">
+                                            <div class="form-group">
+                                                <h3 class="card-title">Publish</h3>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <label class="">
+                                                        <input class="checkbox" type="checkbox" name="draft" value="1" @if($post->draft) checked @endif>
+                                                            <span>Set as Draft</span>
+                                                        </lable>
+                                                        <button type="submit" name="submit" class="btn btn-primary">Save</button>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <button type="button" data-toggle="modal" data-target="#deletemodal" class="btn btn-danger">Delete</button>
+                                                    &nbsp;
+                                                    <a href="{{route('post.show',$post->id)}}" class="btn btn-secondary">Preview</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="card col">
+                                        <div class="card-block">
+                                            <div class="form-group">
+                                                <h3 class="card-title">Activities</h3>
+                                                <div class="col col-12 col-sm-12" style="max-height: 400px; overflow: auto;">
+                                                    @foreach ($checked_activities as $activity)
+                                                        <label class="row">
+                                                            <input class="checkbox" type="checkbox" name="activity[]" value="{{$activity->id}}" checked>
+                                                            <span> {{$activity->name}} <small>{{$activity->SectionTo->name}}</small></span>
+                                                        </label>
+
+                                                    @endforeach
+                                                    @foreach ($unchecked_activities as $activity)
+                                                        <label class="row">
+                                                            <input class="checkbox" type="checkbox" name="activity[]" value="{{$activity->id}}">
+                                                            <span> {{$activity->name}} <small>{{$activity->SectionTo->name}}</small></span>
+                                                        </label>
+
+                                                    @endforeach
+
+                                                </div>
 
                                             </div>
-                                            <!-- Create the editor container -->
-                                            {{-- <div id="editor" type="textarea" name="content"> --}}
-                                                <textarea  type="text" name="content" style="width: 100%; height: 600px;">
-                                                    {!!$post->body!!}
-                                                </textarea>
-                                            {{-- </div> --}}
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="card row" style="margin: 10px; padding: 20px">
-                                <div class="card-block">
-                                    <div class="form-group row">
-                                        <h3 class="card-title">Publish</h3>
-                                    </div>
-                                    <div class="row">
-                                            <label class="">
-                                                <input class="checkbox" type="checkbox" name="draft" value="1" @if($post->draft) checked @endif>
-                                                    <span>Set as Draft</span>
-                                            </lable>
-                                            <button type="submit" name="submit" class="btn btn-primary">Save</button>
-                                    </div>
-                                    <div class="row">
-                                            <button type="button" data-toggle="modal" data-target="#deletemodal" class="btn btn-danger">Delete</button>
-                                            &nbsp;
-                                            <a href="{{route('post.show',$post->id)}}" class="btn btn-secondary">Preview</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card row" style="margin: 10px; padding: 20px">
-                                <div class="card-block">
-                                    <div class="form-group row">
-                                        <h3 class="card-title">Activities</h3>
-                                        <div class="col col-12 col-sm-12" style="max-height: 400px; overflow: auto;">
-                                            @foreach ($checked_activities as $activity)
-                                                <label class="row">
-                                                    <input class="checkbox" type="checkbox" name="activity[]" value="{{$activity->id}}" checked>
-                                                    <span> {{$activity->name}} <small>{{$activity->SectionTo->name}}</small></span>
-                                                </label>
 
-                                            @endforeach
-                                            @foreach ($unchecked_activities as $activity)
-                                                <label class="row">
-                                                    <input class="checkbox" type="checkbox" name="activity[]" value="{{$activity->id}}">
-                                                    <span> {{$activity->name}} <small>{{$activity->SectionTo->name}}</small></span>
-                                                </label>
-
-                                            @endforeach
-
-                                        </div>
-
-                                    </div>
-                                </div>
                             </div>
 
                         </div>
-
-                    </div>
                     </form>
                 </div>
 

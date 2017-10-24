@@ -77,7 +77,7 @@
                 <section class="section">
                     <div class="row">
                         <div class="col">
-                            <table class="table table-striped" id="StudentTable">
+                            <table class="table table-striped table-responsive" id="StudentTable">
                                 <thead>
                                     <tr>
                                         <th>First name</th>
@@ -90,7 +90,7 @@
                                         <tr>
                                             <td><a href="{{route('student.show',$student->id)}}">{{$student->fname}}</a></td>
                                             <td><a href="{{route('student.show',$student->id)}}">{{$student->lname}}</a></td>
-                                            <td><a href="{{route('student.folder',$student->id)}}" class="btn btn-sm btn-primary">OPEN FOLDER</a></td>
+                                            <td><a href="{{route('student.folder',$student->id)}}">OPEN FOLDER</a></td>
                                         </tr>
                                     @endforeach
                                 </tbody>

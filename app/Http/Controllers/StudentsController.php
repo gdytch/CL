@@ -6,7 +6,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
+use Image;
 use Excel;
 use Auth;
 use App\Student;
@@ -68,10 +70,19 @@ class StudentsController extends Controller
     public function store(Request $request)
     {
 
+        $validator = Validator::make($request->all(), [
+            'avatar_file' => 'file|max:1024'
+        ]);
+        //TODO: check if fname and lname already exists
+        if ($validator->fails()) {
+            return redirect()->route('student.create')
+                        ->withErrors($validator)
+                        ->withInput();
+        }
+
         $lname = ucwords(strtolower($request->lname));
         $fname = ucwords(strtolower($request->fname));
         $path = ''.$lname.' '.$fname.'';
-        $avatar = 'default-avatar.png';
         $password = $request->password;
         $section = $request->section;
 
@@ -79,10 +90,21 @@ class StudentsController extends Controller
         $student->lname = $lname;
         $student->fname = $fname;
         $student->path = $path;
-        $student->avatar = $avatar;
         $student->password = $password;
         $student->section = $section;
         $student->theme = 'green';
+
+        if($request->hasFile('avatar_file'))
+        {
+            $avatar = $request->file('avatar_file');
+            $filename = $student->lname."-".$student->fname." - ".time().".".$avatar->getClientOriginalExtension();
+            Image::make($avatar)->resize(250,250)->save(public_path().'/storage/avatar/'.$filename);
+            $avatar= $filename;
+        }
+        else
+            $avatar = 'default-avatar.png';
+
+        $student->avatar = $avatar;
         $student->save();
 
         $sect = Section::find($section);
@@ -110,11 +132,12 @@ class StudentsController extends Controller
             return redirect()->route('student.edit',$student->id)->withError("Student has no section");
 
         $table_item = $this->checkActivities($student);
-
+        $sections = Section::all();
         $variables = array(
            'dashboard_content' => 'dashboards.admin.student.show',
            'student' => $student,
            'table_item' => $table_item,
+           'sections' => $sections,
         );
 
         return view('layouts.admin')->with($variables);
@@ -152,6 +175,9 @@ class StudentsController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $this->Validate($request, [
+            'avatar_file' => 'file|max:1024',
+        ]);
 
         $student = Student::find($id);
         // Move the student folder if student is moved to a diff section
@@ -180,11 +206,20 @@ class StudentsController extends Controller
             $student->path = $newPath;
         }
 
-        $student->lname = ucwords(strtolower($request->lname));
-        $student->fname = ucwords(strtolower($request->fname));
+        if($request->hasFile('avatar_file'))
+        {
+            $avatar = $request->file('avatar_file');
+            $filename = $student->lname."-".$student->fname." - ".time().".".$avatar->getClientOriginalExtension();
+            if($student->avatar != 'default-avatar.png')
+                Storage::delete("avatar/".$student->avatar);
+            Image::make($avatar)->resize(250,250)->save(public_path().'/storage/avatar/'.$filename);
+            $student->avatar = $filename;
+
+        }
+
         $student->update($request->all());
         $student->save();
-
+        //
         return redirect()->route('student.show',$id)->withSuccess('Saved');
 
     }
@@ -199,16 +234,10 @@ class StudentsController extends Controller
         ]);
 
         $student = Student::find($id);
-
-        if(!Hash::check($request->old_password, $student->password))
-            return redirect()->back()->withError('Incorrect password');
-
         $student->password = $request->password;
         $student->save();
 
-        Auth::logout();
-
-        return redirect('checkUsers?id='.$student->id)->withSuccess('Enter new password');
+        return redirect()->back()->withSuccess('Password updated');
 
     }
 
@@ -225,6 +254,8 @@ class StudentsController extends Controller
         $student->delete();
         $section = Section::find($student->section);
         $section_path ='/'.$section->path;
+        if($student->avatar != 'default-avatar.png' && Storage::exists('/avatar/'.$student->avatar))
+            Storage::delete('avatar/'.$student->avatar);
         Storage::deleteDirectory($section_path.'/'.$student->path);
 
         return redirect()->route('student.index')->withSuccess('Account Deleted');

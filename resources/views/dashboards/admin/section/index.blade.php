@@ -12,13 +12,13 @@
                     </div>
                     <div class="card row row-sm stats-container">
                         <div class="col col-12">
-                            <table class="table table-striped" >
+                            <table class="table table-striped table-responsive" >
                                 <thead>
                                     <tr>
                                         <th>Name</th>
                                         <th class="nosort">Folder</th>
-                                        <th class="nosort" width="150">Login Status</th>
-                                        <th class="nosort" width="100"></th>
+                                        <th class="nosort" >Login Status</th>
+                                        <th class="nosort"></th>
                                     </tr>
                                 </thead>
                                 <tbody>

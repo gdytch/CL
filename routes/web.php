@@ -40,6 +40,7 @@ Route::group(['middleware' => 'auth:admin'], function () {
         Route::resource('post', 'PostsController');
         Route::post('filetyperules', 'AdminsController@filetype_rule_store')->name('filetype_rule.store');
         Route::put('filetyperules/{id}', 'AdminsController@filetype_rule_update')->name('filetype_rule.update');
+        Route::put('update_password/{id}', 'StudentsController@update_password')->name('student.update.password');
         Route::delete('filetyperules/{id}', 'AdminsController@filetype_rule_delete')->name('filetype_rule.delete');
     });
 
@@ -55,7 +56,7 @@ Route::group(['middleware' => 'auth:web'], function () {
     Route::get('home', 'HomeController@index')->name('home');
     Route::prefix('home')->group(function(){
         Route::get('trash', 'HomeController@trash')->name('trash');
-        Route::post('update_password/{id}', 'StudentsController@update_password')->name('update.password');
+        Route::put('update_password/{id}', 'HomeController@update_password')->name('update.password');
         Route::get('settings', 'HomeController@settings')->name('student.settings');
         Route::get('profile', 'HomeController@profile')->name('student.profile');
         Route::get('theme', 'StudentsController@theme')->name('student.theme');

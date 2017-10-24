@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Http\Request;
 use App\Student;
@@ -79,11 +80,10 @@ class FilesController extends Controller
 
         $student = Student::find($id);
         $file = $request->file;
-        $directory = public_path("/storage/".$student->sectionTo->path."/".$student->path."/files/".$file);
-        // $directory = Storage::disk('public')->url($student->sectionTo->path."/".$student->path."/files/".$file);
+        $directory = public_path("\\storage\\".$student->sectionTo->path."\\".$student->path."\\files\\".$file);
 
         return response()->download($directory);
-        // return Storage::getDriver()->getAdapter()->applyPathPrefix($file);
+
     }
 
     /**
@@ -178,7 +178,7 @@ class FilesController extends Controller
         $record = new Record();
         $record->student_id = $student_id;
         $record->activity_id = $activity_id;
-        $record->filename = $filename;
+        $record->filename = $filename.".".$extension;
         $record->date = date("Y-m-d", time());
         $record->save();
 

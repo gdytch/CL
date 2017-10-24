@@ -14,9 +14,8 @@
                         <form id="login-form" action="{{url('checkUser')}}" method="GET" novalidate="">
                             <div class="form-group">
                                 <label for="lname">Last name</label>
-                                <input type="text" class="form-control underlined" name="lname" id="lname" placeholder="Your Lastname" required autofocus> </div>
-
-
+                                <input type="text" class="form-control underlined" name="lname" id="lname" placeholder="Your Lastname" required autofocus autocomplete="off">
+                            </div>
                             <div class="form-group">
                                 <button type="submit" class="btn btn-block btn-primary">Continue</button>
                             </div>
@@ -27,5 +26,5 @@
 
             </div>
         </div>
-    
+
 @endsection

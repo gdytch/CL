@@ -4,7 +4,7 @@
         <h4 class="card-title text-primary">Settings</h4>
         <hr>
         <div class="row sameheight-container">
-            <div class="col-md-6">
+            <div class="col-md-6 col-sm-12 col-xs-12">
                 <div class="card ">
                     <div class="card-block">
                         <div class="title-block">
@@ -30,7 +30,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6  col-sm-12 col-xs-12">
                 <div class="card">
                     <div class="card-block">
                         <div class="title-block">
@@ -39,29 +39,40 @@
                         </div>
                         <div class="col-md-12">
                             <div class="customize-item">
-                                        <a class="btn btn-primary" href="{{url('admin/theme?theme=red')}}" style="background: #FB494D; border-color: #FB494D; color: #fff;"> Red </a>
-                                        <a class="btn btn-primary" href="{{url('admin/theme?theme=orange')}}" style="background-color: #FE7A0E;border-color: #FE7A0E; color: #fff;">Orange</a>
-                                        <a class="btn btn-primary" href="{{url('admin/theme?theme=green')}}" style="background-color: #8CDE33;border-color: #8CDE33; color: #555;">Green</a>
-                                        <a class="btn btn-primary" href="{{url('admin/theme?theme=seagreen')}}" style="background-color: #4bcf99;border-color: #4bcf99; color: #fff;">Seagreen</a>
-                                        <a class="btn btn-primary" href="{{url('admin/theme?theme=blue')}}" style="background-color: #52BCD3;border-color: #52BCD3; color: #fff;">Blue</a>
-                                        <a class="btn btn-primary" href="{{url('admin/theme?theme=purple')}}" style="background-color: #7867A7;border-color: #7867A7; color: #fff;">Purple</a>
+                                        <a class="btn btn-primary theme-item" href="{{url('admin/theme?theme=red')}}" style="background: #FB494D; border-color: #FB494D; color: #fff;">  </a>
+                                        <a class="btn btn-primary theme-item" href="{{url('admin/theme?theme=orange')}}" style="background-color: #FE7A0E;border-color: #FE7A0E; color: #fff;"></a>
+                                        <a class="btn btn-primary theme-item" href="{{url('admin/theme?theme=green')}}" style="background-color: #8CDE33;border-color: #8CDE33; color: #555;"></a>
+                                        <a class="btn btn-primary theme-item" href="{{url('admin/theme?theme=seagreen')}}" style="background-color: #4bcf99;border-color: #4bcf99; color: #fff;"></a>
+                                        <a class="btn btn-primary theme-item" href="{{url('admin/theme?theme=blue')}}" style="background-color: #52BCD3;border-color: #52BCD3; color: #fff;"></a>
+                                        <a class="btn btn-primary theme-item" href="{{url('admin/theme?theme=purple')}}" style="background-color: #7867A7;border-color: #7867A7; color: #fff;"></a>
+                                        <a class="btn btn-primary theme-item" href="{{url('admin/theme?theme=turquoise')}}" style="background-color: #1abc9c;border-color: #1abc9c;"></a>
+                                        <a class="btn btn-primary theme-item" href="{{url('admin/theme?theme=red2')}}" style="background-color: #F44336;border-color: #F44336;"></a>
+                                        <a class="btn btn-primary theme-item" href="{{url('admin/theme?theme=sunflower')}}" style="background-color: #f1c40f;border-color: #f1c40f;"></a>
+                                        <a class="btn btn-primary theme-item" href="{{url('admin/theme?theme=pink')}}" style="background-color: #E91E63;border-color: #E91E63;"></a>
+                                        <a class="btn btn-primary theme-item" href="{{url('admin/theme?theme=bright-purple')}}" style="background-color: #9C27B0;border-color: #9C27B0;"></a>
+                                        <a class="btn btn-primary theme-item" href="{{url('admin/theme?theme=blue2')}}" style="background-color: #2196F3;border-color: #2196F3;"></a>
+                                        <a class="btn btn-primary theme-item" href="{{url('admin/theme?theme=cyan')}}" style="background-color: #00BCD4;border-color: #00BCD4;"></a>
+                                        <a class="btn btn-primary theme-item" href="{{url('admin/theme?theme=teal')}}" style="background-color: #009688;border-color: #009688;"></a>
+                                        <a class="btn btn-primary theme-item" href="{{url('admin/theme?theme=blue-grey')}}" style="background-color: #607D8B;border-color: #607D8B;"></a>
+
+
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6  col-sm-12 col-xs-12">
                 <div class="card">
                     <div class="card-block">
                         <div class="title-block">
                             <h4 class="card-title text-primary">Filetype Rules <a href="#" data-toggle="modal" data-target="#addRule" class="btn btn-sm btn-secondary"style="float:right">Add</a></h4>
                         </div>
                         <div class="col-md-12">
-                            <table class="table table-striped">
+                            <table class="table table-striped table-responsive">
                                 <thead>
-                                    <th width="200">Name</th>
-                                    <th width="200">Extensions</th>
-                                    <th width="200"></th>
+                                    <th>Name</th>
+                                    <th>Extensions</th>
+                                    <th></th>
                                 </thead>
                                 <tbody>
                                     @foreach ($filetype_rules as $rule)

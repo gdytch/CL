@@ -32,7 +32,7 @@
                                                 <div class="tab-pane @if($active == $section->id)active show @endif fade in" id="{{$section->id}}" @if($active == $section->id)aria-expanded="true" @else aria-expanded="false" @endif>
                                                     <br>
                                                     @if(count($section->Activities) > 0)
-                                                        <table class="table table-striped" id="StudentTable{{$section->name}}">
+                                                        <table class="table table-striped table-responsive" id="StudentTable{{$section->name}}">
                                                             <thead>
                                                                 <tr>
                                                                     <th>Activity</th>

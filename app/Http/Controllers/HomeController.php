@@ -29,7 +29,7 @@ class HomeController extends Controller
     public function index()
     {
 
-        $student = Student::find(Auth::user()->id);
+        $student = Auth::user();
         $todays_activity = null;
         $message_infos = null;
         if(env('APP_URL') == 'https://computerclassapp.herokuapp.com/'){
@@ -69,8 +69,6 @@ class HomeController extends Controller
             return redirect()->intended('home');
         }
 
-
-
         return redirect()->back()->withError('Invalid Password')->with('error', 'Invalid password')->withInput();
 
     }
@@ -83,7 +81,6 @@ class HomeController extends Controller
         if(Auth::guard('web')->check())
             return redirect('home');
 
-
         if($request->lname != null){
             $lname = ucwords(strtolower($request->lname));
             $users = Student::where('lname' , $lname)->get()->except('password');
@@ -92,7 +89,6 @@ class HomeController extends Controller
         if($request->id != null)
             $users = Student::where('id' , $request->id)->get()->except('password');
 
-
         if(count($users) == 0 )
             return back()->withError('Last name not found');
 
@@ -100,7 +96,6 @@ class HomeController extends Controller
             $message_info = "Heroku demo <br> Select an account<br>Password: <strong>123456</strong>";
         else
             $message_info = null;
-
 
         return view('auth.login')->with('users', $users)->with('message_info', $message_info);
 
@@ -129,7 +124,7 @@ class HomeController extends Controller
     public function trash()
     {
 
-        $student = Student::find(Auth::user()->id);
+        $student = Auth::user();
         $directory = "/".$student->sectionTo->path."/".$student->path."/trash/";
         $contents = Storage::allFiles($directory);
         $files = null;
@@ -158,7 +153,7 @@ class HomeController extends Controller
     public function settings()
     {
 
-        $student = Student::find(Auth::user()->id);
+        $student = Auth::user();
 
         $variables = array(
            'dashboard_content' => 'dashboards.student.pages.settings',
@@ -210,9 +205,32 @@ class HomeController extends Controller
     public function recordLogin($id)
     {
 
-        $student = Student::find($id);
+        $student = Auth::user();
         $student->last_login = date("Y-m-d");
         $student->save();
+
+    }
+
+
+
+    public function update_password(Request $request, $id)
+    {
+
+        $this->Validate($request, [
+            'password' => 'confirmed|min:5'
+        ]);
+
+        $student = Student::find($id);
+
+        if(!Hash::check($request->old_password, $student->password))
+            return redirect()->back()->withError('Incorrect password');
+
+        $student->password = $request->password;
+        $student->save();
+
+        Auth::logout();
+
+        return redirect('checkUsers?id='.$student->id)->withSuccess('Enter new password');
 
     }
 
