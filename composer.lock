@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "d76fe4b4d6c7faefc15649f47d24a5c0",
+    "content-hash": "ec39a5d213c513b99968259607ef103d",
     "packages": [
         {
             "name": "barryvdh/laravel-debugbar",
@@ -647,16 +647,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v5.5.18",
+            "version": "v5.5.19",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "1cc21baac11551377734b8c17ead17db4c34fe21"
+                "reference": "c678100e84934ec85c9f8bc26bd0a60222682719"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/1cc21baac11551377734b8c17ead17db4c34fe21",
-                "reference": "1cc21baac11551377734b8c17ead17db4c34fe21",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/c678100e84934ec85c9f8bc26bd0a60222682719",
+                "reference": "c678100e84934ec85c9f8bc26bd0a60222682719",
                 "shasum": ""
             },
             "require": {
@@ -774,7 +774,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2017-10-19T12:50:26+00:00"
+            "time": "2017-10-25T19:10:45+00:00"
         },
         {
             "name": "laravel/tinker",
@@ -4737,7 +4737,8 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.0.0"
+        "php": ">=7.0.0",
+        "ext-gd": "*"
     },
     "platform-dev": []
 }
