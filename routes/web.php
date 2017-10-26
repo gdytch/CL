@@ -26,22 +26,29 @@ Route::group(['middleware' => 'auth:admin'], function () {
     Route::get('/admin', 'AdminsController@home')->name('admin');
     Route::resource('admin-user', 'AdminsController');
     Route::prefix('admin')->group(function(){
-        Route::resource('student', 'StudentsController');
-        Route::resource('section', 'SectionsController');
-        Route::post('admin/create/batch', 'StudentsController@batch')->name('student.create.batch');
-        Route::get('section/status/{id}', 'SectionsController@changeStatus')->name('section.status');
-        Route::resource('activity', 'ActivitiesController');
-        Route::get('student/folder/{id}', 'StudentsController@folder')->name('student.folder');
-        Route::get('section/folder/{id}', 'SectionsController@folder')->name('section.folder');
         Route::get('settings', 'AdminsController@settings')->name('admin.settings');
         Route::get('theme', 'AdminsController@theme')->name('admin.theme');
-        Route::get('activity/status/{id}', 'ActivitiesController@changeStatus')->name('activity.status');
-        Route::get('activity/submission/{id}', 'ActivitiesController@changeSubmissionStatus')->name('activity.submission');
-        Route::resource('post', 'PostsController');
         Route::post('filetyperules', 'AdminsController@filetype_rule_store')->name('filetype_rule.store');
         Route::put('filetyperules/{id}', 'AdminsController@filetype_rule_update')->name('filetype_rule.update');
-        Route::put('update_password/{id}', 'StudentsController@update_password')->name('student.update.password');
         Route::delete('filetyperules/{id}', 'AdminsController@filetype_rule_delete')->name('filetype_rule.delete');
+        Route::put('update_password/{id}', 'AdminsController@update_password')->name('admin.update.password');
+
+        Route::resource('student', 'StudentsController');
+        Route::get('student/folder/{id}', 'StudentsController@folder')->name('student.folder');
+        Route::put('student/update_password/{id}', 'StudentsController@update_password')->name('student.update.password');
+        Route::post('student/create/batch', 'StudentsController@batch')->name('student.create.batch');
+
+        Route::resource('section', 'SectionsController');
+        Route::get('section/status/{id}', 'SectionsController@changeStatus')->name('section.status');
+        Route::get('section/folder/{id}', 'SectionsController@folder')->name('section.folder');
+
+        Route::resource('post', 'PostsController');
+
+        Route::resource('activity', 'ActivitiesController');
+        Route::get('activity/status/{id}', 'ActivitiesController@changeStatus')->name('activity.status');
+        Route::get('activity/submission/{id}', 'ActivitiesController@changeSubmissionStatus')->name('activity.submission');
+
+
     });
 
 });

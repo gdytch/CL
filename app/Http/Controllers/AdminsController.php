@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use App\Admin;
 use Auth;
+use Image;
 use App\Student;
 use App\Section;
 use App\Activity;
@@ -14,12 +15,11 @@ use App\FTRule;
 use App\Record;
 use App\Session;
 
-
 class AdminsController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:admin')->except('showLoginForm','login','store_first');
+        $this->middleware('auth:admin')->except('showLoginForm', 'login', 'store_first');
     }
     /**
      * Display a listing of the resource.
@@ -29,8 +29,6 @@ class AdminsController extends Controller
     public function index()
     {
         //
-        //TODO: admin crud
-
     }
 
     /**
@@ -51,19 +49,29 @@ class AdminsController extends Controller
      */
     public function store(Request $request)
     {
+        $this->Validate($request, [
+            'password' => 'confirmed|min:5',
+            'username' => 'unique:admins',
+        ]);
 
+        $request->username = strtolower($request->username);
+        $admin = new Admin($request->all());
+        $admin->avatar = 'default-avatar.png';
+        $admin->theme  = 'green';
+        $admin->save();
 
+        return redirect()->back()->withSuccess('Admin added');
     }
 
     public function store_first(Request $request)
     {
         $this->Validate($request, [
-            'password' => 'confirmed|max:5'
+            'password' => 'confirmed|min:5'
         ]);
         $request->username = strtolower($request->username);
         $admin = new Admin($request->all());
         $admin->avatar = 'default-avatar.png';
-        $admin->theme = 'green';
+        $admin->theme  = 'green';
         $admin->save();
         return redirect()->route('admin.login.form');
     }
@@ -99,8 +107,48 @@ class AdminsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->Validate($request, [
+            'avatar_file' => 'file|max:1024',
+        ]);
+
+        $admin = Admin::find($id);
+
+        if(!Hash::check($request->confirm_password, $admin->password))
+            return redirect()->back()->withErrors('Invalid password');
+
+        $admin->update($request->all());
+
+        //new avatar
+        if ($request->hasFile('avatar_file')) {
+            $avatar = $request->file('avatar_file');
+            $filename = $admin->lname."-".$admin->fname." - ".time().".".$avatar->getClientOriginalExtension();
+            if ($admin->avatar != 'default-avatar.png') {
+                Storage::delete("avatar/".$admin->avatar);
+            }
+            Image::make($avatar)->resize(250, 250)->save(public_path().'/storage/avatar/'.$filename);
+            $admin->avatar = $filename;
+            $admin->update();
+        }
+
+        return redirect()->back()->withSuccess('Admin updated');
     }
+
+    public function update_password(Request $request, $id)
+    {
+        $admin = Admin::find($id);
+        if(!Hash::check($request->confirm_password, $admin->password))
+            return redirect()->back()->withErrors('Invalid password');
+
+        $this->Validate($request, [
+            'password' => 'confirmed|min:5'
+        ]);
+
+        $admin->password = $request->password;
+        $admin->save();
+
+        return redirect()->back()->withSuccess('Password updated');
+    }
+
 
     /**
      * Remove the specified resource from storage.
@@ -110,53 +158,61 @@ class AdminsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if(count(Admin::all())  <= 1)
+            return redirect()->back()->withError('Cannot delete the only admin account');
+
+        $admin = Admin::find($id);
+        $admin->delete();
+
+        if(Auth::user()->id == $admin->id){
+            Auth::logout();
+            return redirect()->route('welcome');
+        }
+
+        return redirect()->back()->withSuccess('Account deleted');
     }
 
 
 
     public function showLoginForm()
     {
-
         $admins = Admin::all();
-        if(count($admins) == 0)
+        if (count($admins) == 0) {
             return view('auth.register');
+        }
 
-        if(Auth::guard('admin')->check())
+        if (Auth::guard('admin')->check()) {
             return redirect('admin');
+        }
 
-        if(env('APP_URL') == 'https://computerclassapp.herokuapp.com/'){
+        if (env('APP_URL') == 'https://computerclassapp.herokuapp.com/') {
             $message_info = "Heroku demo <br> Username: <strong>Admin</strong><br> Password: <strong>12345</strong>";
-        }else {
+        } else {
             $message_info = null;
         }
 
         return view('dashboards.admin.pages.login')->with('message_info', $message_info);
-
-
     }
 
 
 
     public function home()
     {
-
         $current_date = date("M d Y", time());
         $variables = array(
             'dashboard_content' => 'dashboards.admin.pages.home',
-            'stats' => $this->stats(),
-            'current_date' => $current_date
+            'stats'             => $this->stats(),
+            'current_date'      => $current_date
         );
 
         return view('layouts.admin')->with($variables);
-
     }
 
 
 
     public function login(Request $request)
     {
-      //Validate the form data
+        //Validate the form data
         $this->validate($request, [
             'username' => 'required',
             'password' => 'required'
@@ -164,47 +220,40 @@ class AdminsController extends Controller
 
         $username = strtolower($request->username);
         //if validated
-        if(Auth::guard('admin')->attempt(['username' => $username, 'password' => $request->password]))
+        if (Auth::guard('admin')->attempt(['username' => $username, 'password' => $request->password])) {
             return redirect()->intended('admin');
+        }
 
 
         return redirect()->back()->withInput($request->only($this->username()))->withErrors('Invalid credentials');
-
     }
 
 
 
     public function username()
     {
-
         return 'username';
-
     }
-
 
 
     public function stats()
     {
-
-        //TODO: active now stats
-        //TODO: logged in today(attendance)
-
-        $students = Student::all();
-        $sections = Section::all();
-        $activities = Activity::all();
+        $students         = Student ::all();
+        $sections         = Section ::all();
+        $activities       = Activity::all();
         $activity_submits = 0;
-        $storage_size = 0;
-        $today = date("Y-m-d", time());
-        $login_list = null;
+        $storage_size     = 0;
+        $today            = date("Y-m-d", time());
+        $login_list       = null;
         //get today's total number of student logins
         $logins_today = Student::where('last_login', $today)->distinct()->get();
         foreach ($logins_today as $student) {
-          $login_list[] = (object) array(
-            'id' => $student->id,
-            'fname' => $student->fname,
-            'lname' => $student->lname,
+            $login_list[] = (object) array(
+            'id'      => $student->id,
+            'fname'   => $student->fname,
+            'lname'   => $student->lname,
             'section' => $student->sectionTo->name,
-            'online' => $this->isOnline($student)
+            'online'  => $this->sessionStatus($student)
           );
         }
         // get today's activities
@@ -214,8 +263,9 @@ class AdminsController extends Controller
         }
 
         //get total activity submits
-        foreach ($students as $student)
+        foreach ($students as $student) {
             $activity_submits += count($student->Records);
+        }
 
         $all_files = Storage::allfiles();
         //get total storage size
@@ -226,26 +276,24 @@ class AdminsController extends Controller
         $section_storage = $this->getSectionStorage();
 
         $stats = (object) array(
-            'total_students' => count($students),
-            'total_sections' => count($sections),
-            'total_activities' => count($activities),
-            'activity_submits' => $activity_submits,
+            'total_students'     => count($students),
+            'total_sections'     => count($sections),
+            'total_activities'   => count($activities),
+            'activity_submits'   => $activity_submits,
             'total_storage_size' => $this->bytesToHuman($storage_size),
-            'section_storage' => $section_storage,
-            'logins_today' => $logins_today,
-            'todays_activities' => $todays_activities,
-            'login_list' => $login_list
+            'section_storage'    => $section_storage,
+            'logins_today'       => $logins_today,
+            'todays_activities'  => $todays_activities,
+            'login_list'         => $login_list
         );
 
         return $stats;
-
     }
 
 
 
     public function getSectionStorage()
     {
-
         $all_files = Storage::allfiles();
         $total_storage_size = 0;
 
@@ -256,27 +304,26 @@ class AdminsController extends Controller
         $section_paths = Section::select('path')->distinct()->get();
         $section_storage = null;
 
-        foreach ($section_paths as $section)
-        {
+        foreach ($section_paths as $section) {
             $size = 0;
             $files = Storage::allfiles($section->path);
 
-            if($files != null)
-                foreach ($files as $file)
+            if ($files != null) {
+                foreach ($files as $file) {
                     $size += Storage::size($file);
+                }
+            }
             $percent = ($size / $total_storage_size) * 100;
 
             $section_storage[] = (object) array('path' => $section->path, 'size' => $this->bytesToHuman($size), 'percent' => round($percent, 0));
         }
 
         return $section_storage;
-
     }
 
 
     public function bytesToHuman($bytes)
     {
-
         $units = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB'];
 
         for ($i = 0; $bytes > 1024; $i++) {
@@ -284,43 +331,40 @@ class AdminsController extends Controller
         }
 
         return round($bytes, 2) . ' ' . $units[$i];
-
     }
 
 
 
     public function settings()
     {
-
         $rules = FTRule::all();
+
+        $admins = Admin::all();
 
         $variables = array(
             'dashboard_content' => 'dashboards.admin.pages.settings',
-            'filetype_rules' => $rules
+            'filetype_rules'    => $rules,
+            'admins'            => $admins
         );
 
         return view('layouts.admin')->with($variables);
-
     }
 
 
 
     public function theme(Request $request)
     {
-
-        $admin = Admin::find(Auth::user()->id);
+        $admin = Auth::user();
         $admin->theme = $request->get('theme');
         $admin->save();
 
         return redirect()->back();
-
     }
 
 
 
     public function filetype_rule_store(Request $request)
     {
-
         $this->Validate($request, [
             'name' => 'unique:ftrules'
         ]);
@@ -334,62 +378,64 @@ class AdminsController extends Controller
 
     public function filetype_rule_update(Request $request, $id)
     {
-
         $this->Validate($request, [
             'name' => 'unique:ftrules,id,'.$id
         ]);
 
         $rule = FTRule::find($id);
 
-        if($rule->name == 'Default')
+        if ($rule->name == 'Default') {
             return redirect()->back()->withErrors('Default rule is locked');
+        }
 
         $rule->update($request->all());
 
         return redirect()->back()->withSuccess('Rule updated');
-
     }
 
 
     public function filetype_rule_delete($id)
     {
-
         $rule = FTRule::find($id);
-        if($rule->name == 'Default')
+        if ($rule->name == 'Default') {
             return redirect()->back()->withErrors('Default rule is locked');
+        }
 
         $activities = $rule->Activities;
         $default = FTRule::where('name', 'Default')->get()->first();
-        if(count($activities) != 0)
+        if (count($activities) != 0) {
             foreach ($activities as $activity) {
                 $activity->ftrule_id = $default->id;
                 $activity->update();
             }
+        }
         $rule->delete();
 
         return redirect()->back()->withSuccess('Rule deleted');
-
     }
 
-    public function isOnline($student)
+    public function sessionStatus($student)
     {
         $session = Session::where(['user_id' => $student->id, 'id' => $student->session_id])->get()->first();
 
-        if($session == null || count($session) == 0)
-          return '<small><i class="fa fa-circle"></i></small>';
+        if ($session == null || count($session) == 0) {
+            return '<small><i class="fa fa-circle"></i></small>';
+        }
 
         $current_time = time();
 
-        if(($current_time - $session->last_activity) >= 1800 && ($current_time - $session->last_activity) <= 3600)
-          return '<small><i class="fa fa-circle yellow" ></i></small>';
+        if (($current_time - $session->last_activity) >= 1800 && ($current_time - $session->last_activity) <= 3600) {
+            return '<small><i class="fa fa-circle yellow" ></i></small>';
+        }
 
-        if(($current_time - $session->last_activity) >= 3601 && ($current_time - $session->last_activity) <= 7199)
-          return '<small><i class="fa fa-circle orange" ></i></small>';
+        if (($current_time - $session->last_activity) >= 3601 && ($current_time - $session->last_activity) <= 7199) {
+            return '<small><i class="fa fa-circle orange" ></i></small>';
+        }
 
-        if(($current_time - $session->last_activity) >= 7200)
-          return '<small><i class="fa fa-circle red" ></i></small>';
+        if (($current_time - $session->last_activity) >= 7200) {
+            return '<small><i class="fa fa-circle red" ></i></small>';
+        }
 
         return '<small><i class="fa fa-circle green"></i></small>';
     }
-
 }

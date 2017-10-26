@@ -212,6 +212,7 @@ class StudentsController extends Controller
             $student->path = $newPath;
         }
 
+        //new avatar
         if ($request->hasFile('avatar_file')) {
             $avatar = $request->file('avatar_file');
             $filename = $student->lname."-".$student->fname." - ".time().".".$avatar->getClientOriginalExtension();

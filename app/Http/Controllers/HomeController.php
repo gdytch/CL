@@ -18,7 +18,6 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-
         $this->middleware('auth:web')->except('checkUser', 'login', 'welcome');
     }
 
@@ -29,10 +28,9 @@ class HomeController extends Controller
      */
     public function index()
     {
-
         $student = Auth::user();
         $todays_activity = null;
-        $message_infos = null;
+        $message_infos   = null;
         if (env('APP_URL') == 'https://computerclassapp.herokuapp.com/') {
             $message_infos[0] = "Heroku Demo, file uploads will be deleted in every dyno restart (deployment)";
         }
@@ -49,11 +47,11 @@ class HomeController extends Controller
 
         $variables = array(
             'dashboard_content' => 'dashboards.student.pages.home',
-            'student' => $student,
-            'files' => $files,
-            'activities' => $activities,
-            'todays_activity' => $todays_activity,
-            'message_infos' => $message_infos
+            'student'           => $student,
+            'files'             => $files,
+            'activities'        => $activities,
+            'todays_activity'   => $todays_activity,
+            'message_infos'     => $message_infos
         );
         return view('layouts.student')->with($variables);
     }
@@ -62,7 +60,6 @@ class HomeController extends Controller
 
     public function login(Request $request)
     {
-
         if ($request->id == null) {
             return back()->withError('Select an account');
         }
@@ -79,7 +76,6 @@ class HomeController extends Controller
 
     public function checkUser(Request $request)
     {
-
         if (Auth::guard('web')->check()) {
             return redirect('home');
         }
@@ -131,7 +127,6 @@ class HomeController extends Controller
 
     public function trash()
     {
-
         $student = Auth::user();
         $directory = "/".$student->sectionTo->path."/".$student->path."/trash/";
         $contents = Storage::allFiles($directory);
@@ -144,18 +139,18 @@ class HomeController extends Controller
                 $file_id = $temp[1];
                 $file['filename'] = $temp[0];
                 $files[$key] = (object) array(
-                  'name' => $file['filename'],
-                  'type' => $file['extension'],
-                  'path' => $file['dirname'],
-                  'id' => $file_id,
+                  'name'     => $file['filename'],
+                  'type'     => $file['extension'],
+                  'path'     => $file['dirname'],
+                  'id'       => $file_id,
                   'basename' => $file['basename']);
             }
         }
 
         $variables = array(
             'dashboard_content' => 'dashboards.student.pages.trash',
-            'student' => $student,
-            'files' => $files
+            'student'           => $student,
+            'files'             => $files
         );
 
         return view('layouts.student')->with($variables);
@@ -165,7 +160,6 @@ class HomeController extends Controller
 
     public function settings()
     {
-
         $student = Auth::user();
 
         $variables = array(
@@ -180,15 +174,14 @@ class HomeController extends Controller
 
     public function profile()
     {
-
         $student = Auth::user();
 
         $table_item = app('App\Http\Controllers\StudentsController')->checkActivities($student);
 
         $variables = array(
            'dashboard_content' => 'dashboards.student.pages.profile',
-           'student' => $student,
-           'table_item' => $table_item,
+           'student'           => $student,
+           'table_item'        => $table_item,
         );
 
         return view('layouts.student')->with($variables);
@@ -198,13 +191,12 @@ class HomeController extends Controller
 
     public function activity()
     {
-
         $student = Auth::user();
         $activities = $student->sectionTo->Activities()->where('active', true)->orderBy('created_at', 'desc')->get();
 
         $variables = array(
             'dashboard_content' => 'dashboards.student.pages.activity',
-            'activities' => $activities,
+            'activities'        => $activities,
         );
 
         return view('layouts.student')->with($variables);
@@ -214,7 +206,6 @@ class HomeController extends Controller
 
     public function recordLogin($id)
     {
-
         $student = Auth::user();
         $student->last_login = date("Y-m-d");
         $student->session_id = Session::getId();
@@ -225,7 +216,6 @@ class HomeController extends Controller
 
     public function update_password(Request $request, $id)
     {
-
         $this->Validate($request, [
             'password' => 'confirmed|min:5'
         ]);
