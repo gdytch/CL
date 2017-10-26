@@ -55,7 +55,7 @@ class PostsController extends Controller
         $message_info = null;
 
         if (env('APP_URL') == 'https://computerclassapp.herokuapp.com/') {
-            $message_info_per = "Uploaded images are deleted in every dyno restarts, you can your images in google drive or other cloud storage and paste the image url. ";
+            $message_info_per = "Uploaded images are deleted in every dyno restarts, you can upload your images in google drive or other cloud storage and paste the image url. ";
         } else {
             $message_info_per = null;
         }
