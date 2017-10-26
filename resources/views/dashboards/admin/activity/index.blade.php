@@ -31,7 +31,7 @@
                                             @foreach ($sections as $key => $section)
                                                 <div class="tab-pane @if($active == $section->id)active show @endif fade in" id="{{$section->id}}" @if($active == $section->id)aria-expanded="true" @else aria-expanded="false" @endif>
                                                     <br>
-                                                    @if(count($section->Activities) > 0)
+                                                    @if($table_list != null)
                                                         <table class="table table-striped table-responsive" id="StudentTable{{$section->name}}">
                                                             <thead>
                                                                 <tr>
@@ -46,19 +46,20 @@
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
-                                                            @foreach ($section->Activities()->orderBy('created_at', 'desc')->get() as $activity)
+                                                            @foreach ($table_list as $activity)
                                                                 <tr>
                                                                     <td>{{$activity->name}}</td>
                                                                     <td>{{$activity->description}}</td>
                                                                     <td>{{$activity->date}}</td>
-                                                                    <td>{{$activity->FTRule->extensions}}</td>
-                                                                    <td>{{count($activity->Records()->distinct()->get(['student_id']))}}/{{count($section->Students)}}</td>
+                                                                    <td>{{$activity->activity_rule}}</td>
+                                                                    <td>{{$activity->submit_count}}</td>
                                                                     <td>
                                                                         @if($activity->active)
                                                                             <a href="{{route('activity.status',$activity->id)}}" class="btn btn-sm btn-success">Active</a>
                                                                             @else <a href="{{route('activity.status',$activity->id)}}" class="btn btn-sm btn-danger">Inactive</a>
                                                                         @endif
                                                                     </td>
+
                                                                     <td>
                                                                         @if($activity->submission)
                                                                             <a href="{{route('activity.submission',$activity->id)}}" class="btn btn-sm btn-success">Open</a>
@@ -68,6 +69,7 @@
                                                                     <td><a href="{{route('activity.show',$activity->id)}}" class="btn btn-sm btn-info">View</a></td>
                                                                 </tr>
                                                             @endforeach
+                                                       
                                                             </tbody>
                                                         </table>
                                                     @else
@@ -91,7 +93,6 @@
         </div>
     </div>
 </section>
-
 <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="batchModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">

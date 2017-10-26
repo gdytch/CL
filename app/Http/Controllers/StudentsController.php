@@ -25,21 +25,31 @@ class StudentsController extends Controller
     public function index(Request $request)
     {
 
-        if($request->id == 'all' || $request->id == null)
+        if ($request->id == 'all' || $request->id == null) {
             $students = Student::all();
-        else
+        } else {
             $students = Student::where('section', $request->id)->get();
+        }
 
         $sections = Section::all();
 
+        foreach ($students as $student) {
+            $table_list[] = (object) array(
+                'id' => $student->id,
+                'fname' => $student->fname,
+                'lname' => $student->lname,
+                'section_name' => $student->sectionTo->name,
+                'section_id' => $student->section,
+            );
+        }
+
         $variables = array(
              'dashboard_content' => 'dashboards.admin.student.index',
-             'students' => $students,
-             'sections' => $sections
+             'sections' => $sections,
+             'table_list' => $table_list,
         );
 
         return view('layouts.admin')->with($variables);
-
     }
 
     /**
@@ -58,7 +68,6 @@ class StudentsController extends Controller
         );
 
         return view('layouts.admin')->with($variables);
-
     }
 
     /**
@@ -73,7 +82,6 @@ class StudentsController extends Controller
         $validator = Validator::make($request->all(), [
             'avatar_file' => 'file|max:1024'
         ]);
-        //TODO: check if fname and lname already exists
         if ($validator->fails()) {
             return redirect()->route('student.create')
                         ->withErrors($validator)
@@ -82,6 +90,11 @@ class StudentsController extends Controller
 
         $lname = ucwords(strtolower($request->lname));
         $fname = ucwords(strtolower($request->fname));
+
+        if (Student::where(['lname' => $lname, 'fname' => $fname])->get()) {
+            return redirect()->back()->withErrors('Student already exists');
+        }
+
         $path = ''.$lname.' '.$fname.'';
         $password = $request->password;
         $section = $request->section;
@@ -94,15 +107,14 @@ class StudentsController extends Controller
         $student->section = $section;
         $student->theme = 'green';
 
-        if($request->hasFile('avatar_file'))
-        {
+        if ($request->hasFile('avatar_file')) {
             $avatar = $request->file('avatar_file');
             $filename = $student->lname."-".$student->fname." - ".time().".".$avatar->getClientOriginalExtension();
-            Image::make($avatar)->resize(250,250)->save(public_path().'/storage/avatar/'.$filename);
+            Image::make($avatar)->resize(250, 250)->save(public_path().'/storage/avatar/'.$filename);
             $avatar= $filename;
-        }
-        else
+        } else {
             $avatar = 'default-avatar.png';
+        }
 
         $student->avatar = $avatar;
         $student->save();
@@ -113,7 +125,6 @@ class StudentsController extends Controller
         $this->makeFolder($folder_path);
 
         return redirect()->route('student.index')->withSuccess('Student Added');
-
     }
 
     /**
@@ -128,8 +139,9 @@ class StudentsController extends Controller
         $student = Student::find($id);
 
         //check if student has a section
-        if($student->section == null)
-            return redirect()->route('student.edit',$student->id)->withError("Student has no section");
+        if ($student->section == null) {
+            return redirect()->route('student.edit', $student->id)->withError("Student has no section");
+        }
 
         $table_item = $this->checkActivities($student);
         $sections = Section::all();
@@ -141,7 +153,6 @@ class StudentsController extends Controller
         );
 
         return view('layouts.admin')->with($variables);
-
     }
 
     /**
@@ -163,7 +174,6 @@ class StudentsController extends Controller
         );
 
         return view('layouts.admin')->with($variables);
-
     }
 
     /**
@@ -181,24 +191,20 @@ class StudentsController extends Controller
 
         $student = Student::find($id);
         // Move the student folder if student is moved to a diff section
-        if($student->section != null){
-            if($student->section != $request->section)
-            {
+        if ($student->section != null) {
+            if ($student->section != $request->section) {
                 $section1 = Section::find($student->section);
                 $newSection = Section::find($request->section);
                 Storage::move($section1->path.'/'.$student->path, $newSection->path.'/'.$student->path);
             }
-        }
-        else
-        {
+        } else {
             $newSection = Section::find($request->section);
             $folder_path = '/'.$newSection->path.'/'.$student->path;
             $this->makeFolder($path);
         }
 
         // Rename the student folder if student name is changed
-        if(($student->fname != $request->fname)||($student->lname != $request->lname))
-        {
+        if (($student->fname != $request->fname)||($student->lname != $request->lname)) {
             $section1 = Section::find($request->section);
             $newPath = ''.ucwords(strtolower($request->lname)).' '.ucwords(strtolower($request->fname)).'';
             $oldPath = $student->path;
@@ -206,22 +212,20 @@ class StudentsController extends Controller
             $student->path = $newPath;
         }
 
-        if($request->hasFile('avatar_file'))
-        {
+        if ($request->hasFile('avatar_file')) {
             $avatar = $request->file('avatar_file');
             $filename = $student->lname."-".$student->fname." - ".time().".".$avatar->getClientOriginalExtension();
-            if($student->avatar != 'default-avatar.png')
+            if ($student->avatar != 'default-avatar.png') {
                 Storage::delete("avatar/".$student->avatar);
-            Image::make($avatar)->resize(250,250)->save(public_path().'/storage/avatar/'.$filename);
+            }
+            Image::make($avatar)->resize(250, 250)->save(public_path().'/storage/avatar/'.$filename);
             $student->avatar = $filename;
-
         }
 
         $student->update($request->all());
         $student->save();
         //
-        return redirect()->route('student.show',$id)->withSuccess('Saved');
-
+        return redirect()->route('student.show', $id)->withSuccess('Saved');
     }
 
 
@@ -238,7 +242,6 @@ class StudentsController extends Controller
         $student->save();
 
         return redirect()->back()->withSuccess('Password updated');
-
     }
 
     /**
@@ -254,12 +257,12 @@ class StudentsController extends Controller
         $student->delete();
         $section = Section::find($student->section);
         $section_path ='/'.$section->path;
-        if($student->avatar != 'default-avatar.png' && Storage::exists('/avatar/'.$student->avatar))
+        if ($student->avatar != 'default-avatar.png' && Storage::exists('/avatar/'.$student->avatar)) {
             Storage::delete('avatar/'.$student->avatar);
+        }
         Storage::deleteDirectory($section_path.'/'.$student->path);
 
         return redirect()->route('student.index')->withSuccess('Account Deleted');
-
     }
 
 
@@ -267,29 +270,33 @@ class StudentsController extends Controller
     public function batch(Request $request)
     {
 
-        if(!$request->hasFile('file'))
+        if (!$request->hasFile('file')) {
             return redirect()->back()->withError('No file');
+        }
 
         $file = $request->file('file');
 
-        $results = Excel::load($file, function($reader) {})->get();
+        $results = Excel::load($file, function ($reader) {
+        })->get();
 
         $students = array();
         $password = bcrypt('123456');
         $sect = Section::all();
         // Fetch data from Excel file
-        foreach ($results as $key => $column)
-        {
-            if($column->fname == null)
+        foreach ($results as $key => $column) {
+            if ($column->fname == null) {
                 $column->fname = 'fname';
+            }
             $lname = ucwords(strtolower($column->lname));
             $fname = ucwords(strtolower($column->fname));
             $section = strtoupper($column->section);
             $path = ''.$lname.' '.$fname.'';
             $sectionid = null;
-            foreach ($sect as $key1 => $s)
-                if($s->name == $section)
+            foreach ($sect as $key1 => $s) {
+                if ($s->name == $section) {
                     $sectionid = $s->id;
+                }
+            }
 
             $students[$key] = ['lname' => $lname, 'fname' => $fname, 'path' => $path, 'avatar' => 'default-avatar.png', 'password' => $password, 'section' => $sectionid, 'theme' => 'green'];
         }
@@ -298,28 +305,28 @@ class StudentsController extends Controller
         Student::insert($students);
 
         // Create folders for students
-        foreach ($results as $key => $column)
-        {
+        foreach ($results as $key => $column) {
             $section_path = null;
-            if($column->fname == null)
+            if ($column->fname == null) {
                 $column->fname = 'fname';
+            }
             $lname = ucwords(strtolower($column->lname));
             $fname = ucwords(strtolower($column->fname));
             $section = strtoupper($column->section);
             $path = ''.$lname.' '.$fname.'';
-            foreach ($sect as $key1 => $s)
-            {
-                if($s->name == $section)
+            foreach ($sect as $key1 => $s) {
+                if ($s->name == $section) {
                     $section_path = $s->path;
+                }
             }
-            if($section_path == null)
+            if ($section_path == null) {
                 continue;
+            }
             $folder_path = '/'.$section_path.'/'.$path;
             $this->makeFolder($folder_path);
         }
 
         return redirect()->route('student.index')->withSuccess('Successfully Added Students.');
-
     }
 
 
@@ -329,8 +336,7 @@ class StudentsController extends Controller
 
         $student = Student::find($id);
         $directory = public_path()."\\storage"."\\".$student->sectionTo->path."\\".$student->path."\\files";
-        if (!(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') && !(file_exists($directory)))
-        {
+        if (!(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') && !(file_exists($directory))) {
             $msg = array("Cannot open folder", "This function only works on a local server running in Windows");
             return redirect()->back()->withErrors($msg);
         }
@@ -346,13 +352,11 @@ class StudentsController extends Controller
     public function makeFolder($path)
     {
 
-        if (!Storage::exists($path))
-        {
-            Storage::makeDirectory($path,0777,true);
-            Storage::makeDirectory($path.'/files',0777,true);
-            Storage::makeDirectory($path.'/trash',0777,true);
+        if (!Storage::exists($path)) {
+            Storage::makeDirectory($path, 0777, true);
+            Storage::makeDirectory($path.'/files', 0777, true);
+            Storage::makeDirectory($path.'/trash', 0777, true);
         }
-
     }
 
 
@@ -362,30 +366,29 @@ class StudentsController extends Controller
 
         $table_item = null;
 
-        if(count($student->Sectionto->Activities) > 0)
-            foreach ($student->Sectionto->Activities()->orderBy('created_at', 'desc')->where('active', true)->get() as $activity)
-            {
+        if (count($student->Sectionto->Activities) > 0) {
+            foreach ($student->Sectionto->Activities()->orderBy('created_at', 'desc')->where('active', true)->get() as $activity) {
                 $files = null;
-                if(count($student->RecordsOf($activity->id))>0)
-                {
+                if (count($student->RecordsOf($activity->id))>0) {
                     $submitted = true;
-                    foreach ($student->RecordsOf($activity->id) as $result)
+                    foreach ($student->RecordsOf($activity->id) as $result) {
                         $files[] = (object) array('filename' => $result->filename,  'date_submitted' => date("M d Y", strtotime($result->created_at)));
-                }
-                else
+                    }
+                } else {
                     $submitted = false;
+                }
 
                 $table_item[] = (object) array(
-                    'name' => $activity->name,
-                    'date' => date("M d Y", strtotime($activity->date)),
-                    'description' => $activity->description,
-                    'submitted' => $submitted,
-                    'files' => $files,
+                'name' => $activity->name,
+                'date' => date("M d Y", strtotime($activity->date)),
+                'description' => $activity->description,
+                'submitted' => $submitted,
+                'files' => $files,
                 );
             }
+        }
 
         return $table_item;
-
     }
 
 
@@ -399,30 +402,28 @@ class StudentsController extends Controller
 
         $this->verifyFileRecords($student);
 
-        if(Storage::exists($directory))
+        if (Storage::exists($directory)) {
             $contents = Storage::allFiles($directory);
-        else
-        {
+        } else {
             $folder_path = '/'.$student->sectionTo->path.'/'.$student->path;
             $this->makeFolder($folder_path);
             $error = array("Student folder wasn't found.", 'Generated a folder for student');
             $contents = null;
         }
 
-        if($contents == null)
+        if ($contents == null) {
             return null;
+        }
 
-        foreach ($contents as $key => $file1)
-        {
-           $file = pathinfo((string)$file1."");
-           $temp = explode("id=", $file['filename']);
-           $file_id = $temp[1];
-           $file['filename'] = $temp[0];
-           $files[$key] = (object) array('name' => $file['filename'], 'type' => $file['extension'], 'path' => $file['dirname'], 'id' => $file_id, 'basename' => $file['basename']);
+        foreach ($contents as $key => $file1) {
+            $file = pathinfo((string)$file1."");
+            $temp = explode("id=", $file['filename']);
+            $file_id = $temp[1];
+            $file['filename'] = $temp[0];
+            $files[$key] = (object) array('name' => $file['filename'], 'type' => $file['extension'], 'path' => $file['dirname'], 'id' => $file_id, 'basename' => $file['basename']);
         }
 
         return $files;
-
     }
 
 
@@ -435,7 +436,6 @@ class StudentsController extends Controller
         $student->save();
 
         return redirect()->back();
-
     }
 
     // Verify if File Records exists in physical storage
@@ -444,15 +444,13 @@ class StudentsController extends Controller
 
         $records = Record::where(['student_id' => $student->id, 'active' => true])->get();
 
-        if(count($records) != 0)
-            foreach ($records as $record)
-                if(!Storage::exists($student->sectionTo->path."/".$student->path."/files/".$record->basename))
-                {
+        if (count($records) != 0) {
+            foreach ($records as $record) {
+                if (!Storage::exists($student->sectionTo->path."/".$student->path."/files/".$record->basename)) {
                     $this_record = Record::find($record->id);
                     $this_record->delete();
                 }
-
+            }
+        }
     }
-
-
 }

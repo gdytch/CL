@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Storage;
 use App\Student;
 use App\Activity;
 use Auth;
+use Session;
+
 class HomeController extends Controller
 {
     /**
@@ -18,7 +20,6 @@ class HomeController extends Controller
     {
 
         $this->middleware('auth:web')->except('checkUser', 'login', 'welcome');
-
     }
 
     /**
@@ -32,7 +33,7 @@ class HomeController extends Controller
         $student = Auth::user();
         $todays_activity = null;
         $message_infos = null;
-        if(env('APP_URL') == 'https://computerclassapp.herokuapp.com/'){
+        if (env('APP_URL') == 'https://computerclassapp.herokuapp.com/') {
             $message_infos[0] = "Heroku Demo, file uploads will be deleted in every dyno restart (deployment)";
         }
 
@@ -40,9 +41,11 @@ class HomeController extends Controller
 
         $activities = $student->SectionTo->Activities()->where(['active' => true, 'submission' => true])->orderBy('date', 'desc')->get();
 
-        foreach ($activities as $activity)
-            if(($activity->date == date("Y-m-d", time())) && (count($student->RecordsOf($activity->id)) == 0) && ($activity->Post != null))
-                    $todays_activity[] = $activity->Post;
+        foreach ($activities as $activity) {
+            if (($activity->date == date("Y-m-d", time())) && (count($student->RecordsOf($activity->id)) == 0) && ($activity->Post != null)) {
+                $todays_activity[] = $activity->Post;
+            }
+        }
 
         $variables = array(
             'dashboard_content' => 'dashboards.student.pages.home',
@@ -53,7 +56,6 @@ class HomeController extends Controller
             'message_infos' => $message_infos
         );
         return view('layouts.student')->with($variables);
-
     }
 
 
@@ -61,16 +63,16 @@ class HomeController extends Controller
     public function login(Request $request)
     {
 
-        if($request->id == null)
+        if ($request->id == null) {
             return back()->withError('Select an account');
+        }
 
-        if(Auth::guard('web')->attempt(['id' => $request->id, 'password' => $request->password])){
+        if (Auth::guard('web')->attempt(['id' => $request->id, 'password' => $request->password])) {
             $this->recordLogin($request->id);
             return redirect()->intended('home');
         }
 
         return redirect()->back()->withError('Invalid Password')->with('error', 'Invalid password')->withInput();
-
     }
 
 
@@ -78,43 +80,49 @@ class HomeController extends Controller
     public function checkUser(Request $request)
     {
 
-        if(Auth::guard('web')->check())
+        if (Auth::guard('web')->check()) {
             return redirect('home');
-
-        if($request->lname != null){
-            $lname = ucwords(strtolower($request->lname));
-            $users = Student::where('lname' , $lname)->get()->except('password');
         }
 
-        if($request->id != null)
-            $users = Student::where('id' , $request->id)->get()->except('password');
+        if ($request->lname != null) {
+            $lname = ucwords(strtolower($request->lname));
+            $users = Student::where('lname', $lname)->get()->except('password');
+        }
 
-        if(count($users) == 0 )
+        if ($request->id != null) {
+            $users = Student::where('id', $request->id)->get()->except('password');
+        }
+
+        if (count($users) == 0) {
             return back()->withError('Last name not found');
+        }
 
-        if(env('APP_URL') == 'https://computerclassapp.herokuapp.com/')
+        if (env('APP_URL') == 'https://computerclassapp.herokuapp.com/') {
             $message_info = "Heroku demo <br> Select an account<br>Password: <strong>123456</strong>";
-        else
+        } else {
             $message_info = null;
+        }
 
         return view('auth.login')->with('users', $users)->with('message_info', $message_info);
-
     }
 
 
 
     public function welcome()
     {
-        if(Auth::guard('web')->check())
+        if (Auth::guard('web')->check()) {
             return redirect('home');
-        if(Auth::guard('admin')->check())
+        }
+        if (Auth::guard('admin')->check()) {
             return redirect('admin');
+        }
 
-        if(env('APP_URL') == 'https://computerclassapp.herokuapp.com/'){
+        if (env('APP_URL') == 'https://computerclassapp.herokuapp.com/') {
             $message_infos[0] = "Heroku demo <br> Lastname: <strong>Demo, Demo2, Demo3, Demo4, Demo5</strong>";
             $message_infos[1] = "For admin click <a href='/admin'>here</a>";
-        }else
+        } else {
             $message_infos = null;
+        }
 
         return view('welcome')->with('message_infos', $message_infos);
     }
@@ -129,14 +137,20 @@ class HomeController extends Controller
         $contents = Storage::allFiles($directory);
         $files = null;
 
-        if($contents != null)
+        if ($contents != null) {
             foreach ($contents as $key => $file) {
-               $file = pathinfo((string)$file."");
-               $temp = explode("id=", $file['filename']);
-               $file_id = $temp[1];
-               $file['filename'] = $temp[0];
-               $files[$key] = (object) array('name' => $file['filename'], 'type' => $file['extension'], 'path' => $file['dirname'], 'id' => $file_id, 'basename' => $file['basename']);
-           }
+                $file = pathinfo((string)$file."");
+                $temp = explode("id=", $file['filename']);
+                $file_id = $temp[1];
+                $file['filename'] = $temp[0];
+                $files[$key] = (object) array(
+                  'name' => $file['filename'],
+                  'type' => $file['extension'],
+                  'path' => $file['dirname'],
+                  'id' => $file_id,
+                  'basename' => $file['basename']);
+            }
+        }
 
         $variables = array(
             'dashboard_content' => 'dashboards.student.pages.trash',
@@ -145,7 +159,6 @@ class HomeController extends Controller
         );
 
         return view('layouts.student')->with($variables);
-
     }
 
 
@@ -161,7 +174,6 @@ class HomeController extends Controller
         );
 
         return view('layouts.student')->with($variables);
-
     }
 
 
@@ -180,7 +192,6 @@ class HomeController extends Controller
         );
 
         return view('layouts.student')->with($variables);
-
     }
 
 
@@ -197,7 +208,6 @@ class HomeController extends Controller
         );
 
         return view('layouts.student')->with($variables);
-
     }
 
 
@@ -207,8 +217,8 @@ class HomeController extends Controller
 
         $student = Auth::user();
         $student->last_login = date("Y-m-d");
-        $student->save();
-
+        $student->session_id = Session::getId();
+        $student->update();
     }
 
 
@@ -222,8 +232,9 @@ class HomeController extends Controller
 
         $student = Student::find($id);
 
-        if(!Hash::check($request->old_password, $student->password))
+        if (!Hash::check($request->old_password, $student->password)) {
             return redirect()->back()->withError('Incorrect password');
+        }
 
         $student->password = $request->password;
         $student->save();
@@ -231,7 +242,5 @@ class HomeController extends Controller
         Auth::logout();
 
         return redirect('checkUsers?id='.$student->id)->withSuccess('Enter new password');
-
     }
-
 }

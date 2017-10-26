@@ -11,7 +11,7 @@
                     </div>
                     <div class="card-block">
                         @if($posts != null)
-                            @foreach($posts as $post)
+                            @foreach($post_list as $post)
                             <div class="row post-container">
                                 <div class="col col-12 col-md-12 col-xs-12" style=" ">
                                     <div class="card">
@@ -28,9 +28,9 @@
                                             </div>
                                             <div class="card-footer">
                                                 <small>
-                                                    <em> Date created: {{date("M d Y", strtotime($post->created_at))}} </em> |
-                                                    @foreach ($post->Activities as $activity)
-                                                        <em>{{$activity->name}} {{$activity->SectionTo->name}} </em> •
+                                                    <em> Date created: {{$post->created_at}} </em> |
+                                                    @foreach ($post->activity_list as $activity)
+                                                        <em> {{$activity}} </em>
                                                     @endforeach
                                                 </small>
                                             </div>

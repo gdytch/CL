@@ -60,5 +60,7 @@ class Student extends Authenticatable
         return $this->hasMany('App\Record', 'student_id', 'id')->where(['activity_id' => $activity_id, 'active' => true])->get();
     }
 
+    
+
 
 }

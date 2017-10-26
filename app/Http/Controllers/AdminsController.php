@@ -12,13 +12,14 @@ use App\Section;
 use App\Activity;
 use App\FTRule;
 use App\Record;
+use App\Session;
 
 
 class AdminsController extends Controller
 {
     public function __construct()
     {
-        // $this->middleware('auth:admin')->except('showLoginForm','login','store_first');
+        $this->middleware('auth:admin')->except('showLoginForm','login','store_first');
     }
     /**
      * Display a listing of the resource.
@@ -140,9 +141,11 @@ class AdminsController extends Controller
     public function home()
     {
 
+        $current_date = date("M d Y", time());
         $variables = array(
             'dashboard_content' => 'dashboards.admin.pages.home',
             'stats' => $this->stats(),
+            'current_date' => $current_date
         );
 
         return view('layouts.admin')->with($variables);
@@ -192,9 +195,18 @@ class AdminsController extends Controller
         $activity_submits = 0;
         $storage_size = 0;
         $today = date("Y-m-d", time());
-
+        $login_list = null;
         //get today's total number of student logins
-        $logins_today = count(Student::where('last_login', $today)->distinct()->get(['id']));
+        $logins_today = Student::where('last_login', $today)->distinct()->get();
+        foreach ($logins_today as $student) {
+          $login_list[] = (object) array(
+            'id' => $student->id,
+            'fname' => $student->fname,
+            'lname' => $student->lname,
+            'section' => $student->sectionTo->name,
+            'online' => $this->isOnline($student)
+          );
+        }
         // get today's activities
         $todays_activities = Activity::where('date', $today)->get();
         foreach ($todays_activities as $key => $activity) {
@@ -221,7 +233,8 @@ class AdminsController extends Controller
             'total_storage_size' => $this->bytesToHuman($storage_size),
             'section_storage' => $section_storage,
             'logins_today' => $logins_today,
-            'todays_activities' => $todays_activities
+            'todays_activities' => $todays_activities,
+            'login_list' => $login_list
         );
 
         return $stats;
@@ -358,6 +371,25 @@ class AdminsController extends Controller
 
     }
 
+    public function isOnline($student)
+    {
+        $session = Session::where(['user_id' => $student->id, 'id' => $student->session_id])->get()->first();
 
+        if($session == null || count($session) == 0)
+          return '<small><i class="fa fa-circle"></i></small>';
+
+        $current_time = time();
+
+        if(($current_time - $session->last_activity) >= 1800 && ($current_time - $session->last_activity) <= 3600)
+          return '<small><i class="fa fa-circle yellow" ></i></small>';
+
+        if(($current_time - $session->last_activity) >= 3601 && ($current_time - $session->last_activity) <= 7199)
+          return '<small><i class="fa fa-circle orange" ></i></small>';
+
+        if(($current_time - $session->last_activity) >= 7200)
+          return '<small><i class="fa fa-circle red" ></i></small>';
+
+        return '<small><i class="fa fa-circle green"></i></small>';
+    }
 
 }

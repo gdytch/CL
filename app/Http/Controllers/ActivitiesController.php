@@ -29,11 +29,35 @@ class ActivitiesController extends Controller
             $active = $request->get('active');
         }
 
+        foreach($sections as $section) 
+        {
+            if(count($section->Activities) == 0)
+            {
+                $table_list[] = null;
+                continue;
+            }
+            $student_no = count($section->Students);
+            foreach ($section->Activities()->orderBy('created_at', 'desc')->get()  as $activity) 
+            {
+                $table_list[] = (object) array(
+                    'id' => $activity->id,
+                    'name' => $activity->name,
+                    'description' => $activity->description,
+                    'date' => $activity->date,
+                    'activity_rule' => $activity->FTRule->extensions,
+                    'submit_count' => count($activity->Records()->distinct()->get(['student_id']))."/".$student_no,
+                    'active' => $activity->active,
+                    'submission' => $activity->submission,
+                );
+            } 
+        }
+
         $variables = array(
             'dashboard_content' => 'dashboards.admin.activity.index',
             'sections' => $sections,
             'active' => $active,
-            'filetype_rules' => $rules
+            'filetype_rules' => $rules,
+            'table_list' => $table_list,
         );
 
         return view('layouts.admin')->with($variables);

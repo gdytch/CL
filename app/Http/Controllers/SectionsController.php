@@ -75,10 +75,11 @@ class SectionsController extends Controller
     {
 
         $section = Section::find($id);
-
+        $students = $section->Students;
         $variables = array(
             'dashboard_content' => 'dashboards.admin.section.show',
-            'section' => $section
+            'section' => $section,
+            'students' => $students
         );
         return view('layouts.admin')->with($variables);
 

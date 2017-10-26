@@ -30,19 +30,17 @@
                                             <th>Last name</th>
                                             <th>Section</th>
                                             <th class="nosort">Folder</th>
-                                            <th>Activities</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($students as $student)
+                                        @foreach ($table_list as $student)
                                             <tr>
                                                 <td><a href="{{route('student.show',$student->id)}}">{{$student->fname}}</a></td>
                                                 <td><a href="{{route('student.show',$student->id)}}">{{$student->lname}}</a></td>
-                                                <td><a href="{{route('section.show',$student->sectionTo->id)}}">{{$student->sectionTo->name}}</a></td>
+                                                <td><a href="{{route('section.show',$student->section_id)}}">{{$student->section_name}}</a></td>
                                                 <td><a href="{{route('student.folder',$student->id)}}" class="">OPEN FOLDER</a></td>
-                                                <td>{{count($student->Records()->distinct()->get(['activity_id']))}}/{{count($student->sectionTo->Activities)}}</td>
                                             </tr>
-                                        @endforeach
+                                        @endforeach 
                                     </tbody>
                                 </table>
                             </div>

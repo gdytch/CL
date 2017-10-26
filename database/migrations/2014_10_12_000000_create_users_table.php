@@ -20,6 +20,7 @@ class CreateUsersTable extends Migration
             $table->integer('section')->unsigned()->nullable();
             $table->string('path');
             $table->string('password');
+            $table->string('session_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

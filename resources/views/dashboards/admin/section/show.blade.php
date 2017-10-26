@@ -86,7 +86,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($section->Students as $student)
+                                    @foreach ($students as $student)
                                         <tr>
                                             <td><a href="{{route('student.show',$student->id)}}">{{$student->fname}}</a></td>
                                             <td><a href="{{route('student.show',$student->id)}}">{{$student->lname}}</a></td>

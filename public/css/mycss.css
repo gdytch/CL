@@ -45,7 +45,15 @@
 .red{
     color: #FF4444;;
 }
-
+.orange{
+  color: #FE7A0E;
+}
+.yellow{
+  color: #f1c40f;
+}
+.blue{
+  color: #52BCD3;
+}
 .btn{
     text-transform: uppercase;
 }
