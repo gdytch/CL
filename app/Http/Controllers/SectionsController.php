@@ -14,7 +14,7 @@ class SectionsController extends Controller
      */
     public function index()
     {
-
+        //TODO: stats for section
         $sections = Section::all();
 
         $variables = array(
