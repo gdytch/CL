@@ -47,29 +47,31 @@
                                                             </thead>
                                                             <tbody>
                                                             @foreach ($table_list as $activity)
-                                                                <tr>
-                                                                    <td>{{$activity->name}}</td>
-                                                                    <td>{{$activity->description}}</td>
-                                                                    <td>{{$activity->date}}</td>
-                                                                    <td>{{$activity->activity_rule}}</td>
-                                                                    <td>{{$activity->submit_count}}</td>
-                                                                    <td>
-                                                                        @if($activity->active)
-                                                                            <a href="{{route('activity.status',$activity->id)}}" class="btn btn-sm btn-success">Active</a>
-                                                                            @else <a href="{{route('activity.status',$activity->id)}}" class="btn btn-sm btn-danger">Inactive</a>
-                                                                        @endif
-                                                                    </td>
+                                                                @if($activity->section_id == $section->id)
+                                                                    <tr>
+                                                                        <td>{{$activity->name}}</td>
+                                                                        <td>{{$activity->description}}</td>
+                                                                        <td>{{$activity->date}}</td>
+                                                                        <td>{{$activity->activity_rule}}</td>
+                                                                        <td>{{$activity->submit_count}}</td>
+                                                                        <td>
+                                                                            @if($activity->active)
+                                                                                <a href="{{route('activity.status',$activity->id)}}" class="btn btn-sm btn-success">Active</a>
+                                                                                @else <a href="{{route('activity.status',$activity->id)}}" class="btn btn-sm btn-danger">Inactive</a>
+                                                                            @endif
+                                                                        </td>
 
-                                                                    <td>
-                                                                        @if($activity->submission)
-                                                                            <a href="{{route('activity.submission',$activity->id)}}" class="btn btn-sm btn-success">Open</a>
-                                                                        @else <a href="{{route('activity.submission',$activity->id)}}" class="btn btn-sm btn-danger">Close</a>
-                                                                        @endif
-                                                                    </td>
-                                                                    <td><a href="{{route('activity.show',$activity->id)}}" class="btn btn-sm btn-info">View</a></td>
-                                                                </tr>
+                                                                        <td>
+                                                                            @if($activity->submission)
+                                                                                <a href="{{route('activity.submission',$activity->id)}}" class="btn btn-sm btn-success">Open</a>
+                                                                            @else <a href="{{route('activity.submission',$activity->id)}}" class="btn btn-sm btn-danger">Close</a>
+                                                                            @endif
+                                                                        </td>
+                                                                        <td><a href="{{route('activity.show',$activity->id)}}" class="btn btn-sm btn-info">View</a></td>
+                                                                    </tr>
+                                                                @endif
                                                             @endforeach
-                                                       
+
                                                             </tbody>
                                                         </table>
                                                     @else

@@ -42,14 +42,14 @@ class FilesController extends Controller
     {
 
         $this->Validate($request, [
-            'file' => 'max:30000',
+            'file'     => 'max:30000',
             'activity' => 'required'
         ]);
 
-        $student = Student::find($request->id);
-        $activity = Activity::find($request->activity);
+        $student   = Student ::find($request->id);
+        $activity  = Activity::find($request->activity);
         $directory = '/'.$student->sectionTo->path."/".$student->path."/files";
-        $file = $request->file('file');
+        $file      = $request->file('file');
         $extension = $file->getClientOriginalExtension();
 
         //check if file uploaded follows the filetype rule
@@ -78,8 +78,8 @@ class FilesController extends Controller
     public function show(Request $request, $id)
     {
 
-        $student = Student::find($id);
-        $file = $request->file;
+        $student   = Student::find($id);
+        $file      = $request->file;
         $directory = public_path("\\storage\\".$student->sectionTo->path."\\".$student->path."\\files\\".$file);
 
         return response()->download($directory);
@@ -121,7 +121,7 @@ class FilesController extends Controller
         $student = Student::find($id);
 
         $directory = "/".$student->sectionTo->path."/".$student->path."/files/".$request->file;
-        $trash = "/".$student->sectionTo->path."/".$student->path."/trash/".$request->file;
+        $trash     = "/".$student->sectionTo->path."/".$student->path."/trash/".$request->file;
 
         switch ($request->method)
         {

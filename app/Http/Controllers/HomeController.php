@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Student;
 use App\Activity;
+use App\Stats;
 use Auth;
 use Session;
 
@@ -207,9 +208,29 @@ class HomeController extends Controller
     public function recordLogin($id)
     {
         $student = Auth::user();
+
+        $date = date("Y-m-d", time());
+
+        $stat = Stats::where(['date' => $date, 'section_id' => $student->section])->get()->first();
+
+        if($stat != null){
+            if($student->last_login != $date){
+                $stat->value += 1;
+                $stat->update();
+            }
+        }else{
+            $stat = new Stats();
+            $stat->name = $student->sectionTo->name;
+            $stat->section_id = $student->section;
+            $stat->date = $date;
+            $stat->value = 1;
+            $stat->category = "Login History";
+            $stat->save();
+        }
         $student->last_login = date("Y-m-d");
         $student->session_id = Session::getId();
         $student->update();
+
     }
 
 

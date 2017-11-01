@@ -21,16 +21,14 @@
     $(document).ready(function(){
         $('#StudentTable').dataTable(
             {
-            "order": [1, 'asc'],
-            "columnDefs": [
-             { "orderable": false, "targets": "nosort" }
-             ],
-             "paging": false,
-             "bInfo": false,
-             "autowidth": false,
-
-
-        }
+                "order": [1, 'asc'],
+                "columnDefs": [
+                 { "orderable": false, "targets": "nosort" }
+                 ],
+                 "paging": false,
+                 "bInfo": false,
+                 "autowidth": false,
+            }
         );
 
        $('#DataTable').DataTable(
@@ -40,9 +38,6 @@
 
             ],
             "paging": false,
-
-
-
        });
 
     });
@@ -70,3 +65,81 @@
 
 
 </script>
+
+
+@if(Route::is('admin'))
+<script type="text/javascript">
+  $(function() {
+
+    var $dashboardSalesBreakdownChart = $('#dashboard-storage-breakdown-chart');
+
+    if (!$dashboardSalesBreakdownChart.length) {
+      return false;
+    }
+
+    function drawSalesChart() {
+
+      $dashboardSalesBreakdownChart.empty();
+
+      Morris.Donut({
+        element: 'dashboard-storage-breakdown-chart',
+        data: [
+          @foreach($stats->section_storage as $value)
+            { label: "{!!$value->path!!}", value: {!!$value->percent!!} },
+          @endforeach
+        ],
+        resize: true,
+        colors: [
+          tinycolor(config.chart.colorPrimary.toString()).lighten(10).toString(),
+          tinycolor(config.chart.colorPrimary.toString()).darken(8).toString(),
+          config.chart.colorPrimary.toString()
+        ],
+      });
+
+      var $sameheightContainer = $dashboardSalesBreakdownChart.closest(".sameheight-container");
+
+      setSameHeights($sameheightContainer);
+    }
+
+    drawSalesChart();
+
+    $(document).on("themechange", function() {
+      drawSalesChart();
+    });
+
+});
+
+var dataVisits = [
+    @foreach ($stats->login_history->data_string as $data)
+    {!! $data !!}
+    @endforeach
+];
+var chart =  Morris.Line({
+
+        element: 'dashboard-visits-chart',
+        data: dataVisits,
+        xkey: 'x',
+        ykeys: {!! $stats->login_history->ykeys !!},
+        ymin: 'auto 40',
+        labels: {!! $stats->login_history->labels !!},
+        xLabels: "day",
+        hideHover: 'auto',
+        yLabelFormat: function (y) {
+            // Only integers
+            if (y === parseInt(y, 10)) {
+                return y;
+            }
+            else {
+                return '';
+            }
+        },
+        resize: true,
+
+
+    });
+    chart.options.labels.forEach(function(label, i){
+    var legendItem = $('<span></span>').text(label).css('color', chart.options.lineColors[i])
+    $('#legend').append(legendItem)
+})
+</script>
+@endif

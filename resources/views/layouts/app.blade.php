@@ -2,7 +2,6 @@
 <html class="no-js" lang="en">
     <head>
         @include('inc.header')
-        @include('inc.scripts')
     </head>
     <body>
         <div class="main-wrapper">
@@ -10,6 +9,7 @@
                 @yield('content')
             </div>
         </div>
+        @include('inc.scripts')
        @include('inc.messages')
     </body>
 </html>

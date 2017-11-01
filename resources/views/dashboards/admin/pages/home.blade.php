@@ -3,10 +3,12 @@
   <div class="row sameheight-container">
     <div class="col-sm-12 col-md-12 col-xl-6 col-xs-12 stats-col">
       <div class="card sameheight-item stats" data-exclude="xs">
-        <div class="card-block">
-          <div class="title-block">
-            <h4 class="title"> Stats </h4>
+          <div class="card-header bordered">
+              <div class="header-block">
+                  <h4 class="card-title text-primary"> Stats </h4>
+              </div>
           </div>
+        <div class="card-block">
           <div class="row row-sm stats-container">
             <div class="col-12 col-sm-6  stat-col">
               <div class="stat-icon">
@@ -76,19 +78,21 @@
 
     <div class="col-md-12 col-lg-6 col-xl-6 col-sm-12 col-xs-12">
       <div class="card sameheight-item " data-exclude="xs" id="dashboard-history">
-        <div class="card-header card-header-sm bordered">
+        <div class="card-header bordered">
           <div class="header-block">
-            <h3 class="title">Today's Activity</h3>
+            <h3 class="card-title text-primary">Today's Activity</h3>
           </div>
-          @if(count($stats->todays_activities) != 0)
-          <ul class="nav nav-tabs pull-right" role="tablist">
-            @foreach ($stats->todays_activities as $key => $activity)
-            <li class="nav-item">
-              <a class="nav-link @if($key == 0) active @endif" href="#activity_tab{{$activity->id}}" role="tab" data-toggle="tab">{{$activity->name}} {{$activity->SectionTo->name}}</a>
-            </li>
-            @endforeach
-          </ul>
-          @endif
+          <div class="header-block">
+              @if(count($stats->todays_activities) != 0)
+                  <ul class="nav nav-tabs pull-right" role="tablist">
+                      @foreach ($stats->todays_activities as $key => $activity)
+                          <li class="nav-item">
+                              <a class="nav-link @if($key == 0) active @endif" href="#activity_tab{{$activity->id}}" role="tab" data-toggle="tab">{{$activity->name}} {{$activity->SectionTo->name}}</a>
+                              </li>
+                          @endforeach
+                      </ul>
+                  @endif
+          </div>
         </div>
         <div class="card-block">
           <div class="tab-content">
@@ -118,41 +122,24 @@
   </div>
   <div class="row sameheight-container">
     <div class="col col-sm-12 col-md-12 col-xl-8 history-col">
-      <div class="card sameheight-item " data-exclude="xs" id="dashboard-history">
-        <div class="card-header card-header-sm bordered">
+      <div class="card sameheight-item ">
+        <div class="card-header bordered">
           <div class="header-block">
-            <h3 class="title">History</h3>
+            <h3 class="card-title text-primary">History</h3>
           </div>
-          <ul class="nav nav-tabs pull-right" role="tablist">
-            <li class="nav-item">
-              <a class="nav-link active" href="#visits" role="tab" data-toggle="tab">Visits</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#downloads" role="tab" data-toggle="tab">Downloads</a>
-            </li>
-          </ul>
         </div>
         <div class="card-block">
-          <div class="tab-content">
-            <div role="tabpanel" class="tab-pane active fade show" id="visits">
-              <p class="title-description"> Number of unique visits last 30 days </p>
-              <div id="dashboard-visits-chart"></div>
-            </div>
-            <div role="tabpanel" class="tab-pane fade" id="downloads">
-              <p class="title-description"> Number of downloads last 30 days </p>
-              <div id="dashboard-downloads-chart"></div>
-
-            </div>
-          </div>
+                    <div id="dashboard-visits-chart"></div>
+                    <div id="legend"></div>
         </div>
       </div>
     </div>
 
     <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xs-12">
       <div class="card sameheight-item   sales-breakdown" data-exclude="xs,sm,lg">
-        <div class="card-header">
+        <div class="card-header bordered">
           <div class="header-block">
-            <h3 class="title"> Storage breakdown </h3>
+            <h3 class="card-title text-primary"> Storage breakdown </h3>
           </div>
         </div>
         <div class="card-block  stats-container">
@@ -190,9 +177,9 @@
   <div class="row">
     <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12">
       <div class="card sameheight-item">
-        <div class="card-header">
+        <div class="card-header bordered">
           <div class="header-block">
-            <h3 class="title"> Sessions </h3> &nbsp; <em> {{$current_date}} </em>
+            <h3 class="card-title text-primary"> Sessions </h3> &nbsp; <em> {{$current_date}} </em>
           </div>
         </div>
         <div class="card-block">
@@ -237,7 +224,7 @@ page under construction... more stats to follow {{--
       <div class="card sameheight-item  items" data-exclude="xs,sm,lg">
         <div class="card-header bordered">
           <div class="header-block">
-            <h3 class="title"> Items </h3>
+            <h3 class="card-title text-primary"> Items </h3>
             <a href="item-editor.html" class="btn btn-primary btn-sm"> Add new </a>
           </div>
           <div class="header-block pull-right">
@@ -474,7 +461,7 @@ page under construction... more stats to follow {{--
       <div class="card tasks " data-exclude="xs,sm">
         <div class="card-header bordered">
           <div class="header-block">
-            <h3 class="title"> Tasks </h3>
+            <h3 class="card-title text-primary"> Tasks </h3>
           </div>
           <div class="header-block pull-right">
             <a href="" class="btn btn-primary btn-sm rounded pull-right"> Add new </a>
@@ -1024,46 +1011,5 @@ page under construction... more stats to follow {{--
   </div>
 </section> --}}
 
-<script type="text/javascript">
-  $(function() {
-
-    var $dashboardSalesBreakdownChart = $('#dashboard-storage-breakdown-chart');
-
-    if (!$dashboardSalesBreakdownChart.length) {
-      return false;
-    }
-
-    function drawSalesChart() {
-
-      $dashboardSalesBreakdownChart.empty();
-
-      Morris.Donut({
-        element: 'dashboard-storage-breakdown-chart',
-        data: [
-          @foreach($stats->section_storage as $value)
-            { label: "{!!$value->path!!}", value: {!!$value->percent!!} },
-          @endforeach
-        ],
-        resize: true,
-        colors: [
-          tinycolor(config.chart.colorPrimary.toString()).lighten(10).toString(),
-          tinycolor(config.chart.colorPrimary.toString()).darken(8).toString(),
-          config.chart.colorPrimary.toString()
-        ],
-      });
-
-      var $sameheightContainer = $dashboardSalesBreakdownChart.closest(".sameheight-container");
-
-      setSameHeights($sameheightContainer);
-    }
-
-    drawSalesChart();
-
-    $(document).on("themechange", function() {
-      drawSalesChart();
-    });
-
-  })
-</script>
 
 @endsection

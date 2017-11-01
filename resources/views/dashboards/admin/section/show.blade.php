@@ -18,7 +18,7 @@
         <div class="col-md-4">
             <div class="card card-block sameheight-item" >
                 <div class="title-block">
-                    <h3 class="card-title text-primary">Details</h3>
+                    <h3 class="card-title text-primary">Details <button data-toggle="modal" data-target="#editmodal" class="btn btn-sm btn-secondary" style="float: right">Edit</button></h3>
                     <hr>
                 </div>
                 <section class="section">
@@ -32,13 +32,13 @@
                                     <td>Students</td><td><h5>{{count($section->Students)}}</h5></td>
                                 </tr>
                                 <tr>
-                                    <td>Status</td><td><h5>@if($section->status)<p class="btn btn-primary">Open</p> @else <p class="btn btn-danger">Close</p>@endif </h5></td>
+                                    <td>Status</td><td><h5>@if($section->status)<p class="btn btn-success">Open</p> @else <p class="btn btn-danger">Close</p>@endif </h5></td>
                                 </tr>
                                 <tr>
-                                    <td></td><td><h5><a href="{{route('section.folder',$section->id)}}" class="btn btn-primary">open folder</a></h5></td>
+                                    <td></td><td><h5><a href="{{route('section.folder',$section->id)}}" class="btn btn-secondary">open folder</a></h5></td>
                                 </tr>
                                 <tr>
-                                    <td></td><td><a href="{{route('section.edit', $section->id)}}" class="btn btn-secondary">Edit</a></td>
+                                    <td></td><td></td>
                                 </tr>
                             </table>
 
@@ -104,5 +104,46 @@
         </div>
     </div>
 </section>
+<div class="modal fade" id="editmodal" tabindex="-1" role="dialog" aria-labelledby="passwordModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Edit</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form role="form" action="{{route('section.update',$section->id)}}" method="POST">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group" >
+                            {{csrf_field()}}
+                            <label class="control-label col-md-4">Section Name</label>
+                            <input name="name" type="text" class="form-control underlined" required="" value="{{$section->name}}">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Folder</label>
+                            <input name="path" type="text" class="form-control underlined" required="" value="{{$section->path}}" disabled>
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control" name="status">
+                                <option value="1" @if($section->status) selected @endif>Open</option>
+                                <option value="0" @if(!$section->status) selected @endif>Close</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                    <input type="hidden" name="_method" value="PUT">
+            </div>
+            <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">cancel</button>
+                    <button type="submit" name="submit" class="btn btn-primary">update</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 @endsection

@@ -24,7 +24,7 @@ class StudentsController extends Controller
      */
     public function index(Request $request)
     {
-
+        $table_list = array();
         if ($request->id == 'all' || $request->id == null) {
             $students = Student::all();
         } else {
@@ -35,18 +35,18 @@ class StudentsController extends Controller
 
         foreach ($students as $student) {
             $table_list[] = (object) array(
-                'id' => $student->id,
-                'fname' => $student->fname,
-                'lname' => $student->lname,
+                'id'           => $student->id,
+                'fname'        => $student->fname,
+                'lname'        => $student->lname,
                 'section_name' => $student->sectionTo->name,
-                'section_id' => $student->section,
+                'section_id'   => $student->section,
             );
         }
 
         $variables = array(
              'dashboard_content' => 'dashboards.admin.student.index',
-             'sections' => $sections,
-             'table_list' => $table_list,
+             'sections'          => $sections,
+             'table_list'        => $table_list,
         );
 
         return view('layouts.admin')->with($variables);
@@ -95,17 +95,17 @@ class StudentsController extends Controller
             return redirect()->back()->withErrors('Student already exists');
         }
 
-        $path = ''.$lname.' '.$fname.'';
+        $path     = ''.$lname.' '.$fname.'';
         $password = $request->password;
-        $section = $request->section;
+        $section  = $request->section;
 
         $student = new Student();
-        $student->lname = $lname;
-        $student->fname = $fname;
-        $student->path = $path;
+        $student->lname    = $lname;
+        $student->fname    = $fname;
+        $student->path     = $path;
         $student->password = $password;
-        $student->section = $section;
-        $student->theme = 'green';
+        $student->section  = $section;
+        $student->theme    = 'green';
 
         if ($request->hasFile('avatar_file')) {
             $avatar = $request->file('avatar_file');
@@ -147,9 +147,9 @@ class StudentsController extends Controller
         $sections = Section::all();
         $variables = array(
            'dashboard_content' => 'dashboards.admin.student.show',
-           'student' => $student,
-           'table_item' => $table_item,
-           'sections' => $sections,
+           'student'           => $student,
+           'table_item'        => $table_item,
+           'sections'          => $sections,
         );
 
         return view('layouts.admin')->with($variables);
@@ -169,8 +169,8 @@ class StudentsController extends Controller
 
         $variables = array(
             'dashboard_content' => 'dashboards.admin.student.edit',
-            'student' => $student,
-            'sections' => $sections
+            'student'           => $student,
+            'sections'          => $sections
         );
 
         return view('layouts.admin')->with($variables);
@@ -299,7 +299,15 @@ class StudentsController extends Controller
                 }
             }
 
-            $students[$key] = ['lname' => $lname, 'fname' => $fname, 'path' => $path, 'avatar' => 'default-avatar.png', 'password' => $password, 'section' => $sectionid, 'theme' => 'green'];
+            $students[$key] = [
+                'lname'    => $lname,
+                'fname'    => $fname,
+                'path'     => $path,
+                'avatar'   => 'default-avatar.png',
+                'password' => $password,
+                'section'  => $sectionid,
+                'theme'    => 'green'
+            ];
         }
 
         // Save to database
@@ -380,11 +388,11 @@ class StudentsController extends Controller
                 }
 
                 $table_item[] = (object) array(
-                'name' => $activity->name,
-                'date' => date("M d Y", strtotime($activity->date)),
-                'description' => $activity->description,
-                'submitted' => $submitted,
-                'files' => $files,
+                    'name'        => $activity->name,
+                    'date'        => date("M d Y", strtotime($activity->date)),
+                    'description' => $activity->description,
+                    'submitted'   => $submitted,
+                    'files'       => $files,
                 );
             }
         }

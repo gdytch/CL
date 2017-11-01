@@ -4,12 +4,16 @@
   <hr>
   <div class="row sameheight-container">
     <div class="col-md-6 col-sm-12 col-xs-12">
-      <div class="card ">
-        <div class="card-block">
-          <div class="title-block">
-            <h4 class="card-title text-primary"> Admin <button data-toggle="modal" data-target="#editAdmin" class="btn btn-sm btn-secondary" style="float: right">Edit</button></h4>
-            <hr>
+      <div class="card">
+        <div class="card-header bordered">
+          <div class="header-block">
+            <h4 class="card-title text-primary"> Admin </h4>
           </div>
+          <div class="header-block pull-right">
+              <button data-toggle="modal" data-target="#editAdmin" class="btn btn-sm btn-secondary" style="float: right">Edit</button>
+          </div>
+        </div>
+        <div class="card-block">
           <div class="col-md-12">
               <div class="row">
                   <div class=" col-md-4" style="">
@@ -30,12 +34,13 @@
     </div>
     <div class="col-md-6  col-sm-12 col-xs-12">
       <div class="card">
-        <div class="card-block">
-          <div class="title-block">
+        <div class="card-header bordered">
+          <div class="header-block">
             <h4 class="card-title text-primary">Theme</h4>
-            <hr>
           </div>
-          <div class="col-md-12">
+        </div>
+        <div class="card-block">
+              <div class="col-md-12">
             <div class="customize-item">
               <a class="btn btn-primary theme-item" href="{{url('admin/theme?theme=red')}}" style="background: #FB494D; border-color: #FB494D; color: #fff;">  </a>
               <a class="btn btn-primary theme-item" href="{{url('admin/theme?theme=orange')}}" style="background-color: #FE7A0E;border-color: #FE7A0E; color: #fff;"></a>
@@ -54,108 +59,119 @@
               <a class="btn btn-primary theme-item" href="{{url('admin/theme?theme=blue-grey')}}" style="background-color: #607D8B;border-color: #607D8B;"></a>
             </div>
           </div>
+
         </div>
       </div>
     </div>
     <div class="col-md-6  col-sm-12 col-xs-12">
       <div class="card">
-        <div class="card-block">
-          <div class="title-block">
-            <h4 class="card-title text-primary">Filetype Rules <a href="#" data-toggle="modal" data-target="#addRule" class="btn btn-sm btn-secondary"style="float:right">Add</a></h4>
+        <div class="card-header bordered">
+          <div class="header-block">
+            <h4 class="card-title text-primary">Filetype Rules </h4>
           </div>
-          <div class="col-md-12">
-            <table class="table table-striped table-responsive">
-              <thead>
-                <th>Name</th>
-                <th>Extensions</th>
-                <th></th>
-              </thead>
-              <tbody>
-                @foreach ($filetype_rules as $rule)
-                <tr>
-                  <td>
-                    <span class="">{{$rule->name}}</span>
-                  </td>
-                  <td>
-                    <span class="">{{$rule->extensions}}</span>
-                  </td>
-                  <td>
-                    @if($rule->name != 'Default')
-                    <button type="button" data-target="#editRule{{$rule->id}}" data-toggle="modal" class="btn btn-sm btn-secondary " name="button">Edit</button>
-                    <button type="button" data-target="#deleteRule{{$rule->id}}" data-toggle="modal" class="btn btn-sm btn-danger " name="button">Delete</button> @endif
-                  </td>
-                </tr>
-                <div class="modal fade" id="editRule{{$rule->id}}" tabindex="-1" role="dialog" aria-labelledby="batchModalLabel" aria-hidden="true">
-                  <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Edit Rule</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                      </div>
-                      <div class="modal-body">
-                        <form role="form" action="{{route('filetype_rule.update',$rule->id)}}" method="POST">
-                          <div class="row">
-                            <div class="col">
-                              <div class="form-group">
-                                {{csrf_field()}}
-                                <label class="control-label col-md-4">Rule name</label>
-                                <input name="name" type="text" class="form-control underlined" required value='{{$rule->name}}'>
-                              </div>
-                              <div class="form-group">
-                                <label class="control-label col-md-4">File extensions</label>
-                                <input name="extensions" type="text" class="form-control underlined" placeholder='Separate extensions by comma' required value="{{$rule->extensions}}">
-                              </div>
-                            </div>
-                          </div>
-                      </div>
-                      <div class="modal-footer">
-                        <input type="hidden" name="_method" value="put">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        <button type="submit" name="submit" class="btn btn-primary">Save</button>
-                        </form>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="modal fade" id="deleteRule{{$rule->id}}" tabindex="-1" role="dialog" aria-labelledby="batchModalLabel" aria-hidden="true">
-                  <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Delete Rule</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                      </div>
-                      <div class="modal-body">
-                        Are you sure to delete '{{$rule->name}}' rule?
-                      </div>
-                      <div class="modal-footer">
-                        <form role="form" action="{{route('filetype_rule.update',$rule->id)}}" method="POST">
-                          {{ csrf_field() }}
-                          <input type="hidden" name="_method" value="delete">
-                          <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                          <button type="submit" name="submit" class="btn btn-primary">Yes</button>
-                        </form>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                @endforeach
-              </tbody>
-            </table>
+          <div class="header-block pull-right">
+              <a href="#" data-toggle="modal" data-target="#addRule" class="btn btn-sm btn-secondary pull-right">Add</a>
           </div>
         </div>
-      </div>
+        <div class="card-block">
+              <div class="col-md-12">
+                <table class="table table-striped table-responsive">
+                  <thead>
+                    <th>Name</th>
+                    <th>Extensions</th>
+                    <th></th>
+                  </thead>
+                  <tbody>
+                    @foreach ($filetype_rules as $rule)
+                    <tr>
+                      <td>
+                        <span class="">{{$rule->name}}</span>
+                      </td>
+                      <td>
+                        <span class="">{{$rule->extensions}}</span>
+                      </td>
+                      <td>
+                        @if($rule->name != 'Default')
+                        <button type="button" data-target="#editRule{{$rule->id}}" data-toggle="modal" class="btn btn-sm btn-secondary " name="button">Edit</button>
+                        <button type="button" data-target="#deleteRule{{$rule->id}}" data-toggle="modal" class="btn btn-sm btn-danger " name="button">Delete</button> @endif
+                      </td>
+                    </tr>
+                    <div class="modal fade" id="editRule{{$rule->id}}" tabindex="-1" role="dialog" aria-labelledby="batchModalLabel" aria-hidden="true">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Edit Rule</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            <form role="form" action="{{route('filetype_rule.update',$rule->id)}}" method="POST">
+                              <div class="row">
+                                <div class="col">
+                                  <div class="form-group">
+                                    {{csrf_field()}}
+                                    <label class="control-label col-md-4">Rule name</label>
+                                    <input name="name" type="text" class="form-control underlined" required value='{{$rule->name}}'>
+                                  </div>
+                                  <div class="form-group">
+                                    <label class="control-label col-md-4">File extensions</label>
+                                    <input name="extensions" type="text" class="form-control underlined" placeholder='Separate extensions by comma' required value="{{$rule->extensions}}">
+                                  </div>
+                                </div>
+                              </div>
+                          </div>
+                          <div class="modal-footer">
+                            <input type="hidden" name="_method" value="put">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <button type="submit" name="submit" class="btn btn-primary">Save</button>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="modal fade" id="deleteRule{{$rule->id}}" tabindex="-1" role="dialog" aria-labelledby="batchModalLabel" aria-hidden="true">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Delete Rule</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            Are you sure to delete '{{$rule->name}}' rule?
+                          </div>
+                          <div class="modal-footer">
+                            <form role="form" action="{{route('filetype_rule.update',$rule->id)}}" method="POST">
+                              {{ csrf_field() }}
+                              <input type="hidden" name="_method" value="delete">
+                              <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                              <button type="submit" name="submit" class="btn btn-primary">Yes</button>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    @endforeach
+                  </tbody>
+                </table>
+              </div>
+          </div>
+        </div>
     </div>
     <div class="col-md-6 col-sm-12 col-xs-12">
       <div class="card">
-        <div class="card-block">
-          <div class="title-block">
-            <h4 class="card-title text-primary">Administrators<a href="#" data-toggle="modal" data-target="#addAdmin" class="btn btn-sm btn-secondary"style="float:right">Add</a></h4>
+        <div class="card-header bordered">
+          <div class="header-block">
+            <h4 class="card-title text-primary">Administrators</h4>
           </div>
+          <div class="header-block pull-right">
+              <a href="#" data-toggle="modal" data-target="#addAdmin" class="btn btn-sm btn-secondary"style="float:right">Add</a>
+          </div>
+        </div>
+        <div class="card-block">
           <div class="col-md-12">
             <table class="table table-striped table-responsive">
               <thead>

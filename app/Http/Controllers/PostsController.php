@@ -25,11 +25,11 @@ class PostsController extends Controller
             }
 
             $post_list[] = (object) array(
-            'id' => $post->id,
-            'title' => $post->title,
-            'draft' => $post->draft,
-            'body' => $post->body,
-            'created_at' => date("M d Y", strtotime($post->created_at)),
+            'id'            => $post->id,
+            'title'         => $post->title,
+            'draft'         => $post->draft,
+            'body'          => $post->body,
+            'created_at'    => date("M d Y", strtotime($post->created_at)),
             'activity_list' => $activity_list
             );
         }
@@ -61,8 +61,8 @@ class PostsController extends Controller
         }
         $variables = array(
             'dashboard_content' => 'dashboards.admin.post.create',
-            'activities' => $activities,
-            'message_info_per' => $message_info_per
+            'activities'        => $activities,
+            'message_info_per'  => $message_info_per
         );
 
         return view('layouts.admin')->with($variables);
@@ -133,10 +133,10 @@ class PostsController extends Controller
         $unchecked_activities = Activity::where('post_id', null)->orderBy('name', 'asc')->get();
 
         $variables = array(
-            'dashboard_content' => 'dashboards.admin.post.edit',
-            'checked_activities' => $checked_activities,
+            'dashboard_content'    => 'dashboards.admin.post.edit',
+            'checked_activities'   => $checked_activities,
             'unchecked_activities' => $unchecked_activities,
-            'post' => $post
+            'post'                 => $post
         );
 
         return view('layouts.admin')->with($variables);

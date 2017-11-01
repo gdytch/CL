@@ -14,6 +14,7 @@ use App\Activity;
 use App\FTRule;
 use App\Record;
 use App\Session;
+use App\Stats;
 
 class AdminsController extends Controller
 {
@@ -275,6 +276,9 @@ class AdminsController extends Controller
         //get total storage size per section
         $section_storage = $this->getSectionStorage();
 
+        //get login history
+        $login_history = $this->getLoginHistory();
+
         $stats = (object) array(
             'total_students'     => count($students),
             'total_sections'     => count($sections),
@@ -284,7 +288,8 @@ class AdminsController extends Controller
             'section_storage'    => $section_storage,
             'logins_today'       => $logins_today,
             'todays_activities'  => $todays_activities,
-            'login_list'         => $login_list
+            'login_list'         => $login_list,
+            'login_history'       => $login_history
         );
 
         return $stats;
@@ -437,5 +442,32 @@ class AdminsController extends Controller
         }
 
         return '<small><i class="fa fa-circle green"></i></small>';
+    }
+
+
+    public function getLoginHistory()
+    {
+        $sections = Section::all();
+        $labels = '';
+        $ykeys = '';
+        $data_string = array();
+        foreach ($sections as $section) {
+            $labels .= "'".$section->name."', ";
+            $ykeys .= "'y".$section->id."', ";
+        }
+        $logs = Stats::where(['category' => 'Login History'])->orderBy('date')->take(30)->get();
+        if($logs != null){
+            foreach ($logs as $log) {
+                $data_string[] = "{ x:'".$log->date."', y".$log->section_id.':'.$log->value."},";
+            }
+        }
+        $data = (object) array(
+            'labels' => '['.$labels.']',
+            'ykeys' => '['.$ykeys.']',
+            'data_string' => $data_string,
+        );
+
+
+        return $data;
     }
 }

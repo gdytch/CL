@@ -29,7 +29,7 @@ class ActivitiesController extends Controller
             $active = $request->get('active');
         }
 
-        foreach($sections as $section) 
+        foreach($sections as $section)
         {
             if(count($section->Activities) == 0)
             {
@@ -37,27 +37,28 @@ class ActivitiesController extends Controller
                 continue;
             }
             $student_no = count($section->Students);
-            foreach ($section->Activities()->orderBy('created_at', 'desc')->get()  as $activity) 
+            foreach ($section->Activities()->orderBy('created_at', 'desc')->get()  as $activity)
             {
                 $table_list[] = (object) array(
-                    'id' => $activity->id,
-                    'name' => $activity->name,
-                    'description' => $activity->description,
-                    'date' => $activity->date,
+                    'id'            => $activity->id,
+                    'name'          => $activity->name,
+                    'description'   => $activity->description,
+                    'date'          => $activity->date,
+                    'section_id'    => $section->id,
                     'activity_rule' => $activity->FTRule->extensions,
-                    'submit_count' => count($activity->Records()->distinct()->get(['student_id']))."/".$student_no,
-                    'active' => $activity->active,
-                    'submission' => $activity->submission,
+                    'submit_count'  => count($activity->Records()->distinct()->get(['student_id']))."/".$student_no,
+                    'active'        => $activity->active,
+                    'submission'    => $activity->submission,
                 );
-            } 
+            }
         }
 
         $variables = array(
             'dashboard_content' => 'dashboards.admin.activity.index',
-            'sections' => $sections,
-            'active' => $active,
-            'filetype_rules' => $rules,
-            'table_list' => $table_list,
+            'sections'          => $sections,
+            'active'            => $active,
+            'filetype_rules'    => $rules,
+            'table_list'        => $table_list,
         );
 
         return view('layouts.admin')->with($variables);
@@ -104,9 +105,9 @@ class ActivitiesController extends Controller
 
         $activity = Activity::find($id);
         $sections = Section::all();
-        $rules = FTRule::all();
+        $rules    = FTRule::all();
         $students = $activity->SectionTo->Students()->orderBy('lname', 'asc')->get();
-        $post = $activity->Post;
+        $post     = $activity->Post;
         // student who have are done with the activity
         foreach ($students as $key => $student) {
             $status = false;
@@ -116,16 +117,21 @@ class ActivitiesController extends Controller
                 $status = true;
                 $submitted_at = date("M d Y", strtotime($result->created_at));
             }
-            $activity_log[] = (object) array('id' => $student->id, 'name' => $student->lname.', '.$student->fname, 'status' => $status, 'submitted_at' => $submitted_at);
+            $activity_log[] = (object) array(
+                'id'           => $student->id,
+                'name'         => $student->lname.', '.$student->fname,
+                'status'       => $status,
+                'submitted_at' => $submitted_at
+            );
         }
 
         $variables = array(
             'dashboard_content' => 'dashboards.admin.activity.show',
-            'activity' => $activity,
-            'activity_log' => $activity_log,
-            'post' => $post,
-            'sections' => $sections,
-            'filetype_rules' => $rules
+            'activity'          => $activity,
+            'activity_log'      => $activity_log,
+            'post'              => $post,
+            'sections'          => $sections,
+            'filetype_rules'    => $rules
         );
 
         return view('layouts.admin')->with($variables);

@@ -78,8 +78,8 @@ class SectionsController extends Controller
         $students = $section->Students;
         $variables = array(
             'dashboard_content' => 'dashboards.admin.section.show',
-            'section' => $section,
-            'students' => $students
+            'section'           => $section,
+            'students'          => $students
         );
         return view('layouts.admin')->with($variables);
 
