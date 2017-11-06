@@ -103,9 +103,6 @@
 
     drawSalesChart();
 
-    $(document).on("themechange", function() {
-      drawSalesChart();
-    });
 
 });
 

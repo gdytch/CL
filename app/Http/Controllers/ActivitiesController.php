@@ -24,6 +24,7 @@ class ActivitiesController extends Controller
         $sections = Section::all();
         $rules = FTRule::all();
         $active = null;
+        $section_activities = array();
 
         if ($request->get('active')) {
             $active = $request->get('active');
@@ -33,32 +34,32 @@ class ActivitiesController extends Controller
         {
             if(count($section->Activities) == 0)
             {
-                $table_list[] = null;
-                continue;
-            }
-            $student_no = count($section->Students);
-            foreach ($section->Activities()->orderBy('created_at', 'desc')->get()  as $activity)
-            {
-                $table_list[] = (object) array(
-                    'id'            => $activity->id,
-                    'name'          => $activity->name,
-                    'description'   => $activity->description,
-                    'date'          => $activity->date,
-                    'section_id'    => $section->id,
-                    'activity_rule' => $activity->FTRule->extensions,
-                    'submit_count'  => count($activity->Records()->distinct()->get(['student_id']))."/".$student_no,
-                    'active'        => $activity->active,
-                    'submission'    => $activity->submission,
-                );
+                $section_activities[$section->id] = null;
+            }else {
+                $student_no = count($section->Students);
+                foreach ($section->Activities()->orderBy('created_at', 'desc')->get()  as $activity)
+                {
+                    $section_activities[$section->id] = (object) array(
+                        'id'            => $activity->id,
+                        'name'          => $activity->name,
+                        'description'   => $activity->description,
+                        'date'          => $activity->date,
+                        'section_id'    => $section->id,
+                        'activity_rule' => $activity->FTRule->extensions,
+                        'submit_count'  => count($activity->Records()->distinct()->get(['student_id']))."/".$student_no,
+                        'active'        => $activity->active,
+                        'submission'    => $activity->submission,
+                    );
+                }
             }
         }
 
         $variables = array(
-            'dashboard_content' => 'dashboards.admin.activity.index',
-            'sections'          => $sections,
-            'active'            => $active,
-            'filetype_rules'    => $rules,
-            'table_list'        => $table_list,
+            'dashboard_content'  => 'dashboards.admin.activity.index',
+            'sections'           => $sections,
+            'active'             => $active,
+            'filetype_rules'     => $rules,
+            'section_activities' => $section_activities,
         );
 
         return view('layouts.admin')->with($variables);

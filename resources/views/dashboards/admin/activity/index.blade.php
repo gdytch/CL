@@ -31,7 +31,7 @@
                                             @foreach ($sections as $key => $section)
                                                 <div class="tab-pane @if($active == $section->id)active show @endif fade in" id="{{$section->id}}" @if($active == $section->id)aria-expanded="true" @else aria-expanded="false" @endif>
                                                     <br>
-                                                    @if($table_list != null)
+                                                    @if($section_activities[$section->id] != null )
                                                         <table class="table table-striped table-responsive" id="StudentTable{{$section->name}}">
                                                             <thead>
                                                                 <tr>
@@ -46,8 +46,7 @@
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
-                                                            @foreach ($table_list as $activity)
-                                                                @if($activity->section_id == $section->id)
+                                                            @php $activity = $section_activities[$section->id]; @endphp
                                                                     <tr>
                                                                         <td>{{$activity->name}}</td>
                                                                         <td>{{$activity->description}}</td>
@@ -69,9 +68,6 @@
                                                                         </td>
                                                                         <td><a href="{{route('activity.show',$activity->id)}}" class="btn btn-sm btn-info">View</a></td>
                                                                     </tr>
-                                                                @endif
-                                                            @endforeach
-
                                                             </tbody>
                                                         </table>
                                                     @else

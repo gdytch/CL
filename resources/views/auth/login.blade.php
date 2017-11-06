@@ -20,8 +20,9 @@
             /*border-bottom: 1px solid;*/
         }
         .radio:checked  + div.account-block{
-            color: #52BCD3;
-            border-bottom: 1px solid;
+            color: #fff;
+            background: #545454;
+            border-bottom: 1px solid #999999;
         }
 
         .radio + span:before {

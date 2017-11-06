@@ -10,7 +10,7 @@
                         </div>
                     </div>
                     <div class="card-block">
-                        @if($posts != null)
+                        @if(count($posts) != 0)
                             @foreach($post_list as $post)
                             <div class="row post-container">
                                 <div class="col col-12 col-md-12 col-xs-12" style=" ">

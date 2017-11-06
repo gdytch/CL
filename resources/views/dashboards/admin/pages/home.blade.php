@@ -105,11 +105,11 @@
                       <i class="fa fa-list-alt"></i>
                     </div>
                     <div class="stat">
-                      <div class="value">{{$activity->total_submits}} </div>
+                      <div class="value">{{$activity->total_submits}}/{{$activity->total_students}} </div>
                       <div class="name"> Submitted Activities </div>
                     </div>
                     <div class="progress stat-progress">
-                      <div class="progress-bar" style="width: 100%;"></div>
+                      <div class="progress-bar" style="width: {{$activity->percentage}}%;"></div>
                     </div>
                   </div>
                 </div>

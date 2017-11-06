@@ -28,10 +28,15 @@
 
 
     <link rel="stylesheet" href="{{asset('css/vendor.min.css')}}">
+
     <!-- Theme initialization -->
 
     @if(!isset(Auth::user()->theme) || Auth::user()->theme == null)
-        <link rel="stylesheet" href="{{asset('css/app.min.css')}}">
+    @php
+        $themes = ['red', 'orange', 'green', 'seagreen', 'blue', 'purple', 'turquoise', 'red2', 'sunflower', 'pink', 'bright-purple', 'blue2', 'cyan', 'teal', 'blue-grey'];
+        $theme = $themes[mt_rand(0,14)];
+    @endphp
+        <link rel="stylesheet" href="{{asset('css/_themes/'.$theme.'-theme.min.css')}}">
     @else
         <link rel="stylesheet" href='{{asset('css/_themes/'.Auth::user()->theme.'-theme.min.css')}}'>
     @endif

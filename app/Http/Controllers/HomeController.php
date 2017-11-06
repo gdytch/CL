@@ -91,7 +91,7 @@ class HomeController extends Controller
         }
 
         if (count($users) == 0) {
-            return back()->withError('Last name not found');
+            return back()->withError('User not found');
         }
 
         if (env('APP_URL') == 'https://computerclassapp.herokuapp.com/') {

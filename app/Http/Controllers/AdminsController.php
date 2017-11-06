@@ -185,7 +185,9 @@ class AdminsController extends Controller
         if (Auth::guard('admin')->check()) {
             return redirect('admin');
         }
-
+        if (Auth::guard('web')->check()) {
+            return redirect('home');
+        }
         if (env('APP_URL') == 'https://computerclassapp.herokuapp.com/') {
             $message_info = "Heroku demo <br> Username: <strong>Admin</strong><br> Password: <strong>12345</strong>";
         } else {
@@ -260,7 +262,12 @@ class AdminsController extends Controller
         // get today's activities
         $todays_activities = Activity::where('date', $today)->get();
         foreach ($todays_activities as $key => $activity) {
-            $todays_activities[$key]['total_submits'] = count(Record::where('activity_id', $activity->id)->distinct()->get(['student_id']));
+            $submits_count = count(Record::where('activity_id', $activity->id)->distinct()->get(['student_id']));
+            $section_students = count($activity->SectionTo->Students);
+            $precentage = ($submits_count/$section_students) * 100;
+            $todays_activities[$key]['total_submits'] = $submits_count;
+            $todays_activities[$key]['total_students'] = $section_students;
+            $todays_activities[$key]['percentage'] = $precentage;
         }
 
         //get total activity submits
@@ -307,7 +314,7 @@ class AdminsController extends Controller
         }
 
         $section_paths = Section::select('path')->distinct()->get();
-        $section_storage = null;
+        $section_storage = array();
 
         foreach ($section_paths as $section) {
             $size = 0;
