@@ -78,6 +78,7 @@ class HomeController extends Controller
 
     public function checkUser(Request $request)
     {
+        $users = null;
         if (Auth::guard('web')->check()) {
             return redirect('home');
         }
@@ -86,10 +87,12 @@ class HomeController extends Controller
             $lname = ucwords(strtolower($request->lname));
             $users = Student::where('lname', $lname)->get()->except('password');
         }
-
         if ($request->id != null) {
             $users = Student::where('id', $request->id)->get()->except('password');
         }
+
+        if($users == null)
+            return redirect()->route('welcome');
 
         if (count($users) == 0) {
             return back()->withError('User not found');

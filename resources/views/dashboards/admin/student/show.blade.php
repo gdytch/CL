@@ -1,16 +1,5 @@
 @section('dashboard-content')
 <section class="section">
-    <style>
-
-        .StudentTable{
-            width: 100%;
-
-        }
-        .StudentTable td:first-child{
-            text-align: right;
-            padding-right: 20px;
-        }
-    </style>
     <div class="row ">
         <div class="col col-12 ">
             <div class="card card-block sameheight-item" >
@@ -23,24 +12,15 @@
                         <div class=" col-md-2" style="">
                             <img src="{{asset('storage/avatar/'.$student->avatar)}}" alt="" class="student_avatar">
                         </div>
-                        <div class="col">
-                            <table class="StudentTable">
-                                <tr>
-                                    <td width="100">Firstname</td><td><h3>{{$student->fname}}</h3></td>
-                                </tr>
-                                <tr>
-                                    <td>Lastname</td><td><h3>{{$student->lname}}</h3></td>
-                                </tr>
-                                <tr>
-                                    <td>Section</td><td><h3>{{$student->sectionTo->name}}</h3></td>
-                                </tr>
-                                <tr>
-                                    <td></td><td><h3><a href="{{route('student.folder',$student->id)}}" class="btn btn-primary">OPEN FOLDER</a></h3></td>
-                                </tr>
-                            </table>
-
+                        <div class="col" style="margin-left: 20px">
+                            <h6 class="text-primary"><small><strong>Firstname</strong></small></h6>
+                            <h4>{{$student->fname}}</h4>
+                            <h6 class="text-primary"><small><strong>Lastname</strong></small></h6>
+                            <h4>{{$student->lname}}</h4>
+                            <h6 class="text-primary"><small><strong>Section</strong></small></h6>
+                            <h4>{{$student->sectionTo->name}}</h4>
+                            <a href="{{route('student.folder',$student->id)}}" class="btn btn-primary">OPEN FOLDER</a>
                         </div>
-
                     </div>
                 </section>
             </div>

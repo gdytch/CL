@@ -1,4 +1,5 @@
 
+
 <!-- Reference block for JS -->
 <div class="ref" id="ref">
    <div class="color-primary"></div>
@@ -67,6 +68,9 @@
 	});
 
     var viewer = new Viewer(document.getElementById('post'));
+    $('img').bind('contextmenu', function(e) {
+        return false;
+    });
 
 </script>
 

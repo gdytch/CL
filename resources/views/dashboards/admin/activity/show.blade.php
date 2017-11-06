@@ -18,32 +18,25 @@
         <div class="col-md-6 col-sm-12 sameheight-container">
             <div class="card card-block" >
                 <div class="title-block">
-                    <h4 class="card-title text-primary">Activity    <button type="button" data-target="#deletemodal" data-toggle="modal" class="btn btn-danger" style="float:right">Delete</button>&nbsp;<button type="button" data-target="#editModal" data-toggle="modal" class="btn btn-secondary" style="float:right; margin-right: 5px">Edit</button></h4>
+                    <h4 class="card-title text-primary">Activity </h4>
+                    <button type="button" data-target="#editModal" data-toggle="modal" class="btn btn-sm btn-secondary pull-right" >Edit</button>
+                    <button type="button" data-target="#deletemodal" data-toggle="modal" class="btn btn-sm btn-danger pull-right" >Delete</button>
                     <hr>
                 </div>
                 <section class="section">
                     <div class="row">
-                        <div class="col-md-12">
-                            <table class="StudentTable">
-                                <tr>
-                                    <td width="200">Name</td><td><h3>{{$activity->name}}</h3></td>
-                                </tr>
-                                <tr>
-                                    <td>Date</td><td><h3>{{$activity->date}}</h3></td>
-                                </tr>
-                                <tr>
-                                    <td>Description</td><td><h3>{{$activity->description}}</h3></td>
-                                </tr>
-                                <tr>
-                                    <td>Section</td><td><h3>{{$activity->SectionTo->name}}</h3></td>
-                                </tr>
-                                <tr>
-                                    <td>Filetype Rule</td><td><h3>{{$activity->FTRule->name}}</h3></td>
-                                </tr>
-                            </table>
-
+                        <div class="col-md-12 col-md-offset-4" style="margin-left: 20px">
+                            <h6 class="text-primary"><small><strong>Name</strong></small></h6>
+                            <h4>{{$activity->name}}</h4>
+                            <h6 class="text-primary"><small><strong>Date</strong></small></h6>
+                            <h4>{{$activity->date}}</h4>
+                            <h6 class="text-primary"><small><strong>Description</strong></small></h6>
+                            <h4>{{$activity->description}}</h4>
+                            <h6 class="text-primary"><small><strong>Section</strong></small></h6>
+                            <h4>{{$activity->SectionTo->name}}</h4>
+                            <h6 class="text-primary"><small><strong>File rule</strong></small></h6>
+                            <h4>{{$activity->FTRule->name}}</h4>
                         </div>
-
                     </div>
                 </section>
             </div>
@@ -122,7 +115,7 @@
                 </div>
                 <div class="content-block">
                     <div class="col-12">
-                            <div class="card-block post ">
+                            <div class="card-block post " id="post">
                                 {!!$post->body!!}
                             </div>
                     </div>

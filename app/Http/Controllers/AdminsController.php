@@ -249,7 +249,7 @@ class AdminsController extends Controller
         $today            = date("Y-m-d", time());
         $login_list       = null;
         //get today's total number of student logins
-        $logins_today = Student::where('last_login', $today)->distinct()->get();
+        $logins_today = Student::where('last_login', $today)->distinct()->orderBy('section')->get();
         foreach ($logins_today as $student) {
             $login_list[] = (object) array(
             'id'      => $student->id,
