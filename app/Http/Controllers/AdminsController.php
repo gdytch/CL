@@ -477,4 +477,11 @@ class AdminsController extends Controller
 
         return $data;
     }
+
+
+
+    public function test()
+    {
+        echo count(Student::where(['lname' => 'genon', 'fname' => 'dytch'])->get());
+    }
 }

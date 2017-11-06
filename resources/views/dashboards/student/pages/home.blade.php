@@ -7,6 +7,7 @@
                             <div class="card-block">
                                 <div class="title-block">
                                     <h5 class="card-title text-primary">Today's Activity</h5>
+                                    <button type="button" name="button" class="btn btn-primary" data-toggle="modal" data-target="#uploadmodal"><i class="fa fa-file"></i> Upload / Submit File</button>
                                     <hr>
                                 </div>
                                 <div class="section">
@@ -15,7 +16,7 @@
                                         <div class="card-block">
                                                 <h4 class="card-title"> {{$post->title}}  </h4>
                                         </div>
-                                        <div class="card-block post">
+                                        <div class="card-block post" id="post">
                                             {!!$post->body !!}
                                         </div>
                                     </div>
@@ -29,7 +30,7 @@
         @endif
         <div class="row ">
             <div class="col col-12 col-sm-12 col-md-12 col-xl-12">
-                <button type="button" name="button" class="btn btn-lg btn-primary" data-toggle="modal" data-target="#uploadmodal"><i class="fa fa-file"></i> Submit File</button>
+                <button type="button" name="button" class="btn btn-primary" data-toggle="modal" data-target="#uploadmodal"><i class="fa fa-file"></i> Upload File</button>
 
                 <br><br>
 

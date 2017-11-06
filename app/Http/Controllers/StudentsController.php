@@ -90,8 +90,7 @@ class StudentsController extends Controller
 
         $lname = ucwords(strtolower($request->lname));
         $fname = ucwords(strtolower($request->fname));
-
-        if (Student::where(['lname' => $lname, 'fname' => $fname])->get()) {
+        if (count(Student::where(['lname' => $lname, 'fname' => $fname])->get()) != 0) {
             return redirect()->back()->withErrors('Student already exists');
         }
 

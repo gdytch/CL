@@ -15,6 +15,9 @@
 <script type="text/javascript" src="{{asset('js/app.js')}}"></script>
 <script type="text/javascript" src="{{asset('js/bootstrap-notify.min.js')}}"></script>
 <script type="text/javascript" src="{{asset('js/datatables.min.js')}}"></script>
+<script type="text/javascript" src="{{asset('js/viewer.min.js')}}">
+
+</script>
 
 <script type="text/javascript">
 
@@ -63,6 +66,7 @@
 
 	});
 
+    var viewer = new Viewer(document.getElementById('post'));
 
 </script>
 

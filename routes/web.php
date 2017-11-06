@@ -48,6 +48,7 @@ Route::group(['middleware' => 'auth:admin'], function () {
         Route::get('activity/status/{id}', 'ActivitiesController@changeStatus')->name('activity.status');
         Route::get('activity/submission/{id}', 'ActivitiesController@changeSubmissionStatus')->name('activity.submission');
 
+        Route::get('test', 'AdminController@test')->name('test');
 
     });
 
@@ -69,9 +70,4 @@ Route::group(['middleware' => 'auth:web'], function () {
         Route::get('theme', 'StudentsController@theme')->name('student.theme');
         Route::get('activity', 'HomeController@activity')->name('student.activity');
     });
-});
-
-
-Route::get('/test', function(){
-    return view('dashboards.test');
 });

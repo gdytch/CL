@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Hash;
 use App\Student;
 use App\Activity;
 use App\Stats;
@@ -252,6 +253,6 @@ class HomeController extends Controller
 
         Auth::logout();
 
-        return redirect('checkUsers?id='.$student->id)->withSuccess('Enter new password');
+        return redirect('checkUsers?lname='.$student->lname)->withSuccess('Enter new password');
     }
 }

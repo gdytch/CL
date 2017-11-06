@@ -42,4 +42,5 @@
     @endif
 
     <link rel="stylesheet" href="{{asset('css/datatables.min.css')}}">
+    <link rel="stylesheet" href="{{asset('css/viewer.min.css')}}">
     <link rel="stylesheet" href="{{asset('css/mycss.css')}}">
