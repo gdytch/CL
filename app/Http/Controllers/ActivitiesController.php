@@ -25,10 +25,11 @@ class ActivitiesController extends Controller
         $rules = FTRule::all();
         $active = null;
         $section_activities = array();
-
+        $today = date("Y-m-d", time());
         if ($request->get('active')) {
             $active = $request->get('active');
         }
+
 
         foreach($sections as $section)
         {
@@ -45,6 +46,7 @@ class ActivitiesController extends Controller
                         'description'   => $activity->description,
                         'date'          => $activity->date,
                         'section_id'    => $section->id,
+                        'section'       => $section->name,
                         'activity_rule' => $activity->FTRule->extensions,
                         'submit_count'  => count($activity->Records()->distinct()->get(['student_id']))."/".$student_no,
                         'active'        => $activity->active,
@@ -60,6 +62,7 @@ class ActivitiesController extends Controller
             'active'             => $active,
             'filetype_rules'     => $rules,
             'section_activities' => $section_activities,
+            'today'              => $today,
         );
 
         return view('layouts.admin')->with($variables);

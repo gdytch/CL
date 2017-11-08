@@ -59,7 +59,7 @@
             </div>
 
         </div>
-        <div class="col-md-6 col-sm-12">
+        <div class="col-md-12 col-lg-6 col-sm-12">
             <div class="card card-block" >
                 <div class="title-block">
                     <h4 class="card-title text-primary">Submissions</h4>
@@ -72,6 +72,7 @@
                                     <th>Student</th>
                                     <th>Submitted</th>
                                     <th>Submitted on</th>
+                                    <th></th>
                                 </thead>
                                 <tbody>
                                     @foreach ($activity_log as $log)
@@ -80,6 +81,7 @@
                                             <td><a href="{{route('student.show',$log->id)}}">{{$log->name}}</a></td>
                                             <td><span class="green"><i class="fa fa-check"></i> <b>Yes</b></span></td>
                                             <td>{{$log->submitted_at}}</td>
+                                            <td><a href="{{route('student.folder',$log->id)}}" class="btn btn-sm btn-primary">open folder</a></td>
                                         </tr>
                                         @endif
                                     @endforeach
@@ -92,6 +94,7 @@
                                                     <span class="red"><i class="fa fa-close"></i> <b>No</b></span>
                                             </td>
                                             <td></td>
+                                            <td><a href="{{route('student.folder',$log->id)}}" class="btn btn-sm btn-primary">open folder</a></td>
                                         </tr>
                                         @endif
                                     @endforeach
@@ -104,7 +107,7 @@
         </div>
 
         @if($post != null || count($post) != 0)
-        <div class="col-md-6 col-sm-12">
+        <div class="col-md-12 col-lg-6 col-sm-12">
             <div class="card card-block">
                 <div class="title-block">
                     <h4 class="card-title text-primary">

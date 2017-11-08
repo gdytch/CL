@@ -12,7 +12,7 @@
                                      </h4>
                                     <hr>
                             </div>
-                            <div class="card-block post">
+                            <div class="card-block post" id="post">
                                 {!!$post->body !!}
                             </div>
                             <div class="card-footer">

@@ -1,5 +1,6 @@
 @section('dashboard-content')
     <section class="section">
+        <button type="button" name="button" class="btn btn-primary" data-toggle="modal" data-target="#uploadmodal"><i class="fa fa-file"></i> Upload / Submit File</button>
         @if(count($todays_activity) != 0)
                 <div class="row ">
                     <div class="col col-12 col-sm-12 col-md-12 col-xl-12">
@@ -7,7 +8,6 @@
                             <div class="card-block">
                                 <div class="title-block">
                                     <h5 class="card-title text-primary">Today's Activity</h5>
-                                    <button type="button" name="button" class="btn btn-primary" data-toggle="modal" data-target="#uploadmodal"><i class="fa fa-file"></i> Upload / Submit File</button>
                                     <hr>
                                 </div>
                                 <div class="section">
@@ -30,7 +30,7 @@
         @endif
         <div class="row ">
             <div class="col col-12 col-sm-12 col-md-12 col-xl-12">
-                <button type="button" name="button" class="btn btn-primary" data-toggle="modal" data-target="#uploadmodal"><i class="fa fa-file"></i> Upload File</button>
+                {{-- <button type="button" name="button" class="btn btn-primary" data-toggle="modal" data-target="#uploadmodal"><i class="fa fa-file"></i> Upload File</button> --}}
 
                 <br><br>
 

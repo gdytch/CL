@@ -1,5 +1,5 @@
 @section('dashboard-content')
-    @php if(!isset($active)) $active = $sections[0]->id; @endphp
+    @php    if(!isset($active)) $active = 'default';    @endphp
 <section class="section">
     <div class="row sameheight-container">
         <div class="col col-12 ">
@@ -20,6 +20,9 @@
 
                                         </div>
                                         <ul class="nav nav-tabs nav-tabs-bordered">
+                                            <li class="nav-item">
+                                                <a href="#" class="nav-link @if($active == 'default')active @endif" data-target="#default" data-toggle="tab" aria-controls="home" role="tab" aria-expanded="false">Today's Activities</a>
+                                            </li>
                                             @foreach ($sections as $key => $section)
                                                 <li class="nav-item">
                                                     <a href="#" class="nav-link @if($active == $section->id)active @endif" data-target="#{{$section->id}}" data-toggle="tab" aria-controls="home" role="tab" aria-expanded="false">{{$section->name}}</a>
@@ -28,6 +31,55 @@
                                         </ul>
                                         <!-- Tab panes -->
                                         <div class="tab-content tabs-bordered card">
+                                            <div class="tab-pane @if($active == 'default')active show @endif fade in" id="default" @if($active == 'default')aria-expanded="true" @else aria-expanded="false" @endif>
+                                                <br>
+                                                    <table class="table table-striped table-responsive" id="StudentTabledefault">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Activity</th>
+                                                                <th>Description</th>
+                                                                <th>Section</th>
+                                                                <th>Added</th>
+                                                                <th>File rule</th>
+                                                                <th class="nosort">Submissions</th>
+                                                                <th width="100">Status</th>
+                                                                <th width="100">Submission</th>
+                                                                <th class="nosort" width="50"></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        @foreach ($sections as $key => $section)
+                                                            @if($section_activities[$section->id] != null )
+                                                                @php $activity = $section_activities[$section->id]; @endphp
+                                                                    @if($activity->date == $today)
+                                                                        <tr>
+                                                                            <td>{{$activity->name}}</td>
+                                                                            <td>{{$activity->description}}</td>
+                                                                            <td>{{$activity->section}}</td>
+                                                                            <td>{{$activity->date}}</td>
+                                                                            <td>{{$activity->activity_rule}}</td>
+                                                                            <td>{{$activity->submit_count}}</td>
+                                                                            <td>
+                                                                                @if($activity->active)
+                                                                                    <a href="{{route('activity.status',$activity->id)}}" class="btn btn-sm btn-success">Active</a>
+                                                                                    @else <a href="{{route('activity.status',$activity->id)}}" class="btn btn-sm btn-danger">Inactive</a>
+                                                                                @endif
+                                                                            </td>
+
+                                                                            <td>
+                                                                                @if($activity->submission)
+                                                                                    <a href="{{route('activity.submission',$activity->id)}}" class="btn btn-sm btn-success">Open</a>
+                                                                                @else <a href="{{route('activity.submission',$activity->id)}}" class="btn btn-sm btn-danger">Close</a>
+                                                                                @endif
+                                                                            </td>
+                                                                            <td><a href="{{route('activity.show',$activity->id)}}" class="btn btn-sm btn-info">View</a></td>
+                                                                        </tr>
+                                                                    @endif
+                                                            @endif
+                                                        @endforeach
+                                                        </tbody>
+                                                    </table>
+                                            </div>
                                             @foreach ($sections as $key => $section)
                                                 <div class="tab-pane @if($active == $section->id)active show @endif fade in" id="{{$section->id}}" @if($active == $section->id)aria-expanded="true" @else aria-expanded="false" @endif>
                                                     <br>

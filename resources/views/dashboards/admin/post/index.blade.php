@@ -9,7 +9,7 @@
                             <a href="{{route('post.create')}}" class="btn btn-secondary " ><i class="fa fa-plus"></i> Create post</a>
                         </div>
                     </div>
-                    <div class="card-block">
+                    <div class="card-block" id="post">
                         @if(count($posts) != 0)
                             @foreach($post_list as $post)
                             <div class="row post-container">

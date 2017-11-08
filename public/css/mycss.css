@@ -83,6 +83,7 @@
     width: 100% !important;
     height: auto !important;
     max-width: 800px !important;
+    border: 2px solid grey;
 }
 
 .post-container{
@@ -121,8 +122,21 @@
        font-size: 11pt;
        font-weight: 600;
 }
-   #legend span {
-       display: inline-block;
-       padding: 10px 20px;
-       position: relative;
-   }
+#legend span {
+   display: inline-block;
+   padding: 10px 20px;
+   position: relative;
+}
+
+table{
+    display: inline-table !important;
+}
+
+@media (max-width: 767px){
+.auth-container {
+    width: 450px;
+    position: absolute;
+    left: 15%;
+    top: 15%;
+}
+}

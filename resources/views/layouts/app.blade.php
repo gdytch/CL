@@ -3,7 +3,7 @@
     <head>
         @include('inc.header')
     </head>
-    <body>
+    <body onload="startTime()">
         <div class="main-wrapper">
             <div class="app fixed-sidebar" id="app">
                 @yield('content')

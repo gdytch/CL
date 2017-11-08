@@ -194,7 +194,8 @@ class StudentsController extends Controller
             if ($student->section != $request->section) {
                 $section1 = Section::find($student->section);
                 $newSection = Section::find($request->section);
-                Storage::move($section1->path.'/'.$student->path, $newSection->path.'/'.$student->path);
+                if(!Storage::exists($section1->path.'/'.$student->path, $newSection->path.'/'.$student->path))
+                    Storage::move($section1->path.'/'.$student->path, $newSection->path.'/'.$student->path);
             }
         } else {
             $newSection = Section::find($request->section);

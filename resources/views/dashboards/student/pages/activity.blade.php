@@ -1,7 +1,7 @@
 @section('dashboard-content')
     @php $student = Auth::user(); @endphp
 
-    <section class="section">
+    <section class="section" id="post">
         <h4 class="card-title text-primary">Activities</h4>
         <hr><br>
         @foreach($activities as $activity)
@@ -15,7 +15,7 @@
                             <hr>
                         </div>
                         <div class="card-content col">
-                                <div class="card-block post">
+                                <div class="card-block post" >
                                     {!!$activity->Post->body !!}
                                 </div>
                         </div>

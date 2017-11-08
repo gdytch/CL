@@ -121,7 +121,7 @@
     </div>
   </div>
   <div class="row sameheight-container">
-    <div class="col col-sm-12 col-md-12 col-xl-8 history-col">
+    <div class="col col-sm-12 col-md-12 col-xl-7 history-col">
       <div class="card sameheight-item ">
         <div class="card-header bordered">
           <div class="header-block">
@@ -134,8 +134,54 @@
         </div>
       </div>
     </div>
-
-    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+    <div class="col-xl-5 col-lg-6 col-md-12 col-sm-12 col-xs-12">
+      <div class="card sameheight-item">
+        <div class="card-header bordered">
+          <div class="header-block">
+            <h3 class="card-title text-primary"> Sessions </h3> &nbsp; <em> {{$current_date}} </em>
+          </div>
+        </div>
+        <div class="card-block">
+          <div class="col" style="max-height: 600px; overflow: auto;">
+            @if(count($stats->login_list) != null)
+            <table class="table table-striped table-responsive">
+                <thead>
+                    <tr>
+                        <th></th><th>Student</th><th>Section</th><th>Submitted</th>
+                    </tr>
+                </thead>
+              <tbody>
+                @foreach ($stats->login_list as $student)
+                <tr>
+                  <td width="10">
+                    {!!$student->online!!}
+                  </td>
+                  <td >
+                    <a href="{{route('student.show',$student->id)}}"> {{$student->lname}}, {{$student->fname}} </a>
+                  </td>
+                  <td >
+                    {{$student->section}}
+                  </td>
+                  <td>
+                      {!!$student->submit_status!!}
+                  </td>
+                </tr>
+                @endforeach
+              </tbody>
+            </table>
+            @else
+              No Logins
+            @endif
+          </div>
+          <div class="col-12">
+            <small><i class="fa fa-circle green"></i> Active  <i class="fa fa-circle yellow"></i> Idle <i class="fa fa-circle red"></i> Expired Session  <i class="fa fa-circle"></i> Logged out</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+      <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-xs-12">
       <div class="card sameheight-item   sales-breakdown" data-exclude="xs,sm,lg">
         <div class="card-header bordered">
           <div class="header-block">
@@ -169,45 +215,6 @@
                 @endforeach
               </table>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12">
-      <div class="card sameheight-item">
-        <div class="card-header bordered">
-          <div class="header-block">
-            <h3 class="card-title text-primary"> Sessions </h3> &nbsp; <em> {{$current_date}} </em>
-          </div>
-        </div>
-        <div class="card-block">
-          <div class="col-12" style="max-height: 600px; overflow: auto;">
-            @if(count($stats->login_list) != null)
-            <table class="table table-striped table-responsive">
-              <tbody>
-                @foreach ($stats->login_list as $student)
-                <tr>
-                  <td width="10">
-                    {!!$student->online!!}
-                  </td>
-                  <td nowrap>
-                    {{$student->lname}}, {{$student->fname}}
-                  </td>
-                  <td nowrap>
-                    {{$student->section}}
-                  </td>
-                </tr>
-                @endforeach
-              </tbody>
-            </table>
-            @else
-              No Logins
-            @endif
-          </div>
-          <div class="col-12">
-            <small><i class="fa fa-circle green"></i> Active  <i class="fa fa-circle yellow"></i> Idle (30 - 60 mins)  <i class="fa fa-circle orange"></i> Idle (1 - 2 hrs)  <i class="fa fa-circle red"></i> Expired Session  <i class="fa fa-circle"></i> Logged out</small>
           </div>
         </div>
       </div>

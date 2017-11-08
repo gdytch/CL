@@ -248,17 +248,7 @@ class AdminsController extends Controller
         $storage_size     = 0;
         $today            = date("Y-m-d", time());
         $login_list       = null;
-        //get today's total number of student logins
-        $logins_today = Student::where('last_login', $today)->distinct()->orderBy('section')->get();
-        foreach ($logins_today as $student) {
-            $login_list[] = (object) array(
-            'id'      => $student->id,
-            'fname'   => $student->fname,
-            'lname'   => $student->lname,
-            'section' => $student->sectionTo->name,
-            'online'  => $this->sessionStatus($student)
-          );
-        }
+
         // get today's activities
         $todays_activities = Activity::where('date', $today)->get();
         foreach ($todays_activities as $key => $activity) {
@@ -268,6 +258,26 @@ class AdminsController extends Controller
             $todays_activities[$key]['total_submits'] = $submits_count;
             $todays_activities[$key]['total_students'] = $section_students;
             $todays_activities[$key]['percentage'] = $precentage;
+        }
+
+        //get today's total number of student logins/sessions
+        $logins_today = Student::where('last_login', $today)->distinct()->orderBy('section')->get();
+        foreach ($logins_today as $student) {
+            $submit_status = '<span class="yellow"><i class="fa fa-info-circle"> </i> <strong>No Activity</strong></span>';
+            foreach ($todays_activities as $key => $activity) {
+                if($activity->section_id == $student->section){
+                    $submit_status = $this->checkActivity($activity, $student);
+                    break;
+                }
+            }
+            $login_list[] = (object) array(
+            'id'      => $student->id,
+            'fname'   => $student->fname,
+            'lname'   => $student->lname,
+            'section' => $student->sectionTo->name,
+            'submit_status' => $submit_status,
+            'online'  => $this->sessionStatus($student)
+          );
         }
 
         //get total activity submits
@@ -296,7 +306,7 @@ class AdminsController extends Controller
             'logins_today'       => $logins_today,
             'todays_activities'  => $todays_activities,
             'login_list'         => $login_list,
-            'login_history'       => $login_history
+            'login_history'      => $login_history
         );
 
         return $stats;
@@ -436,12 +446,8 @@ class AdminsController extends Controller
 
         $current_time = time();
 
-        if (($current_time - $session->last_activity) >= 1800 && ($current_time - $session->last_activity) <= 3600) {
+        if (($current_time - $session->last_activity) >= 1800 && ($current_time - $session->last_activity) <= 7199) {
             return '<small><i class="fa fa-circle yellow" ></i></small>';
-        }
-
-        if (($current_time - $session->last_activity) >= 3601 && ($current_time - $session->last_activity) <= 7199) {
-            return '<small><i class="fa fa-circle orange" ></i></small>';
         }
 
         if (($current_time - $session->last_activity) >= 7200) {
@@ -483,5 +489,16 @@ class AdminsController extends Controller
     public function test()
     {
         echo count(Student::where(['lname' => 'genon', 'fname' => 'dytch'])->get());
+    }
+
+
+    public function checkActivity($activity, $student)
+    {
+        $record = Record::where(['student_id' => $student->id, 'activity_id' => $activity->id])->get()->first();
+
+        if(count($record) != 0)
+            return '<span class="green"><i class="fa fa-check"></i></span>';
+
+        return '<span class="red"><i class="fa fa-close"></i></span>';
     }
 }

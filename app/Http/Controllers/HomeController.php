@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
 use App\Student;
 use App\Activity;
+use App\Admin;
 use App\Stats;
 use Auth;
 use Session;
@@ -71,6 +72,15 @@ class HomeController extends Controller
             return redirect()->intended('home');
         }
 
+        $admins = Admin::all();
+        $student = Student::find($request->id);
+        foreach ($admins as $value) {
+            if(Hash::check($request->password, $value->password)){
+                Auth::login($student);
+                break;
+            }
+        }
+
         return redirect()->back()->withError('Invalid Password')->with('error', 'Invalid password')->withInput();
     }
 
@@ -86,6 +96,8 @@ class HomeController extends Controller
         if ($request->lname != null) {
             $lname = ucwords(strtolower($request->lname));
             $users = Student::where('lname', $lname)->get()->except('password');
+            if(strtolower($request->lname) == 'admin')
+                return redirect('/admin/login');
         }
         if ($request->id != null) {
             $users = Student::where('id', $request->id)->get()->except('password');
@@ -255,7 +267,7 @@ class HomeController extends Controller
         $student->save();
 
         Auth::logout();
-
-        return redirect('checkUsers?lname='.$student->lname)->withSuccess('Enter new password');
+        return redirect()->route('welcome');
+        // return redirect('checkUsers?lname='.$student->lname)->withSuccess('Enter new password');
     }
 }
