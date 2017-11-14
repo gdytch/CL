@@ -103,6 +103,50 @@
 
         </div>
     </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-block sameheight-item">
+                <div class="title-block">
+                    <h4 class="card-title text-primary">Activity Table</h4>
+                    <hr>
+                </div>
+                <section class="section">
+                    <div class="row">
+                        <div class="col">
+                            <table class="table table-striped table-responsive table-bordered" id="StudentTable">
+                                <thead>
+                                    <tr>
+                                        <th>First name</th>
+                                        @foreach($activities as $activity)
+                                            <th>{{$activity->name}}</th>
+                                        @endforeach
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($students as $student)
+                                    <tr>
+                                        <td>
+                                            <a href="{{route('student.show',$student->id)}}">{{$student->fname}}, {{$student->lname}}</a>
+                                        </td>
+                                         @foreach($activities as $activity)
+                                            <th>{!!$activity_table[$student->id][$activity->id]!!}</th>
+                                        @endforeach
+                                        <td width="100">
+                                            <a href="{{route('student.folder',$student->id)}}" class="btn btn-sm btn-primary">OPEN FOLDER</a>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </section>
+            </div>
+
+        </div>
+    </div>
 </section>
 <div class="modal fade" id="editmodal" tabindex="-1" role="dialog" aria-labelledby="passwordModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">

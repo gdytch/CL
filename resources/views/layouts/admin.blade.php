@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('content')
+    
     @include('inc.navbar')
     @include('inc.sidebar')
     <article class="content dashboard-page">

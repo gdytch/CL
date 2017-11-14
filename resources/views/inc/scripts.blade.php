@@ -44,6 +44,7 @@
             "paging": false,
        });
 
+
     });
 
     jQuery(document).ready(function($) {
@@ -73,8 +74,9 @@
     });
 
 
+
     function startTime() {
-        var today = new Date(<?php echo date("Y, m, d, H, i, s", time()) ?>);
+        var today = new Date();
         var mt = today.getMonth();
         var d = today.getDate();
         var y = today.getFullYear();
@@ -84,16 +86,20 @@
         var ampm = h >= 12 ? 'pm' : 'am';
         h = h % 12;
         h = h ? h : 12;
+        mt += 1;
         m = checkTime(m);
         s = checkTime(s);
         document.getElementById('datetime').innerHTML =
-        '<i class="fa fa-calendar-o"></i> ' + mt + '-' + d + '-' + y + "&nbsp; <i class='fa fa-clock-o'></i> " + h + ":" + m + ":" + " " + ampm;
+        '<i class="fa fa-calendar-o"></i> ' + mt + '-' + d + '-' + y + "&nbsp; <i class='fa fa-clock-o'></i> " + h + ":" + m + " " + ampm;
         var t = setTimeout(startTime, 500);
     }
     function checkTime(i) {
         if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
         return i;
     }
+
+
+
 
 </script>
 
@@ -171,3 +177,10 @@ var chart =  Morris.Line({
 })
 </script>
 @endif
+
+
+<script type="text/javascript">
+
+ 
+
+</script>

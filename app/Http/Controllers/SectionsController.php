@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use App\Section;
+use App\Record;
 
 class SectionsController extends Controller
 {
@@ -76,10 +77,21 @@ class SectionsController extends Controller
 
         $section = Section::find($id);
         $students = $section->Students;
+        $activities = $section->Activities;
+
+        foreach($students as $key => $student){
+            $activity_table[$student->id] = array();
+            foreach($activities as $activity){
+                $activity_table[$student->id][$activity->id] = $this->checkActivity($student, $activity);
+            }
+        }
+
         $variables = array(
             'dashboard_content' => 'dashboards.admin.section.show',
             'section'           => $section,
-            'students'          => $students
+            'students'          => $students,
+            'activities'        => $activities,
+            'activity_table'    => $activity_table
         );
         return view('layouts.admin')->with($variables);
 
@@ -174,5 +186,16 @@ class SectionsController extends Controller
 
     }
 
+
+    
+    public function checkActivity($student, $activity)
+    {
+
+        $record = Record::where(['student_id' => $student->id, 'activity_id' => $activity->id])->get()->first();
+        if(count($record) != 0)
+            return '<span class="green"><i class="fa fa-check"></i> <b>Yes</b></span>';
+        
+        return '<span class="red"><i class="fa fa-close"></i> <b>No</b></span>';
+    }
 
 }

@@ -48,7 +48,27 @@ Route::group(['middleware' => 'auth:admin'], function () {
         Route::get('activity/status/{id}', 'ActivitiesController@changeStatus')->name('activity.status');
         Route::get('activity/submission/{id}', 'ActivitiesController@changeSubmissionStatus')->name('activity.submission');
 
-        Route::get('test', 'AdminController@test')->name('test');
+        Route::resource('exam', 'ExamsController');
+        Route::post('exam/generate_papers', 'ExamsController@generate_papers')->name('exam.generate_papers');
+        Route::get('exam/{exam_id}/show/student/{id}', 'ExamsController@studentExamPaper')->name('exam.show.student');
+
+        Route::post('exam/exam_paper/store', 'ExamsController@exam_paper_store')->name('exam_paper.store');
+        Route::get('exam/exam_paper/show/{id}', 'ExamsController@exam_paper_show')->name('exam_paper.show');
+        Route::put('exam/exam_paper/update/{id}', 'ExamsController@exam_paper_update')->name('exam_paper.update');
+
+        Route::post('exam/exam_test/store', 'ExamsController@exam_test_store')->name('exam_test.store');
+        Route::put('exam/exam_test/update/{id}', 'ExamsController@exam_test_update')->name('exam_test.update');
+        Route::delete('exam/exam_test/delete/{id}', 'ExamsController@exam_test_delete')->name('exam_test.delete');
+
+        Route::post('exam/exam_item/store', 'ExamsController@exam_item_store')->name('exam_item.store');
+        Route::put('exam/exam_item/update/{id}', 'ExamsController@exam_item_update')->name('exam_item.update');
+        Route::get('exam/exam_item/delete/{id}', 'ExamsController@exam_item_delete')->name('exam_item.delete');
+
+        Route::post('exam/exam_item_choice/store', 'ExamsController@exam_item_choice_store')->name('exam_item_choice.store');
+        Route::put('exam/exam_item_choice/update/{id}', 'ExamsController@exam_item_choice_update')->name('exam_item_choice.update');
+        Route::get('exam/exam_item_choice/delete/{id}', 'ExamsController@exam_item_choice_delete')->name('exam_item_choice.delete');
+
+
 
     });
 
@@ -69,5 +89,9 @@ Route::group(['middleware' => 'auth:web'], function () {
         Route::get('profile', 'HomeController@profile')->name('student.profile');
         Route::get('theme', 'StudentsController@theme')->name('student.theme');
         Route::get('activity', 'HomeController@activity')->name('student.activity');
+        Route::get('exam/finish/', 'HomeController@ExamFinish')->name('exam.finish');
+        Route::post('exam/next/', 'HomeController@NextPage')->name('exam.next');
+        Route::get('exam/{page}/', 'HomeController@exam')->name('exam.open');
+        Route::post('exam/submit/', 'HomeController@ExamSubmit')->name('exam.submit');
     });
 });

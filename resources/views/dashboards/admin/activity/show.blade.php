@@ -69,6 +69,7 @@
                         <div class="col-md-12">
                             <table class="table table-striped table-responsive">
                                 <thead>
+                                    <th>    </th>
                                     <th>Student</th>
                                     <th>Submitted</th>
                                     <th>Submitted on</th>
@@ -78,6 +79,7 @@
                                     @foreach ($activity_log as $log)
                                         @if($log->status)
                                         <tr>
+                                            <td>{!!$log->session !!}</td>
                                             <td><a href="{{route('student.show',$log->id)}}">{{$log->name}}</a></td>
                                             <td><span class="green"><i class="fa fa-check"></i> <b>Yes</b></span></td>
                                             <td>{{$log->submitted_at}}</td>
@@ -89,6 +91,7 @@
                                     @foreach ($activity_log as $log)
                                         @if(!$log->status)
                                         <tr>
+                                            <td>{!!$log->session !!}</td>
                                             <td><a href="{{route('student.show',$log->id)}}">{{$log->name}}</a></td>
                                             <td>
                                                     <span class="red"><i class="fa fa-close"></i> <b>No</b></span>

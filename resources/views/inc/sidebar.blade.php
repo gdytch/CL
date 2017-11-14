@@ -28,6 +28,10 @@
                   <a href="{{route('post.index')}}">
                       <i class="fa fa-edit"></i> Posts Manager </a>
               </li>
+              <li {{ (Route::is('exam.index', 'exam_paper.show', 'exam.show', 'exam.show.student') ? 'class=active' : '') }}>
+                 <a href="{{route('exam.index')}}">
+                     <i class="fa fa-file-text-o"></i> Exam manager </a>
+             </li>
                <li {{ (Route::is('admin.settings') ? 'class=active' : '') }}>
                   <a href="{{route('admin.settings')}}">
                       <i class="fa fa-gear"></i> Settings </a>

@@ -54,6 +54,9 @@
 .blue{
   color: #52BCD3;
 }
+.grey{
+    color:#4f5f6f !important;
+}
 .btn{
     text-transform: uppercase;
 }
@@ -85,7 +88,9 @@
     max-width: 800px !important;
     border: 2px solid grey;
 }
-
+.post  img.left{
+    width: auto !important;
+}
 .post-container{
     margin: 0px auto;
     max-width: 1000px;

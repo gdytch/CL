@@ -37,10 +37,12 @@ class ActivitiesController extends Controller
             {
                 $section_activities[$section->id] = null;
             }else {
+                $activities1 = null;
                 $student_no = count($section->Students);
-                foreach ($section->Activities()->orderBy('created_at', 'desc')->get()  as $activity)
+                $activity_list = $section->Activities()->orderBy('created_at', 'desc')->get();
+                foreach ($activity_list as $activity)
                 {
-                    $section_activities[$section->id] = (object) array(
+                    $activities1[] = (object) array(
                         'id'            => $activity->id,
                         'name'          => $activity->name,
                         'description'   => $activity->description,
@@ -53,6 +55,7 @@ class ActivitiesController extends Controller
                         'submission'    => $activity->submission,
                     );
                 }
+                $section_activities[$section->id] = $activities1;
             }
         }
 
@@ -125,7 +128,8 @@ class ActivitiesController extends Controller
                 'id'           => $student->id,
                 'name'         => $student->lname.', '.$student->fname,
                 'status'       => $status,
-                'submitted_at' => $submitted_at
+                'submitted_at' => $submitted_at,
+                'session'      => app('App\Http\Controllers\AdminsController')->sessionStatus($student)
             );
         }
 

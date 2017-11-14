@@ -6,7 +6,7 @@
                     <div class="card-block">
                         <div class="title-block">
                             <h4 class="card-title text-primary">Posts</h4>
-                            <a href="{{route('post.create')}}" class="btn btn-secondary " ><i class="fa fa-plus"></i> Create post</a>
+                            <a href="{{route('post.create')}}" class="btn btn-secondary pull-right " ><i class="fa fa-plus"></i> Create post</a>
                         </div>
                     </div>
                     <div class="card-block" id="post">
@@ -15,7 +15,7 @@
                             <div class="row post-container">
                                 <div class="col col-12 col-md-12 col-xs-12" style=" ">
                                     <div class="card">
-                                            <div class="card-block">
+                                            <div class="card-block" >
                                                     <h4 class="card-title text-primary">
                                                         {{$post->title}}
                                                         @if($post->draft) <small><em class="text-secondary">draft</em></small>@endif
@@ -23,7 +23,7 @@
                                                          <a href="{{route('post.edit',$post->id)}}" class="btn btn-sm btn-secondary pull-right">Edit</a>
                                                     <hr>
                                             </div>
-                                            <div class="card-block post">
+                                            <div class="card-block post" style="max-height: 500px !important; overflow: auto;">
                                                 {!!$post->body !!}
                                             </div>
                                             <div class="card-footer">

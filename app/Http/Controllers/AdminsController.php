@@ -439,7 +439,10 @@ class AdminsController extends Controller
     public function sessionStatus($student)
     {
         $session = Session::where(['user_id' => $student->id, 'id' => $student->session_id])->get()->first();
-
+        $today = date("Y-m-d", time());
+        if($student->last_login != $today){
+            return '<small><i class="fa fa-circle-o"></i></small>';
+        }
         if ($session == null || count($session) == 0) {
             return '<small><i class="fa fa-circle"></i></small>';
         }

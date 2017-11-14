@@ -28,6 +28,23 @@
                     <br>
                 </div>
         @endif
+        @if($exam_paper != null && $student->lname == 'Genon')
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header bordered">
+                            <div class="header-block">
+                                <h3 class="card-title text-primary">  Exam: {{$exam_paper->name}} </h3>
+                                <p class="title-description"> {{$exam_paper->description}} </p>
+                            </div>
+                        </div>
+                        <div class="card-block">
+                            <a href="{{route('exam.open',0)}}" class="btn btn-primary">Start Exam</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
         <div class="row ">
             <div class="col col-12 col-sm-12 col-md-12 col-xl-12">
                 {{-- <button type="button" name="button" class="btn btn-primary" data-toggle="modal" data-target="#uploadmodal"><i class="fa fa-file"></i> Upload File</button> --}}

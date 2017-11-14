@@ -6,18 +6,14 @@
                 <div class="card-block">
                     <div class="title-block">
                         <h1 class="card-title text-primary"> Student List</h1>
-                        <div class="row">
-                            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#addmodal"><i class="fa fa-plus"></i> Add Student</button>
-                            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#batchModal"><i class="fa fa-plus"></i> Batch Add</button>
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 @php if(!isset($_GET['id'])) $_GET['id']='all'; @endphp
-                                <br>
-                                <a href="{{url('admin/student?id=all')}}" class="btn @if($_GET['id'] == 'all')  btn-primary @else  btn-secondary @endif" >All</a>
+                                <br><br>
+                                <a href="{{url('admin/student?id=all')}}" class="btn @if($_GET['id'] == 'all')  btn-primary @else  btn-secondary @endif pull-left" >All</a>
                                     @foreach ($sections as $key => $section)
-                                        <a  href="{{url('admin/student?id='.$section->id)}}" class="btn @if($_GET['id'] == $section->id)  btn-primary @else  btn-secondary @endif">{{$section->name}}</a>
+                                        <a  href="{{url('admin/student?id='.$section->id)}}" class="btn @if($_GET['id'] == $section->id)  btn-primary @else  btn-secondary @endif pull-left">{{$section->name}}</a>
                                         @endforeach
-
-                        </div>
+                                        <button type="button" class="btn btn-secondary pull-right" data-toggle="modal" data-target="#batchModal"><i class="fa fa-plus"></i> Batch Add</button>
+                                        <button type="button" class="btn btn-secondary pull-right" data-toggle="modal" data-target="#addmodal"><i class="fa fa-plus"></i> Add Student</button>
                     </div>
                     <section class="section">
                         <div class="card row">
@@ -40,7 +36,7 @@
                                                 <td><a href="{{route('section.show',$student->section_id)}}">{{$student->section_name}}</a></td>
                                                 <td><a href="{{route('student.folder',$student->id)}}" class="">OPEN FOLDER</a></td>
                                             </tr>
-                                        @endforeach 
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>

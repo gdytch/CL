@@ -7,9 +7,7 @@
                 <div class="card-block">
                     <div class="title-block">
                         <h1 class="card-title text-primary"> Activity List </h1>
-                        <div class="sub-title">
-                            <a href="#" class="btn btn-secondary" data-toggle="modal" data-target="#addModal"><i class="fa fa-plus"></i> Add Activity</a>
-                        </div>
+                            <a href="#" class="btn btn-secondary pull-right" data-toggle="modal" data-target="#addModal"><i class="fa fa-plus"></i> Add Activity</a>
                     </div>
                     <div class="row row-sm stats-container">
                         <div class="col-xl-12  ">
@@ -50,7 +48,7 @@
                                                         <tbody>
                                                         @foreach ($sections as $key => $section)
                                                             @if($section_activities[$section->id] != null )
-                                                                @php $activity = $section_activities[$section->id]; @endphp
+                                                                @foreach($section_activities[$section->id] as $activity)
                                                                     @if($activity->date == $today)
                                                                         <tr>
                                                                             <td>{{$activity->name}}</td>
@@ -75,6 +73,7 @@
                                                                             <td><a href="{{route('activity.show',$activity->id)}}" class="btn btn-sm btn-info">View</a></td>
                                                                         </tr>
                                                                     @endif
+                                                                @endforeach
                                                             @endif
                                                         @endforeach
                                                         </tbody>
@@ -98,7 +97,8 @@
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
-                                                            @php $activity = $section_activities[$section->id]; @endphp
+                                                            {{-- @php $activity = $section_activities[$section->id]; @endphp --}}
+                                                            @foreach($section_activities[$section->id] as $activity)
                                                                     <tr>
                                                                         <td>{{$activity->name}}</td>
                                                                         <td>{{$activity->description}}</td>
@@ -120,6 +120,7 @@
                                                                         </td>
                                                                         <td><a href="{{route('activity.show',$activity->id)}}" class="btn btn-sm btn-info">View</a></td>
                                                                     </tr>
+                                                                @endforeach
                                                             </tbody>
                                                         </table>
                                                     @else

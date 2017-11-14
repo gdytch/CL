@@ -1,12 +1,11 @@
 @extends('layouts.app')
 @section('content')
-    @include('inc.navbar')
-    @include('inc.student-sidebar')
-    <article class="content dashboard-page">
-        @include($dashboard_content)
-        @yield('dashboard-content')
-    </article>
-    {{-- @include('inc.footer') --}}
-
+        @include('inc.navbar')
+        @include('inc.student-sidebar')
+        <article class="content dashboard-page">
+            @include($dashboard_content)
+            @yield('dashboard-content')
+        </article>
+        {{-- @include('inc.footer') --}}
 
 @endsection

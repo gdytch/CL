@@ -6,9 +6,7 @@
                 <div class="card-block">
                     <div class="title-block">
                         <h1 class="card-title text-primary"> Section List </h1>
-                        <div class="sub-title">
-                            <button type="button" data-toggle="modal" data-target="#addmodal" class="btn btn-secondary"><i class="fa fa-plus"></i> Add section</button>
-                        </div>
+                            <button type="button" data-toggle="modal" data-target="#addmodal" class="btn btn-secondary pull-right"><i class="fa fa-plus"></i> Add section</button>
                     </div>
                     <div class="card row row-sm stats-container">
                         <div class="col col-12">
