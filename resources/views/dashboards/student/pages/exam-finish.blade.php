@@ -31,7 +31,11 @@
         border: none;
         box-shadow: none;
     }
-
+    .exam_nav{
+        line-height: 7px;
+        font-size: 9pt;
+        padding: 8px;
+    }
     </style>
     <div class="row">
         <div class="col-12">
@@ -72,7 +76,7 @@
                               <div class="modal-body">
                                   <form class="" action="{{route('exam.submit')}}" method="post">
                                       {{ csrf_field() }}
-                                    <h6>Enter password to confirm</h6>
+                                    <h6>Enter your <b>Login password</b> to confirm</h6>
                                     <input type="password" class="form-control underlined" name="password" value="" required autofocus>
                               </div>
                               <div class="modal-footer">
@@ -88,26 +92,27 @@
 
 
                     <div class="row">
-                        <div class="col-12 item_nav-container">
-                            @php $p = 0; @endphp
-                            @foreach ($exam_paper->Tests as $key => $test1)
+                        @php $p = 0; @endphp
+                        @foreach ($exam_paper->Tests as $key => $test1)
+                            <div class="col-12 item_nav-container">
 
-                            &nbsp;
-                            <div class="btn-group" >
+                                &nbsp;
+                                <small>{{$test1->name}}</small> &nbsp;
+                                <div class="btn-group" >
 
-                                @foreach ($test1->Items as $key2 => $item2)
-                                    @if($item_list[$p]->answered)
-                                            <button type="button" class="btn btn-primary @if($p == $page) active @endif">{{$key2+1}}</button>
-                                    @else
-                                            <button type="button" class="btn btn-secondary @if($p == $page) active @endif">{{$key2+1}}</button>
-                                    @endif
-                                    @php $p++; @endphp
-                                @endforeach
+                                    @foreach ($test1->Items as $key2 => $item2)
+                                        @if($item_list[$p]->answered)
+                                                <a href="{{route('exam.open',$p)}}" class="btn btn-primary @if($p == $page) active @endif exam_nav">{{$key2+1}}</a>
+                                        @else
+                                                <a href="{{route('exam.open',$p)}}" class="btn btn-secondary @if($p == $page) active @endif exam_nav">{{$key2+1}}</a>
+                                        @endif
+                                        @php $p++; @endphp
+                                    @endforeach
 
 
+                                </div>
                             </div>
                         @endforeach
-                        </div>
                     </div>
 
                 </div>

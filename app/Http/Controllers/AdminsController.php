@@ -126,7 +126,8 @@ class AdminsController extends Controller
             if ($admin->avatar != 'default-avatar.png') {
                 Storage::delete("avatar/".$admin->avatar);
             }
-            Image::make($avatar)->resize(250, 250)->save(public_path().'/storage/avatar/'.$filename);
+            Image::make($avatar)->fit(250)->save(public_path().'/storage/avatar/'.$filename);
+
             $admin->avatar = $filename;
             $admin->update();
         }

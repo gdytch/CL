@@ -12,7 +12,7 @@ class Exam_Item extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'exam_paper_id', 'exam_test_id', 'correct_answer', 'question', 'points'
+        'exam_paper_id', 'exam_test_id', 'correct_answer', 'question', 'points', 'question_type', 'answer_type'
     ];
 
     public function Test()
@@ -26,5 +26,5 @@ class Exam_Item extends Model
     }
 
 
-    
+
 }

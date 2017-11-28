@@ -18,4 +18,9 @@ class Exam_Test extends Model
     {
         return $this->hasMany('App\Exam_Item', 'exam_test_id', 'id');
     }
+
+    public function Exam_Paper()
+    {
+        return $this->belongsTo('App\Exam_Paper', 'exam_paper_id', 'id');
+    }
 }

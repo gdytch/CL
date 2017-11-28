@@ -7,7 +7,7 @@
         </div>
 
         <div class="col-12">
-            <div class="card">
+            <div class="card" id="exam">
                 <div class="card-header bordered">
                     <div class="header-block">
                         <h3 class="card-title text-primary">  {{$exam_paper->name}}  </h3>
@@ -21,10 +21,10 @@
                     <div class="header-block">
                         <p class="title-description"> Perfect score: {{$exam_paper->perfect_score}} </p>
                     </div>
-                    <div class="header-block">
-                        <button type="button" data-toggle="modal" data-target="#editExam" class="btn btn-secondary pull-right">edit</button>
+                    <div class="header-block pull-right">
+                        <button type="button" data-toggle="modal" data-target="#editExam" class="btn btn-secondary">edit</button>
                         <div class="modal fade" id="editExam" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
-                      <div class="modal-dialog">
+                          <div class="modal-dialog">
                         <div class="modal-content">
                           <div class="modal-header">
                               <h4 class="modal-title" id="">Edit Exam</h4>
@@ -68,7 +68,8 @@
                           </div>
                         </div>
                       </div>
-                    </div>
+                        </div>
+                        <a href="{{route('exam.preview',[$exam_paper->id,0])}}" class="btn btn-primary">preview</a>&nbsp;
                     </div>
 
                 </div>
@@ -148,17 +149,41 @@
                                         <div class="row">
                                             <div class="col">
                                                 {{-- Question --}}
-                                                <li><p> {{$test_item->question}} <em>---Answer: {{$test_item->correct_answer}} Point(s): {{$test_item->points}}</em>
+                                                <li><p>
+                                                    @switch($test_item->question_type)
+                                                        @case('image')
+                                                                <img src="{{asset('photos/shares/'.$test_item->question)}}" class="item_image" alt="">
+                                                                @break;
+                                                        @case('HTML')
+                                                                 {!!$test_item->question!!}
+                                                                @break;
+                                                        @default
+                                                                 {{$test_item->question}}
+                                                    @endswitch
+
+                                                    <span class="text-primary"><em>---Answer: {{$test_item->correct_answer}} Point(s): {{$test_item->points}}</em></span>
                                                     <a href="#" data-toggle="modal" data-target="#test_item{{$test_item->id}}" class="btn btn-sm btn-secondary">Edit</a>
                                                     <br>
                                                 </p>
                                                 </li>
-                                                @if($test->test_type == 'Multiple Choice')
+
+                                                @if($test->test_type == 'Multiple Choice' || $test->test_type == 'Identification')
                                                     <div class="row">
                                                         <ol type="a">
                                                             @foreach ($test_item->Choices as $choice)
                                                                     <li > <a href="#" data-toggle="modal" data-target="#test_item_edit_choice{{$choice->id}}">
-                                                                        <span style="margin-left: 20px;"> {{$choice->choice}}</span>
+                                                                        <span style="margin-left: 20px;">
+                                                                            @switch($test_item->answer_type)
+                                                                                @case('image')
+                                                                                        <img src="{{asset('photos/shares/'.$choice->choice)}}" class="item_image" alt="">
+                                                                                        @break;
+                                                                                @case('HTML')
+                                                                                         {!!$choice->choice!!}
+                                                                                        @break;
+                                                                                @default
+                                                                                         {{$choice->choice}}
+                                                                            @endswitch
+                                                                        </span>
                                                                     </a></li>
                                                                     {{-- Edit choice modal --}}
                                                                     <div class="modal fade" id="test_item_edit_choice{{$choice->id}}" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
@@ -246,12 +271,20 @@
                                                                       <div class="form-group">
                                                                           <label for="">Correct Answer</label>
                                                                           <select class="form-control" name="correct_answer">
-                                                                              <option value="true">True</option>
-                                                                              <option value="false">False</option>
+                                                                              <option value="true" @if($test_item->correct_answer == 'true') selected @endif >True</option>
+                                                                              <option value="false" @if($test_item->correct_answer == 'false') selected @endif>False</option>
                                                                           </select>
                                                                       </div>
                                                                       @break
+                                                                  @case('Identification')
                                                                   @case('Multiple Choice')
+                                                                          <div class="form-group">
+                                                                              <select class="form-control" name="question_type">
+                                                                                  <option value="text" @if($test_item->question_type == 'text') selected @endif>Text</option>
+                                                                                  <option value="HTML" @if($test_item->question_type == 'HTML') selected @endif>HTML code</option>
+                                                                                  <option value="image" @if($test_item->question_type == 'image') selected @endif>Image</option>
+                                                                              </select>
+                                                                          </div>
                                                                           <div class="form-group">
                                                                               <label for="">Correct Answer</label>
                                                                               <input type="text" name="correct_answer" class="form-control underlined" value="{{$test_item->correct_answer}}"  placeholder="Correct Answer" required>
@@ -289,16 +322,23 @@
 
                                         {{-- Add Question modal --}}
                                         <div class="row">
-                                            <div class="col">
+                                            <a name="addQuestion"></a>
+                                            <div class="col" >
                                                 <h5 class="text-primary">Add Question</h5>
                                                 <form class="form-inline" action="{{route('exam_item.store')}}" method="POST">
                                                     {{ csrf_field() }}
                                                     <input type="hidden" name="exam_paper_id" value="{{$exam_paper->id}}">
                                                     <input type="hidden" name="exam_test_id" value="{{$test->id}}">
-                                                    <div class="form-group">
-                                                        <input type="textarea" name="question" class="form-control"  placeholder="Question" required>
+                                                    <div class="form-group" style="width:100%">
+                                                        <input type="textarea" name="question" class="form-control"  placeholder="Question" required style="width:100%">
                                                     </div>
-
+                                                    <div class="form-group">
+                                                        <select class="form-control" name="question_type">
+                                                            <option value="text">Text</option>
+                                                            <option value="HTML">HTML code</option>
+                                                            <option value="image">Image</option>
+                                                        </select>
+                                                    </div>
                                                     @switch($test->test_type)
                                                         @case('True or False')
                                                         <div class="form-group">
@@ -308,22 +348,51 @@
                                                             </select>
                                                         </div>
                                                         @break
+                                                        @case('Identification')
                                                         @case('Multiple Choice')
                                                         <div class="form-group">
                                                             <input type="text" name="correct_answer" class="form-control"  placeholder="Correct Answer" required>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <select class="form-control" name="answer_type">
+                                                                <option value="text">Text</option>
+                                                                <option value="HTML">HTML code</option>
+                                                                <option value="image">Image</option>
+                                                            </select>
                                                         </div>
                                                         @break
                                                         @default
                                                         <div class="form-group">
                                                             <input type="text" name="correct_answer" class="form-control"  placeholder="Correct Answer" required>
                                                         </div>
+                                                        <div class="form-group">
+                                                            <select class="form-control" name="answer_type">
+                                                                <option value="text">Text</option>
+                                                                <option value="HTML">HTML code</option>
+                                                                <option value="image">Image</option>
+                                                            </select>
+                                                        </div>
                                                     @endswitch
 
                                                     <div class="form-group">
-                                                        <input type="number" name="points" class="form-control"  placeholder="Number of points" required>
+                                                        <input type="number" name="points" class="form-control" value="1" placeholder="Number of points" required>
                                                     </div>
                                                     <button type="submit"  class="btn btn-primary">Add</button>
                                                 </form>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">
+                                                <h5 class="text-primary">Add Image</h5>
+                                                <div class="input-group">
+                                                    <span class="input-group-btn">
+                                                        <a href="#" id="lfm" data-input="thumbnail" data-preview="holder" class="btn btn-primary">
+                                                            <i class="fa fa-picture-o"></i> Choose
+                                                        </a>
+                                                    </span>
+                                                    <input type="text" id="thumbnail" class="form-control" name="filepath">
+                                                </div>
+                                                <img src="" id="holder" style="margin:20px; max-height: 100px;" alt="">
                                             </div>
                                         </div>
                                     @endif
@@ -346,6 +415,7 @@
                             <select class="form-control" name="test_type">
                                 <option value="True or False">True or False</option>
                                 <option value="Multiple Choice">Multiple Choice</option>
+                                <option value="Identification">Identification</option>
                             </select>
                         </div>
                         <div class="form-group">

@@ -21,12 +21,7 @@
         padding: 0 10px 0 0;
         font-size: 11pt;
     }
-    .sidebar{
-        display: none;
-    }
-    .app{
-        padding-left: 0px;
-    }
+
     .header{
         left: 0px;
     }
@@ -46,28 +41,24 @@
         font-size: 9pt;
         padding: 8px;
     }
-
     </style>
     <div class="row">
         <div class="col-12">
+            <a href="{{route('exam_paper.show',$exam_paper->id)}}" class="btn btn-secondary">back</a>
             <div class="card">
                 <div class="card-header bordered">
                     <div class="header-block">
                         <h4 class="card-title text-primary"> {{$exam_paper->description}}   </h4>
                         <p class="title-description"> {{$item->Test->name}}. <b>{{$item->Test->test_type}}. </b> <em>{{$item->Test->description}} </em></p>
                     </div>
-                    @if($total_answered == count($item_list))
-                        <div class="header-block pull-right">
-                            <a href="{{route('exam.finish')}}" class="btn btn-primary">Submit Exam</a>
-                        </div>
-                    @endif
                 </div>
                 <div class="card-block">
-                <form class="" action="{{route('exam.next')}}" method="post">
+                <form class="" action="{{route('exam.preview.next')}}" method="post">
                     <div class="row">
                             {{ csrf_field() }}
                             <input type="hidden" name="page" value="{{$page}}">
                             <input type="hidden" name="exam_item_id" value="{{$item->id}}">
+                            <input type="hidden" name="exam_paper_id" value="{{$item->Test->Exam_Paper->id}}">
                             <div class="col-1">
                                 <div class="question-container">
                                     @if($page > 0)
@@ -95,11 +86,11 @@
                                             <div class="form-group">
                                                 <div >
                                                     <label>
-                                                        <input class="radio" name="answer" type="radio" value="true" @if($student_answer == 'true') checked @endif>
+                                                        <input class="radio" name="answer" type="radio" value="true" >
                                                         <span>True</span>
                                                     </label>
                                                     <label>
-                                                        <input class="radio" name="answer" type="radio" value="false"  @if($student_answer == 'false') checked @endif>
+                                                        <input class="radio" name="answer" type="radio" value="false" >
                                                         <span>False</span>
                                                     </label>
                                                 </div>
@@ -112,7 +103,7 @@
 
                                                     @foreach ($item_Choices as $choice)
                                                         <label style="margin-left: 50px">
-                                                            <input class="radio" name="answer" type="radio" value='{{$choice}}'  @if($student_answer == $choice) checked @endif>
+                                                            <input class="radio" name="answer" type="radio" value='{{$choice}}' >
                                                             <span>
                                                                 @switch($item->answer_type)
                                                                     @case('image')
@@ -138,8 +129,6 @@
                                 <div class="question-container">
                                     @if($page < $page_max-1)
                                         <button type="submit" class="btn btn-primary" name="next" value="1">Next</button>
-                                    @else
-                                        <button type="submit" class="btn btn-primary" name="finish" value="1">Next</button>
                                     @endif
                                 </div>
                             </div>
@@ -149,26 +138,22 @@
 
 
                     <div class="row">
-                        @php $p = 0; @endphp
-                        @foreach ($exam_paper->Tests as $key => $test1)
-                            <div class="col-12 item_nav-container">
+                            @php $p = 0; @endphp
+                            @foreach ($exam_paper->Tests as $key => $test1)
+                                <div class="col-12 item_nav-container">
 
-                                &nbsp;
-                                <small>{{$test1->name}}</small> &nbsp;
-                                <div class="btn-group" >
+                                    &nbsp;
+                                    <small>{{$test1->name}}</small> &nbsp;
+                                    <div class="btn-group" >
 
-                                    @foreach ($test1->Items as $key2 => $item2)
-                                        @if($item_list[$p]->answered)
-                                                <button type="submit" name="jump" value="{{$p}}" class="btn btn-primary @if($p == $page) active @endif exam_nav">{{$key2+1}}</button>
-                                        @else
-                                                <button type="submit" name="jump" value="{{$p}}" class="btn btn-secondary @if($p == $page) active @endif exam_nav">{{$key2+1}}</button>
-                                        @endif
-                                        @php $p++; @endphp
-                                    @endforeach
+                                        @foreach ($test1->Items as $key2 => $item2)
+                                                    <button type="submit" name="jump" value="{{$p}}" class="btn btn-secondary @if($p == $page) active @endif exam_nav">{{$key2+1}}</button>
+                                            @php $p++; @endphp
+                                        @endforeach
 
 
+                                    </div>
                                 </div>
-                            </div>
                         @endforeach
                     </div>
                 </form>

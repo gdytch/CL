@@ -17,8 +17,17 @@
                                             <div class="dropdown ">
                                               <a id='dropDown{{$key}}' data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-offset="0">
                                                   <div class="file">
-                                                      <img src="@if(file_exists(public_path('img/icons/'.$file->type.'.png'))){{asset('img/icons/'.$file->type.'.png')}} @else {{asset('img/icons/file.png')}}@endif" alt="" class="file-icon">
-                                                      <p class="file-name">{{$file->name}}.{{$file->type}}</p>
+                                                      @if($file->type == 'jpg' || $file->type == 'jpeg' || $file->type == 'png')
+                                                          <img id="file{{$key}}" src="{{asset('storage/'.$file->path.'/'.$file->basename)}}" alt="" class="file-icon">
+                                                          <img  src="@if(file_exists(public_path('img/icons/'.$file->type.'.png'))){{asset('img/icons/'.$file->type.'.png')}} @else {{asset('img/icons/file.png')}}@endif" alt="" class="file-sub-icon">
+                                                          <p class="file-name">{{$file->name}}.{{$file->type}}</p>
+                                                          <script>
+                                                              var viewer = new Viewer(document.getElementById('file{{$key}}'));
+                                                          </script>
+                                                      @else
+                                                          <img src="@if(file_exists(public_path('img/icons/'.$file->type.'.png'))){{asset('img/icons/'.$file->type.'.png')}} @else {{asset('img/icons/file.png')}}@endif" alt="" class="file-icon">
+                                                          <p class="file-name">{{$file->name}}.{{$file->type}}</p>
+                                                      @endif
                                                   </div>
                                                   <div class="dropdown-menu file-dropdown pull-menu-right" aria-labelledby="dropDown{{$key}}">
                                                       <form action="{{route('file.destroy',$student->id)}}" method="post">

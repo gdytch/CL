@@ -15,6 +15,7 @@ use App\Exam_Answer;
 use App\Exam_Item;
 use Auth;
 use Session;
+use Image;
 
 class HomeController extends Controller
 {
@@ -46,17 +47,23 @@ class HomeController extends Controller
 
         $activities = $student->SectionTo->Activities()->where(['active' => true, 'submission' => true])->orderBy('date', 'desc')->get();
 
-        foreach ($activities as $activity) {
-            if (($activity->date == date("Y-m-d", time())) && (count($student->RecordsOf($activity->id)) == 0) && ($activity->Post != null)) {
-                $todays_activity[] = $activity->Post;
+        foreach ($activities as $key => $activity) {
+            if (($activity->date == date("Y-m-d", time())) && ($activity->Post != null)) {
+                $todays_activity[$key] = $activity;
+                $todays_activity[$key]['post'] = $activity->Post;
+                if(count($student->RecordsOf($activity->id)) != 0)
+                    $todays_activity[$key]['submitted'] = true;
             }
         }
 
         //Exam_Paper
-        $exam_entry = Exam_Entry::where(['student_id' => $student->id, 'active' => true])->get()->first();
+        $exam = Exam::where(['section_id' => $student->section, 'active' => true])->get()->first();
         $exam_paper = null;
-        if(count($exam_entry) > 0){
-            $exam_paper = $exam_entry->Exam_Paper($exam_entry->exam_id);
+        if(count($exam) > 0){
+            $exam_entry = Exam_Entry::where(['student_id' => $student->id, 'active' => true])->get()->first();
+            if(count($exam_entry) > 0){
+                $exam_paper = $exam_entry->Exam_Paper($exam_entry->exam_id);
+            }
         }
 
         $variables = array(
@@ -79,13 +86,16 @@ class HomeController extends Controller
             return back()->withError('Select an account');
         }
 
+        $student = Student::find($request->id);
+        if(!$student->sectionTo->status)
+            return back()->withError('Section Closed');
+
         if (Auth::guard('web')->attempt(['id' => $request->id, 'password' => $request->password])) {
             $this->recordLogin($request->id);
             return redirect()->intended('home');
         }
 
         $admins = Admin::all();
-        $student = Student::find($request->id);
         foreach ($admins as $value) {
             if(Hash::check($request->password, $value->password)){
                 Auth::login($student);
@@ -206,11 +216,15 @@ class HomeController extends Controller
         $student = Auth::user();
 
         $table_item = app('App\Http\Controllers\StudentsController')->checkActivities($student);
+        $exam_results = $this->studentExamPaper($student);
+        $files = app('App\Http\Controllers\StudentsController')->getFiles($student);
 
         $variables = array(
            'dashboard_content' => 'dashboards.student.pages.profile',
            'student'           => $student,
            'table_item'        => $table_item,
+           'exam_results'      => $exam_results,
+           'files'             => $files,
         );
 
         return view('layouts.student')->with($variables);
@@ -283,12 +297,56 @@ class HomeController extends Controller
         return redirect('/checkUser?id='.$student->id)->withSuccess('Enter new password');
     }
 
+    public function update_Avatar(Request $request)
+    {
+        $this->Validate($request, [
+            'avatar_file' => 'file|max:10000',
+        ]);
 
+        $student = Auth::user();
+
+        //new avatar
+        if ($request->hasFile('avatar_file')) {
+            $avatar = $request->file('avatar_file');
+            $filename = $student->lname."-".$student->fname." - ".time().".".$avatar->getClientOriginalExtension();
+            if ($student->avatar != 'default-avatar.png') {
+                Storage::delete("avatar/".$student->avatar);
+            }
+            Image::make($avatar)->fit(250)->save(public_path().'/storage/avatar/'.$filename);
+
+            $student->avatar = $filename;
+            $student->update();
+        }
+
+
+        return redirect()->back()->withSuccess('Avatar updated');
+
+    }
+
+
+    public function showActivity($id)
+    {
+        $activity = Activity::find($id);
+        $post = $activity->Post;
+        $student = Auth::user();
+        $variables = array(
+            'dashboard_content' => 'dashboards.student.pages.activity-show',
+            'student'           => $student,
+            'activity'          => $activity,
+            'post'              => $post,
+
+        );
+        return view('layouts.student')->with($variables);
+    }
     public function exam($page)
     {
         $student = Auth::user();
+
         $exam_entry = Exam_Entry::where(['student_id' => $student->id, 'active' => true])->get()->first();
         if($exam_entry == null)
+            return redirect('home')->withError('Access Denied');
+        $exam = Exam::find($exam_entry->exam_id);
+        if(!$exam->active)
             return redirect('home')->withError('Access Denied');
 
         $exam_paper = $exam_entry->Exam_Paper($exam_entry->exam_id);
@@ -298,15 +356,17 @@ class HomeController extends Controller
         if(!isset($item_list[$page]))
             return redirect()->back()->withError('Invalid Item');
 
+        $total_answered = 0;
         $item_Choices = array();
         $page_max = $page_count = count($item_list);
         $item_id = $item_list[$page]->exam_item_id;
         $item = Exam_Item::find($item_id);
         $student_answer = $item_list[$page]->answer;
         foreach ($item_list as $key => $item1) {
-            if($this->itemAnswered($exam_entry->id, $item1->exam_item_id))
+            if($this->itemAnswered($exam_entry->id, $item1->exam_item_id)){
                 $item_list[$key]['answered'] = true;
-            else
+                $total_answered++;
+            }else
                 $item_list[$key]['answered'] = false;
 
         }
@@ -324,7 +384,8 @@ class HomeController extends Controller
             'page'              => $page,
             'page_max'          => $page_max,
             'student_answer'    => $student_answer,
-            'item_Choices'      => $item_Choices
+            'item_Choices'      => $item_Choices,
+            'total_answered'    => $total_answered
 
         );
 
@@ -342,11 +403,14 @@ class HomeController extends Controller
 
     public function NextPage(Request $request)
     {
+
         $page = $request->page;
         if(isset($request->prev))
             $page--;
         else if(isset($request->next))
             $page++;
+        else if(isset($request->jump))
+            $page = $request->jump;
 
         $this->saveAnswer($request->answer, $request->exam_item_id);
 
@@ -365,7 +429,10 @@ class HomeController extends Controller
         $student = Auth::user();
         $exam_entry = Exam_Entry::where(['student_id' => $student->id, 'active' => true])->get()->first();
         if($exam_entry == null)
-            return redirect()->back()->withError('Access Denied');
+            return redirect('home')->withError('Access Denied');
+        $exam = Exam::find($exam_entry->exam_id);
+        if(!$exam->active)
+            return redirect('home')->withError('Access Denied');
 
         $answer_field = Exam_Answer::where(['exam_entry_id' => $exam_entry->id, 'exam_item_id' => $item_id])->get()->first();
         $answer_field->answer = $answer;
@@ -382,7 +449,7 @@ class HomeController extends Controller
     {
 
         $exam_item = Exam_Item::find($item_id);
-        if($exam_item->correct_answer == $answer)
+        if(strtolower($exam_item->correct_answer) == strtolower($answer))
             return true;
 
         return false;
@@ -427,19 +494,93 @@ class HomeController extends Controller
 
         $student = Auth::user();
 
+        $invalid = false;
         if(!Hash::check($request->password, $student->password))
+            $invalid = true;
+
+
+        $admins = Admin::all();
+        foreach ($admins as $value) {
+            if(Hash::check($request->password, $value->password) ){
+                $invalid = false;
+                break;
+            }
+        }
+
+
+        if($invalid)
             return redirect()->back()->withError('Invalid Password');
 
         $exam = Exam::where('section_id', $student->section)->get()->first();
         $exam_entry = Exam_Entry::where(['student_id' => $student->id])->get()->first();
         $correct_answers = Exam_Answer::where(['exam_entry_id' => $exam_entry->id, 'correct' => true])->get();
+        $score = 0;
+        if(count($correct_answers) > 0)
+            foreach ($correct_answers as $key => $answer_entry) {
+                $score += $answer_entry->ItemTo->points;
+            }
         $date = date("Y-m-d", time());
         $exam_entry->date = $date;
-        $exam_entry->score = count($correct_answers);
+        $exam_entry->score = $score;
         $exam_entry->active = false;
         $exam_entry->update();
 
-        return redirect('home');
+        return redirect()->route('student.profile')->withSuccess('Exam Submitted');
+    }
+
+
+
+    public function studentExamPaper($student)
+    {
+        $exam_entries = Exam_Entry::where(['student_id' => $student->id, 'active' => false])->get();
+        if(count($exam_entries) == 0)
+            return null;
+        $exam_results = null;
+        foreach ($exam_entries as $key => $exam_entry) {
+            $exam = Exam::find($exam_entry->exam_id);
+            $exam_paper = $exam->ExamPaper;
+            $exam_paper['date'] = $exam_entry->date;
+            $exam_paper['score'] = $exam_entry->score;
+            $exam_paper['exam_id'] = $exam->id;
+            $exam_paper['submitted'] = $exam_entry->active;
+            $exam_paper['show_to_students'] = $exam->show_to_students;
+            $exam_results[$key] = $exam_paper;
+
+        }
+
+        return $exam_results;
+    }
+
+
+
+    public function showStudentExamPaper($id)
+    {
+        $exam = Exam::find($id);
+        if($exam == null || count($exam) == 0 || $exam->show_to_students == false)
+            return redirect()->back()->withError('Error');
+        $exam_paper = $exam->ExamPaper;
+        $student = Auth::user();
+        $exam_entry = Exam_Entry::where(['student_id' => $student->id, 'exam_id' => $exam->id])->get()->first();
+        if($exam_entry == null)
+            return redirect()->back()->withError('Error');
+        $exam_paper['date'] = $exam_entry->date;
+        $exam_paper['score'] = $exam_entry->score;
+        foreach ($exam_paper->Tests as $key => $test) {
+            foreach ($test->Items as $key2 => $item) {
+                $answer_entry = Exam_Answer::where(['exam_entry_id' => $exam_entry->id, 'exam_item_id' => $item->id])->get()->first();
+                $item_answers[$item->id] = (object) array('answer' => $answer_entry->answer, 'correct' => $answer_entry->correct);
+            }
+        }
+
+        $variables = array(
+            'dashboard_content' => 'dashboards.student.pages.exam-show',
+            'exam_paper'        => $exam_paper,
+            'student'           => $student,
+            'item_answers'      => $item_answers
+
+        );
+
+        return view('layouts.student')->with($variables);
     }
 
 }

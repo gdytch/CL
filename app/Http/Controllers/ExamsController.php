@@ -25,13 +25,15 @@ class ExamsController extends Controller
     {
         $sections = Section::all();
         $exam_papers = Exam_Paper::all();
-        $exams = Exam::all();
+        $exams = Exam::all()->sortBy('section_id');
         $submitted = 0;
         foreach ($exams as $key => $exam) {
+            $submitted = 0;
             foreach ($exam->SectionTo->Students as $key2 => $student) {
                 $entry = Exam_Entry::where(['student_id' => $student->id, 'exam_id' => $exam->id])->get()->first();
-                if($entry->active == false)
-                    $submitted++;
+                if($entry != null)
+                    if($entry->active == false)
+                        $submitted++;
             }
             $exams[$key]['submitted'] = $submitted;
         }
@@ -79,6 +81,8 @@ class ExamsController extends Controller
     public function show($id)
     {
         $exam = Exam::find($id);
+        if(!$exam->generated_papers)
+            return redirect()->back()->withError('Generate Papers first');
         $exam_paper = $exam->ExamPaper;
         $students = $exam->SectionTo->Students;
         $section = $exam->SectionTo;
@@ -204,6 +208,43 @@ class ExamsController extends Controller
     }
 
 
+    public function activeStatus($id)
+    {
+
+        $exam = Exam::find($id);
+        if(!$exam->generated_papers)
+            return redirect()->back()->withError('Generate Papers first');
+
+        if($exam->active)
+            $exam->active = false;
+        else {
+            $exam->active = true;
+        }
+
+        $exam->update();
+
+        return redirect()->back()->withSuccess('Status changed');
+    }
+
+
+    public function show_to_students($id)
+    {
+
+        $exam = Exam::find($id);
+        if(!$exam->generated_papers)
+            return redirect()->back()->withError('Generate Papers first');
+        if($exam->show_to_students)
+            $exam->show_to_students = false;
+        else {
+            $exam->show_to_students = true;
+        }
+
+        $exam->update();
+
+        return redirect()->back()->withSuccess('Status changed');
+    }
+
+
     /*
         ******************
 
@@ -301,7 +342,7 @@ class ExamsController extends Controller
         $item = new Exam_Item($request->all());
         $item->save();
 
-        if($item->Test->test_type == 'Multiple Choice'){
+        if($item->Test->test_type == 'Multiple Choice' || $item->Test->test_type == 'Identification'){
             $choice = new Exam_Item_Choice();
             $choice->choice = $item->correct_answer;
             $choice->exam_item_id = $item->id;
@@ -319,7 +360,7 @@ class ExamsController extends Controller
         $prev_answer = $item->correct_answer;
         $item->update($request->all());
 
-        if($item->Test->test_type == 'Multiple Choice' && $prev_answer != $request->correct_answer){
+        if(($item->Test->test_type == 'Multiple Choice' || $item->Test->test_type == 'Identification') && $prev_answer != $request->correct_answer){
             $choice = new Exam_Item_Choice();
             $choice->choice = $item->correct_answer;
             $choice->exam_item_id = $item->id;
@@ -351,10 +392,13 @@ class ExamsController extends Controller
 
     public function exam_item_choice_store(Request $request)
     {
-        $choice = new Exam_Item_Choice();
-        $choice->choice = $request->choice;
-        $choice->exam_item_id = $request->exam_item_id;
-        $choice->save();
+        $choices = explode(" <&&> ", $request->choice);
+        foreach($choices as $this_choice){
+            $choice = new Exam_Item_Choice();
+            $choice->choice = $this_choice;
+            $choice->exam_item_id = $request->exam_item_id;
+            $choice->save();
+        }
 
         return redirect()->back();
     }
@@ -375,4 +419,64 @@ class ExamsController extends Controller
 
         return redirect()->back();
     }
+
+
+
+
+    /*
+        ******************
+
+            Exam Preview
+
+        ******************
+    */
+
+    public function previewExam($id, $page)
+    {
+
+        $exam_paper = Exam_Paper::find($id);
+
+        $item_list = Exam_Item::where('exam_paper_id', $exam_paper->id)->get();
+
+        if(!isset($item_list[$page]))
+            return redirect()->back()->withError('Invalid Item');
+
+        $item_Choices = array();
+        $page_max = $page_count = count($item_list);
+        $item = $item_list[$page];
+        foreach ($item->Choices as $key => $choice) {
+            $item_Choices[] = $choice->choice;
+        }
+        shuffle($item_Choices);
+        $variables = array(
+            'dashboard_content' => 'dashboards.admin.exam.preview',
+            'exam_paper'        => $exam_paper,
+            'item_list'         => $item_list,
+            'item'              => $item,
+            'page'              => $page,
+            'page_max'          => $page_max,
+            'item_Choices'      => $item_Choices
+
+        );
+
+        return view('layouts.admin')->with($variables);
+    }
+
+
+
+    public function NextPage(Request $request)
+    {
+
+        $page = $request->page;
+        if(isset($request->prev))
+            $page--;
+        else if(isset($request->next))
+            $page++;
+        else if(isset($request->jump))
+            $page = $request->jump;
+
+        return redirect()->route('exam.preview',[$request->exam_paper_id, $page]);
+    }
+
+
 }

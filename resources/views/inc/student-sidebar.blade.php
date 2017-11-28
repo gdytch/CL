@@ -1,22 +1,69 @@
+<style>
+
+@media (max-width: 1367px){
+    .sidebar{
+        width: 85px;
+        text-align: center;
+    }
+    .sidebar .sidebar-menu>li>a {
+        padding: 15px 15px 15px 15px;
+        font-size: 8pt;
+    }
+    .sidebar .sidebar-menu>li>a i {
+        margin-right: 0px;
+        display: block;
+    }
+    .logo{
+        margin-right: 0px;
+    }
+    .sidebar-header .brand {
+        padding-left: 0px;
+        text-align: center;
+    }
+    .app{
+        padding-left: 85px;
+        padding-bottom: 75px;
+    }
+    .header{
+        left: 85px;
+    }
+    body{
+        zoom: 90%;
+    }
+
+}
+@media (max-width: 991px){
+    .app{
+        padding-left: 0px;
+    }
+    .header{
+        left: 0px;
+    }
+}
+</style>
 <aside class="sidebar">
     <div class="sidebar-container">
         <div class="sidebar-header">
             <div class="brand ">
-                <div class="logo">
-                    <i class="fa fa-desktop text-primary"></i>
-                </div> Computer Class </div>
+                <a href="{{route('home')}}" style="text-decoration:none;color: #fff;">
+                    <div class="logo">
+                        <i class="fa fa-desktop text-primary"></i>
+                    </div>
+                </a>
+            </div>
         </div>
         <nav class="menu">
             <ul class="sidebar-menu metismenu" id="sidebar-menu">
                 <li {{ (Route::is('home') ? 'class=active' : '') }}>
                     <a href="{{route('home')}}">
-                        <i class="fa fa-file"></i> My Files </a>
+                        <i class="fa fa-home"></i>
+                        Home</a>
                 </li>
-                <li {{ (Route::is('student.activity') ? 'class=active' : '') }}>
+                <li {{ (Route::is('student.activity','student.activity.show') ? 'class=active' : '') }}>
                     <a href="{{route('student.activity')}}">
                         <i class="fa fa-book"></i> Activities </a>
                 </li>
-                <li {{ (Route::is('student.profile') ? 'class=active' : '') }}>
+                <li {{ (Route::is('student.profile','exam.student.show') ? 'class=active' : '') }}>
                     <a href="{{route('student.profile')}}">
                         <i class="fa fa-user"></i> Profile
                     </a>

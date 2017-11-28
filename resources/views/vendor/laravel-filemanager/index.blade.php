@@ -34,6 +34,15 @@
     <div class="row">
       <div class="col-sm-2 hidden-xs">
         <div id="tree"></div>
+            <br><br><br>
+          <a class="btn btn-primary" href="#" id="add-folder" data-mfb-label="{{ trans('laravel-filemanager::lfm.nav-new') }}">
+            <i class="fa fa-folder"></i> Add Folder
+          </a>
+        <br><br>
+          <a class="btn btn-primary" href="#" id="upload" data-mfb-label="{{ trans('laravel-filemanager::lfm.nav-upload') }}">
+            <i class="fa fa-upload"></i> Upload Image
+          </a>
+
       </div>
 
       <div class="col-sm-10 col-xs-12" id="main">
@@ -86,7 +95,7 @@
           </div>
         </nav>
         <div class="visible-xs" id="current_dir" style="padding: 5px 15px;background-color: #f8f8f8;color: #5e5e5e;"></div>
-        
+
         <div id="alerts"></div>
 
         <div id="content"></div>
@@ -95,7 +104,7 @@
       <ul id="fab">
         <li>
           <a href="#"></a>
-          <ul class="hide">
+          <ul class="show">
             <li>
               <a href="#" id="add-folder" data-mfb-label="{{ trans('laravel-filemanager::lfm.nav-new') }}">
                 <i class="fa fa-folder"></i>
@@ -122,7 +131,7 @@
         <div class="modal-body">
           <form action="{{ route('unisharp.lfm.upload') }}" role='form' id='uploadForm' name='uploadForm' method='post' enctype='multipart/form-data' class="dropzone">
             <div class="form-group" id="attachment">
-              
+
               <div class="controls text-center">
                 <div class="input-group" style="width: 100%">
                   <a class="btn btn-primary" id="upload-button">{{ trans('laravel-filemanager::lfm.message-choose') }}</a>
@@ -200,11 +209,11 @@
         var _this = this; // For the closure
         this.on("addedfile", function(file) { refreshFoldersAndItems('OK'); });
         this.on('success', function(file, response) {
-          
+
           if(response != 'OK'){
             this.defaultOptions.error(file, response.join('\n'));
           }
-          
+
       });
       },
       acceptedFiles: "{{ lcfirst(str_singular(request('type'))) == 'image' ? implode(',', config('lfm.valid_image_mimetypes')) : implode(',', config('lfm.valid_file_mimetypes')) }}",

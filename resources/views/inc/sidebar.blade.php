@@ -2,9 +2,12 @@
     <div class="sidebar-container">
         <div class="sidebar-header">
             <div class="brand">
-                <div class="logo">
-                    <i class="fa fa-desktop text-primary"></i>
-                </div> ComputerClass </div>
+                <a href="{{route('admin')}}" style="text-decoration:none;color: #fff;">
+                    <div class="logo">
+                        <i class="fa fa-desktop text-primary"></i>
+                    </div>ComputerClass
+                </a>
+            </div>
         </div>
         <nav class="menu">
             <ul class="sidebar-menu metismenu" id="sidebar-menu">
@@ -12,7 +15,7 @@
                     <a href="{{route('admin')}}">
                         <i class="fa fa-home"></i> Dashboard </a>
                 </li>
-                <li {{ (Route::is('student.index','student.show','student.edit','student.create') ? 'class=active' : '') }}>
+                <li {{ (Route::is('student.index','student.show','student.edit','student.create', 'student.index.thumb') ? 'class=active' : '') }}>
                     <a href="{{route('student.index')}}">
                         <i class="fa fa-user"></i> Student Manager </a>
                 </li>
@@ -28,7 +31,7 @@
                   <a href="{{route('post.index')}}">
                       <i class="fa fa-edit"></i> Posts Manager </a>
               </li>
-              <li {{ (Route::is('exam.index', 'exam_paper.show', 'exam.show', 'exam.show.student') ? 'class=active' : '') }}>
+              <li {{ (Route::is('exam.index', 'exam_paper.show', 'exam.show', 'exam.show.student', 'exam.preview') ? 'class=active' : '') }}>
                  <a href="{{route('exam.index')}}">
                      <i class="fa fa-file-text-o"></i> Exam manager </a>
              </li>

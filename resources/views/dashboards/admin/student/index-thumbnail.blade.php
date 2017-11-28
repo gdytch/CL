@@ -1,5 +1,13 @@
 @section('dashboard-content')
+<style>
+.student-thumbnail{
+    box-shadow: 1px 1px 10px -2px rgba(0,0,0,0.4);
+    margin: 15px;
+    border-radius: 12px;
+    overflow: hidden;
 
+}
+</style>
 <section class="section">
     <div class="row sameheight-container">
         <div class="col col-12 ">
@@ -10,37 +18,35 @@
                         <h1 class="card-title text-primary"> Student List</h1>
                                 @php if(!isset($_GET['id'])) $_GET['id']='all'; @endphp
                                 <br><br>
-                                <a href="{{url('admin/student?id=all')}}" class="btn @if($_GET['id'] == 'all')  btn-primary @else  btn-secondary @endif pull-left" >All</a>
+                                <a href="{{url('admin/student/index-thumb/?id=all')}}" class="btn @if($_GET['id'] == 'all')  btn-primary @else  btn-secondary @endif pull-left" >All</a>
                                     @foreach ($sections as $key => $section)
-                                        <a  href="{{url('admin/student?id='.$section->id)}}" class="btn @if($_GET['id'] == $section->id)  btn-primary @else  btn-secondary @endif pull-left">{{$section->name}}</a>
+                                        <a  href="{{url('admin/student/index-thumb/?id='.$section->id)}}" class="btn @if($_GET['id'] == $section->id)  btn-primary @else  btn-secondary @endif pull-left">{{$section->name}}</a>
                                         @endforeach
                                         <button type="button" class="btn btn-secondary pull-right" data-toggle="modal" data-target="#batchModal"><i class="fa fa-plus"></i> Batch Add</button>
                                         <button type="button" class="btn btn-secondary pull-right" data-toggle="modal" data-target="#addmodal"><i class="fa fa-plus"></i> Add Student</button>
                     </div>
                     <section class="section">
-                        <div class="card row">
+                        <div class="card">
 
-                            <div class="col col-12" style="padding: 30px;">
-                                <table class="table table-striped table-responsive" id="StudentTable">
-                                    <thead>
-                                        <tr>
-                                            <th>First name</th>
-                                            <th>Last name</th>
-                                            <th>Section</th>
-                                            <th class="nosort">Folder</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($table_list as $student)
-                                            <tr>
-                                                <td><a href="{{route('student.show',$student->id)}}">{{$student->fname}}</a></td>
-                                                <td><a href="{{route('student.show',$student->id)}}">{{$student->lname}}</a></td>
-                                                <td><a href="{{route('section.show',$student->section_id)}}">{{$student->section_name}}</a></td>
-                                                <td><a href="{{route('student.folder',$student->id)}}" class="">OPEN FOLDER</a></td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
+                            <div class="card-block">
+                                <div class="row">
+                                @foreach ($table_list as $key => $student)
+                                    <div class="col-2">
+                                        <a href="{{route('student.show',$student->id)}}"style="text-decoration: none;">
+                                        <div class="row student-thumbnail">
+                                            <div class="col-12" style="padding:0px">
+                                                <img src="{{asset('storage/avatar/'.$student->avatar)}}" alt="" style="width:100%">
+                                            </div>
+                                            <div class="col-12" >
+                                                {{$student->lname}}, {{$student->fname}}<br>
+                                                <small class="text-primary">{{$student->section_name}}</small>
+                                            </div>
+
+                                        </div>
+                                        </a>
+                                    </div>
+                                @endforeach
+                                </div>
                             </div>
                         </div>
                     </section>

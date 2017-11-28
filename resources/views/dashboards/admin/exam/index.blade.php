@@ -20,7 +20,7 @@
                         <table class="table table-striped table-responsive">
                             <thead>
                                 <tr>
-                                    <td>Title</td><td>Description</td><td>Exam Paper</td><td>Section</td><td>Active</td><td>Submitted</td><td></td>
+                                    <td>Title</td><td>Description</td><td>Exam Paper</td><td>Section</td><td>Active</td><td>Submitted</td><td></td><td>Show to Students</td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -34,9 +34,9 @@
                                         </td>
                                         <td>
                                             @if($exam->active)
-                                                <a href="#" class="btn btn-success btn-sm"> <i class="fa fa-check"></i> Yes</a>
+                                                <a href="{{route('exam.active', $exam->id)}}" class="btn btn-success btn-sm"> <i class="fa fa-check"></i> Yes</a>
                                             @else
-                                                <a href="#" class="btn btn-danger btn-sm"> <i class="fa fa-close"></i> No</a>
+                                                <a href="{{route('exam.active', $exam->id)}}" class="btn btn-danger btn-sm"> <i class="fa fa-close"></i> No</a>
                                             @endif
                                         </td>
                                         <td>
@@ -49,7 +49,8 @@
                                                   <div class="modal-dialog">
                                                     <div class="modal-content">
                                                       <div class="modal-body">
-                                                        Are you sure to generate papers for students?
+                                                        Are you sure to generate papers for students?<br>
+                                                        This action is irreversable.
                                                         <form class="" action="{{route('exam.generate_papers')}}" method="post">
                                                             <input type="hidden" name="id" value="{{$exam->id}}">
                                                             {{ csrf_field() }}
@@ -62,6 +63,13 @@
                                                     </div>
                                                   </div>
                                                 </div>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if($exam->show_to_students)
+                                                <a href="{{route('exam.show_to_students', $exam->id)}}" class="btn btn-success btn-sm"> <i class="fa fa-check"></i> Yes</a>
+                                            @else
+                                                <a href="{{route('exam.show_to_students', $exam->id)}}" class="btn btn-danger btn-sm"> <i class="fa fa-close"></i> No</a>
                                             @endif
                                         </td>
                                     </tr>
@@ -86,7 +94,7 @@
                 <div class="card">
                     <div class="card-header bordered">
                         <div class="header-block">
-                            <h3 class="card-title text-primary"> Paper Exam List  </h3>
+                            <h3 class="card-title text-primary"> Exam Paper List  </h3>
                             <p class="title-description"> </p>
                         </div>
                     </div>

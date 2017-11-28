@@ -20,6 +20,7 @@ class Exam extends Migration
             $table->string('description')->nullable();
             $table->integer('number_of_test');
             $table->integer('perfect_score');
+
         });
         Schema::create('exams', function(Blueprint $table){
             $table->increments('id');
@@ -29,6 +30,7 @@ class Exam extends Migration
             $table->integer('section_id')->nullable()->unsigned();
             $table->boolean('active')->default(false);
             $table->boolean('generated_papers')->default(false);
+            $table->boolean('show_to_students')->default(false);
             $table->timestamps();
             $table->foreign('exam_paper_id')->references('id')->on('exam_paper')->onDelete('set null');
         });
@@ -49,6 +51,8 @@ class Exam extends Migration
             $table->string('correct_answer');
             $table->string('question');
             $table->integer('points');
+            $table->string('question_type')->nullable();
+            $table->string('answer_type')->nullable();
             $table->foreign('exam_paper_id')->references('id')->on('exam_paper')->onDelete('cascade');
             $table->foreign('exam_test_id')->references('id')->on('exam_test')->onDelete('cascade');
 
@@ -92,12 +96,12 @@ class Exam extends Migration
     public function down()
     {
         Schema::dropIfExists('exam');
-        Schema::dropIfExists('exam_paper');
-        Schema::dropIfExists('exam_item');
         Schema::dropIfExists('exam_answer');
         Schema::dropIfExists('exam_item_choices');
-        Schema::dropIfExists('exam_test');
         Schema::dropIfExists('exam_entry');
+        Schema::dropIfExists('exam_item');
+        Schema::dropIfExists('exam_test');
+        Schema::dropIfExists('exam_paper');
 
     }
 }

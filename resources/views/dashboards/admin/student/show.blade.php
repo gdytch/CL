@@ -1,17 +1,25 @@
 @section('dashboard-content')
 <section class="section">
     <div class="row ">
-        <div class="col col-12 ">
-            <div class="card card-block sameheight-item" >
-                <div class="title-block">
-                    <h1>Student  <button data-toggle="modal" data-target="#editmodal" class="btn btn-secondary" style="float:right">Edit</button></h1>
-                    <hr>
+        <div class="col-3">
+            <div class="col col-12 ">
+            <div class="sameheight-item">
+                <div class="card-header bordered">
+                    <div class="header-block">
+                        <h4 class="card-title text-primary">Student</h4>
+                        <button data-toggle="modal" data-target="#editmodal" class="btn btn-secondary pull-right" >Edit</button>
+                    </div>
+                    <div class="header-block pull-right">
+
+                    </div>
                 </div>
-                <section class="section">
+                <section class="section card-block">
                     <div class="row">
-                        <div class=" col-md-2" style="">
+                        <div class=" col" style="">
                             <img src="{{asset('storage/avatar/'.$student->avatar)}}" alt="" class="student_avatar">
                         </div>
+                    </div>
+                    <div class="row">
                         <div class="col" style="margin-left: 20px">
                             <h6 class="text-primary"><small><strong>Firstname</strong></small></h6>
                             <h4>{{$student->fname}}</h4>
@@ -25,55 +33,57 @@
                 </section>
             </div>
         </div>
-    </div>
-    <div class="row ">
-        <div class="col col-md-12 col-12">
-            <div class="card card-block sameheight-item" >
-                <div class="title-block">
-                    <h4>Activities</h4>
-                    <hr>
-                </div>
-                <section class="section">
-                    <div class="row">
-                        <div class="col-12">
-                            @if($table_item != null)
-                                <table class="table table-striped table-responsive">
-                                    <thead>
-                                        <th>Activity</th>
-                                        <th>Description</th>
-                                        <th>Date</th>
-                                        <th>Submitted</th>
-                                        <th>Date Submitted</th>
-                                        <th>Files</th>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($table_item as $activity)
-                                            <tr>
-                                                <td>{{$activity->name}}</td>
-                                                <td>{{$activity->description}}</td>
-                                                <td>{{$activity->date}}</td>
-                                                <td>
 
-                                                    @if($activity->submitted)
-                                                        <span class="green"><i class="fa fa-check"></i> <b>Yes</b></span>
-                                                    @else
-                                                        <span class="red"><i class="fa fa-close"></i> <b>No</b></span>
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    @if($activity->submitted)
-                                                        @foreach ($activity->files as $result)
-                                                            {{$result->date_submitted}}<br>
-                                                        @endforeach
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    @if($activity->submitted)
-                                                        @foreach ($activity->files as $result)
-                                                            {{$result->filename}}<br>
-                                                        @endforeach
-                                                    @endif
-                                                </td>
+        </div>
+        <div class="col-9">
+            <div class="col col-md-12 col-12">
+                <div class="card sameheight-item" >
+                    <div class="card-header bordered">
+                        <div class="header-block">
+                            <h4 class="card-title text-primary">Activities</h4>
+                        </div>
+                    </div>
+                    <section class="section card-block">
+                        <div class="row">
+                            <div class="col-12">
+                                @if($table_item != null)
+                                    <table class="table table-striped table-responsive">
+                                        <thead>
+                                            <th>Activity</th>
+                                            <th>Description</th>
+                                            <th>Date</th>
+                                            <th>Submitted</th>
+                                            <th>Date Submitted</th>
+                                            <th>Files</th>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($table_item as $activity)
+                                                <tr>
+                                                    <td>{{$activity->name}}</td>
+                                                    <td>{{$activity->description}}</td>
+                                                    <td>{{$activity->date}}</td>
+                                                    <td>
+
+                                                        @if($activity->submitted)
+                                                            <span class="green"><i class="fa fa-check"></i> <b>Yes</b></span>
+                                                        @else
+                                                            <span class="red"><i class="fa fa-close"></i> <b>No</b></span>
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        @if($activity->submitted)
+                                                            @foreach ($activity->files as $result)
+                                                                {{$result->date_submitted}}<br>
+                                                            @endforeach
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        @if($activity->submitted)
+                                                            @foreach ($activity->files as $result)
+                                                                {{$result->filename}}<br>
+                                                            @endforeach
+                                                        @endif
+                                                    </td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -82,10 +92,39 @@
                                     No Record
                                 @endif
 
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <div class="col col-12">
+                @if($exam_results != null && count($exam_results) > 0)
+                    <div class="card">
+                        <div class="card-header bordered">
+                            <div class="header-block">
+                                <h3 class="card-title text-primary">  Exam  </h3>
+                                <p class="title-description"> </p>
+                            </div>
+                        </div>
+                        <div class="card-block">
+                            <table class="table table-striped table-responsive">
+                                <tbody>
+                                    @foreach ($exam_results as $key => $exam)
+                                        <tr>
+                                            <td> <small class="text-primary"><b>Exam: </b></small> {{$exam->description}}</td>
+                                            <td> <small class="text-primary"><b>Date: </b></small> {{$exam->date}}</td>
+                                            <td> <small class="text-primary"><b>Score: </b></small> {{$exam->score}}/{{$exam->perfect_score}}</td>
+                                            <td> <a href="{{route('exam.show.student',[$exam->exam_id, $student->id])}}" class="btn btn-sm btn-primary">open</a></td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
                     </div>
-                </section>
+                @endif
             </div>
+
         </div>
     </div>
 </section>

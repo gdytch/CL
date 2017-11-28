@@ -23,7 +23,7 @@
                                                          <a href="{{route('post.edit',$post->id)}}" class="btn btn-sm btn-secondary pull-right">Edit</a>
                                                     <hr>
                                             </div>
-                                            <div class="card-block post" style="max-height: 500px !important; overflow: auto;">
+                                            <div class="card-block post">
                                                 {!!$post->body !!}
                                             </div>
                                             <div class="card-footer">

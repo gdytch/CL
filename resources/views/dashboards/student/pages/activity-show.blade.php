@@ -1,13 +1,9 @@
 @section('dashboard-content')
-    @php $student = Auth::user(); @endphp
 
-    <section class="section" id="post">
-        <h4 class="card-title text-primary">Activities</h4>
-        <hr><br>
-        @foreach($activities as $activity)
-             @if($activity->Post != null)
+    <section class="section">
+        <div class="row sameheight-container">
             <div class="row" style="margin-bottom: 50px;">
-            <div class="col col-12 col-md-12 col-xs-12">
+            <div class="col col-12" >
                 <div class="card post-container">
                     <div class="card-block">
                         <div class="title-block">
@@ -17,8 +13,8 @@
                         </div>
                         <div class="card-content col">
                             <button type="button" name="button" class="btn btn-primary" data-toggle="modal" data-target="#uploadmodal{{$activity->id}}"> <i class="fa fa-file"></i> Upload / Submit File</button>
-                                <div class="card-block post" >
-                                    {!!$activity->Post->body !!}
+                                <div class="card-block post" id="post" >
+                                    {!!$post->body !!}
                                 </div>
                         </div>
                     </div>
@@ -47,7 +43,7 @@
                           </div>
                           <input type="hidden" name="id" value="{{$student->id}}">
                           <br>
-                         
+                          
                           <form>
                   </div>
                   <div class="modal-footer">
@@ -57,9 +53,6 @@
                 </div>
               </div>
             </div>
-        @endif
-        @endforeach
-
+        </div>
     </section>
-
 @endsection

@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Student;
 use App\Activity;
 use App\Record;
+use Image;
 
 class FilesController extends Controller
 {
@@ -63,7 +64,16 @@ class FilesController extends Controller
         $filename = $this->getFilename($student, $activity, $file);
         $basename = $this->recordFile($activity->id, $student->id, $filename, $extension);
 
-        $request->file('file')->storeAs($directory, $basename);
+        if($extension == 'jpg' || $extension == 'jpeg' || $extension == 'png' ){
+            $img = Image::make($request->file('file'));
+            $img->resize(1920, null, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            });
+            $img->save(public_path().'/storage'.$directory.'/'.$basename);
+        }
+        else
+            $request->file('file')->storeAs($directory, $basename);
 
         return redirect()->route('home')->withSuccess('File Submitted');
 

@@ -33,6 +33,7 @@ Route::group(['middleware' => 'auth:admin'], function () {
         Route::delete('filetyperules/{id}', 'AdminsController@filetype_rule_delete')->name('filetype_rule.delete');
         Route::put('update_password/{id}', 'AdminsController@update_password')->name('admin.update.password');
 
+        Route::get('student/index-thumb/', 'StudentsController@showThumbnail')->name('student.index.thumb');
         Route::resource('student', 'StudentsController');
         Route::get('student/folder/{id}', 'StudentsController@folder')->name('student.folder');
         Route::put('student/update_password/{id}', 'StudentsController@update_password')->name('student.update.password');
@@ -51,10 +52,14 @@ Route::group(['middleware' => 'auth:admin'], function () {
         Route::resource('exam', 'ExamsController');
         Route::post('exam/generate_papers', 'ExamsController@generate_papers')->name('exam.generate_papers');
         Route::get('exam/{exam_id}/show/student/{id}', 'ExamsController@studentExamPaper')->name('exam.show.student');
+        Route::get('exam/active/{id}', 'ExamsController@activeStatus')->name('exam.active');
+        Route::get('exam/showtostudents/{id}', 'ExamsController@show_to_students')->name('exam.show_to_students');
 
         Route::post('exam/exam_paper/store', 'ExamsController@exam_paper_store')->name('exam_paper.store');
         Route::get('exam/exam_paper/show/{id}', 'ExamsController@exam_paper_show')->name('exam_paper.show');
         Route::put('exam/exam_paper/update/{id}', 'ExamsController@exam_paper_update')->name('exam_paper.update');
+        Route::get('exam/preview/{id}/{page}', 'ExamsController@previewExam')->name('exam.preview');
+        Route::post('exam/preview/next', 'ExamsController@NextPage')->name('exam.preview.next');
 
         Route::post('exam/exam_test/store', 'ExamsController@exam_test_store')->name('exam_test.store');
         Route::put('exam/exam_test/update/{id}', 'ExamsController@exam_test_update')->name('exam_test.update');
@@ -93,5 +98,8 @@ Route::group(['middleware' => 'auth:web'], function () {
         Route::post('exam/next/', 'HomeController@NextPage')->name('exam.next');
         Route::get('exam/{page}/', 'HomeController@exam')->name('exam.open');
         Route::post('exam/submit/', 'HomeController@ExamSubmit')->name('exam.submit');
+        Route::get('exam/show/{id}', 'HomeController@showStudentExamPaper')->name('exam.student.show');
+        Route::post('settings/avatar', 'HomeController@update_Avatar')->name('student.avatar');
+        Route::get('activity/{id}', 'HomeController@showActivity')->name('student.activity.show');
     });
 });

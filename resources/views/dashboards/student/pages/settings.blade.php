@@ -57,10 +57,47 @@
                     </div>
                 </div>
             </div>
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-header bordered">
+                        <div class="header-block">
+                            <h3 class="card-title text-primary"> Avatar  </h3>
+                            <p class="title-description"> </p>
+                        </div>
+                    </div>
+                    <div class="card-block">
+                        <div class=" col" >
+                            <form class="" action="{{route('student.avatar')}}" method="post" enctype="multipart/form-data">
+                                {{ csrf_field() }}
+                                <img src="{{asset('storage/avatar/'.$student->avatar)}}" alt="" id="avatar" class="student_avatar">
+                                <div class="form-group">
+                                    <input type="file" name="avatar_file" value="" onchange="readURL(this);" class="form-control" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary" name="button">save</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
         </div>
 
 
     </section>
+
+      <script type="text/javascript">
+      function readURL(input) {
+         if (input.files && input.files[0]) {
+             var reader = new FileReader();
+
+             reader.onload = function (e) {
+                 $('#avatar')
+                     .attr('src', e.target.result)
+             };
+
+             reader.readAsDataURL(input.files[0]);
+         }
+      }
+      </script>
 
 @endsection

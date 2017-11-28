@@ -16,7 +16,6 @@
 <script type="text/javascript" src="{{asset('js/app.js')}}"></script>
 <script type="text/javascript" src="{{asset('js/bootstrap-notify.min.js')}}"></script>
 <script type="text/javascript" src="{{asset('js/datatables.min.js')}}"></script>
-<script type="text/javascript" src="{{asset('js/viewer.min.js')}}">
 
 </script>
 
@@ -69,30 +68,8 @@
 	});
 
     var viewer = new Viewer(document.getElementById('post'));
-    $('img').bind('contextmenu', function(e) {
-        return false;
-    });
+    $("img").bind("contextmenu",function(e){return false;});
 
-
-
-    function startTime() {
-        var today = new Date();
-        var mt = today.getMonth();
-        var d = today.getDate();
-        var y = today.getFullYear();
-        var h = today.getHours();
-        var m = today.getMinutes();
-        var s = today.getSeconds();
-        var ampm = h >= 12 ? 'pm' : 'am';
-        h = h % 12;
-        h = h ? h : 12;
-        mt += 1;
-        m = checkTime(m);
-        s = checkTime(s);
-        document.getElementById('datetime').innerHTML =
-        '<i class="fa fa-calendar-o"></i> ' + mt + '-' + d + '-' + y + "&nbsp; <i class='fa fa-clock-o'></i> " + h + ":" + m + " " + ampm;
-        var t = setTimeout(startTime, 500);
-    }
     function checkTime(i) {
         if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
         return i;
@@ -174,13 +151,23 @@ var chart =  Morris.Line({
     chart.options.labels.forEach(function(label, i){
     var legendItem = $('<span></span>').text(label).css('color', chart.options.lineColors[i])
     $('#legend').append(legendItem)
-})
+});
+
+$(document).ready(function(){
+    $("#fullscreenButton").on("click", function(){
+        $("body").fullScreen(true);
+    });
+});
 </script>
 @endif
 
 
-<script type="text/javascript">
+@if(Route::is('exam_paper.show'))
+    <script src="{{asset('vendor/laravel-filemanager/js/lfm.js')}}" type="text/javascript"></script>
+    <script type="text/javascript">
+        $('#lfm').filemanager('image');
+        var viewer = new Viewer(document.getElementById('exam'));
 
- 
+    </script>
 
-</script>
+@endif

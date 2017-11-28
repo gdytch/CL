@@ -19,6 +19,12 @@
     width: 100%;
     padding: 10px;
 }
+.file-sub-icon{
+    width: 25px;
+    top: 0px;
+    right: 0px;
+    position: absolute;
+}
 .file-name{
     font-size: 10pt;
     padding: 10px;
@@ -68,6 +74,10 @@
     margin-bottom: 0;
 }
 
+.sidebar{
+    position: fixed;
+}
+
 #StudentTable, table.dataTable {
     border-collapse: collapse !important;
 
@@ -80,17 +90,19 @@
     max-width: 1000px;
     width: 100%;
     padding: 20px;
+    font-size: 16pt;
 }
 
 .post img{
     width: 100% !important;
     height: auto !important;
-    max-width: 800px !important;
     border: 2px solid grey;
+    vertical-align: baseline;
 }
-.post  img.left{
-    width: auto !important;
+.post small img{
+    width: unset !important;
 }
+
 .post-container{
     margin: 0px auto;
     max-width: 1000px;
@@ -144,4 +156,21 @@ table{
     left: 15%;
     top: 15%;
 }
+}
+
+.item_image{
+    height: 200px;
+    width: auto;
+    border: 2px solid grey;
+}
+#profile-wall{
+    height: 550px;
+    overflow:auto;
+}
+
+@media (min-width: 1367px) {
+    #profile-wall{
+        height: 875px;
+        overflow:auto;
+    }
 }

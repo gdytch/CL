@@ -32,6 +32,12 @@
                                                     <div id="toolbar">
 
                                                     </div>
+                                                    <style>
+                                                    .cke_editable img{
+                                                        max-height: 100px;
+                                                        width: auto !important;
+                                                    }
+                                                    </style>
                                                     <!-- Create the editor container -->
                                                     {{-- <div id="editor" type="textarea" name="content"> --}}
                                                         <textarea id="content"  type="text" name="content" style="width: 100%; height: 600px;"></textarea>

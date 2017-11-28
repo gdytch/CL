@@ -10,5 +10,10 @@ class Exam_Answer extends Model
 
     public $timestamps = false;
 
-    
+
+    public function ItemTo()
+    {
+        return $this->belongsTo('App\Exam_Item', 'exam_item_id', 'id');
+    }
+
 }

@@ -26,7 +26,7 @@
                          </div>
                      </div>
                      <div class="card-block">
-                         <table class="table table-striped table-responsive">
+                         <table class="table table-striped table-responsive table-hover">
                              <thead>
                                  <tr><th>Student</th><th>Submitted</th><th>Score</th></tr>
                              </thead>

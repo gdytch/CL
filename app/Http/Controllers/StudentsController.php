@@ -14,6 +14,8 @@ use Auth;
 use App\Student;
 use App\Section;
 use App\Record;
+use App\Exam;
+use App\Exam_Entry;
 
 class StudentsController extends Controller
 {
@@ -45,6 +47,37 @@ class StudentsController extends Controller
 
         $variables = array(
              'dashboard_content' => 'dashboards.admin.student.index',
+             'sections'          => $sections,
+             'table_list'        => $table_list,
+        );
+
+        return view('layouts.admin')->with($variables);
+    }
+
+    public function showThumbnail(Request $request)
+    {
+        $table_list = array();
+        if ($request->id == 'all' || $request->id == null) {
+            $students = Student::all();
+        } else {
+            $students = Student::where('section', $request->id)->get();
+        }
+
+        $sections = Section::all();
+
+        foreach ($students as $student) {
+            $table_list[] = (object) array(
+                'id'           => $student->id,
+                'fname'        => $student->fname,
+                'lname'        => $student->lname,
+                'section_name' => $student->sectionTo->name,
+                'section_id'   => $student->section,
+                'avatar'       => $student->avatar
+            );
+        }
+
+        $variables = array(
+             'dashboard_content' => 'dashboards.admin.student.index-thumbnail',
              'sections'          => $sections,
              'table_list'        => $table_list,
         );
@@ -143,12 +176,14 @@ class StudentsController extends Controller
         }
 
         $table_item = $this->checkActivities($student);
+        $exam_results = $this->studentExamPaper($student);
         $sections = Section::all();
         $variables = array(
            'dashboard_content' => 'dashboards.admin.student.show',
            'student'           => $student,
            'table_item'        => $table_item,
            'sections'          => $sections,
+           'exam_results'      => $exam_results
         );
 
         return view('layouts.admin')->with($variables);
@@ -393,6 +428,8 @@ class StudentsController extends Controller
                     'description' => $activity->description,
                     'submitted'   => $submitted,
                     'files'       => $files,
+                    'id'        => $activity->id
+
                 );
             }
         }
@@ -461,5 +498,27 @@ class StudentsController extends Controller
                 }
             }
         }
+    }
+
+
+    public function studentExamPaper($student)
+    {
+        $exam_entries = Exam_Entry::where(['student_id' => $student->id, 'active' => false])->get();
+        if(count($exam_entries) == 0)
+            return null;
+        $exam_results = null;
+        foreach ($exam_entries as $key => $exam_entry) {
+            $exam = Exam::find($exam_entry->exam_id);
+            $exam_paper = $exam->ExamPaper;
+            $exam_paper['date'] = $exam_entry->date;
+            $exam_paper['score'] = $exam_entry->score;
+            $exam_paper['exam_id'] = $exam->id;
+            $exam_paper['submitted'] = $exam_entry->active;
+            $exam_paper['show_to_students'] = $exam->show_to_students;
+            $exam_results[$key] = $exam_paper;
+
+        }
+
+        return $exam_results;
     }
 }

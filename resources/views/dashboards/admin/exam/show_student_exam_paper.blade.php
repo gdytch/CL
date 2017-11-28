@@ -21,14 +21,14 @@
                             <h4>{{$student->sectionTo->name}}</h4>
                         </div>
                         <div class="col-md-4">
-                            <h3 class="card-title text-primary">  {{$exam_paper->name}}  </h3>
+                            <h6 class="text-primary"><small><strong>Exam</strong></small></h6>
                             <h4> {{$exam_paper->description}} </h4>
                             <h6 class="text-primary"><small><strong>Date</strong></small></h6>
                             <h4> {{$exam_paper->date}} </h4>
-                            <h6 class="text-primary"><small><strong>Student Score</strong></small></h6>
-                            <h4> {{$exam_paper->score}} </h4>
-                            <h6 class="text-primary"><small><strong>Exam Perfect Score</strong></small></h6>
-                            <h4> {{$exam_paper->perfect_score}} </h4>
+                            <h6 class="text-primary"><small><strong>Score</strong></small></h6>
+                            <h1 style="font-size: 32pt; font-weight:100;"> <span class="text-primary" >{{$exam_paper->score}}</span>
+                                <span style="position: relative;left: -10px;font-size: 25pt;">/</span>
+                                 <span style="left: -20px;font-size: 24pt;position: relative;"> {{$exam_paper->perfect_score}} </span></h1>
                         </div>
                     </div>
                 </div>
@@ -36,7 +36,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-12 col-12 col-lg-6 col-sm-12">
+        <div class="col-md-12 col-12 col-lg-12 col-sm-12">
             <div class="card">
                 <div class="card-header bordered">
                     <div class="header-block">
@@ -60,9 +60,23 @@
                                     {{-- Question Items --}}
                                     @foreach ($test->Items as $key => $test_item)
                                         <div class="row">
-                                            <div class="col">
+                                            <div class="col-1" style="text-align:center">
+                                                @if($item_answers[$test_item->id]->correct) <i class="fa fa-check green"></i> @else <i class="fa fa-close red"></i> <br><span class="text-primary">ans: {{$test_item->correct_answer}}</span> @endif
+
+                                            </div>
+                                            <div class="col-11">
                                                 {{-- Question --}}
-                                                <li><p> {{$test_item->question}} @if($item_answers[$test_item->id]->correct) <i class="fa fa-check green"></i> @else <i class="fa fa-close red"></i> @endif
+                                                <li><p class="question-text">
+                                                    @switch($test_item->question_type)
+                                                        @case('image')
+                                                                <img src="{{asset('photos/shares/'.$test_item->question)}}" class="item_image" alt="">
+                                                                @break;
+                                                        @case('HTML')
+                                                                 {!!$test_item->question!!}
+                                                                @break;
+                                                        @default
+                                                                 {{$test_item->question}}
+                                                    @endswitch
                                                     <br>
                                                 </p>
                                                 </li>
@@ -83,6 +97,7 @@
                                                                     </div>
                                                                 </div>
                                                                 @break
+                                                                @case('Identification')
                                                                 @case('Multiple Choice')
                                                                 <div class="form-group">
                                                                     <div>
@@ -90,7 +105,18 @@
                                                                         @foreach ($test_item->Choices as $choice)
                                                                             <label style="margin-left: 50px">
                                                                                 <input class="radio" name="{{$test_item->id}}" type="radio" value='{{$choice->choice}}'  @if($item_answers[$test_item->id]->answer == $choice->choice) checked @else disabled  @endif>
-                                                                                <span>{{$choice->choice}}</span>
+                                                                                <span>
+                                                                                    @switch($choice->answer_type)
+                                                                                        @case('image')
+                                                                                                <img src="{{asset('photos/shares/'.$choice->choice)}}" class="item_image" alt="">
+                                                                                                @break;
+                                                                                        @case('HTML')
+                                                                                                 {!!$choice->choice!!}
+                                                                                                @break;
+                                                                                        @default
+                                                                                                 {{$choice->choice}}
+                                                                                    @endswitch
+                                                                                </span>
                                                                             </label>
                                                                         @endforeach
                                                                     </div>
@@ -110,84 +136,6 @@
                 </div>
             </div>
         </div>
-
-
-    {{-- Answer key --}}
-        <div class="col-md-12 col-12 col-lg-6 col-sm-12">
-            <div class="card">
-                <div class="card-header bordered">
-                    <div class="header-block">
-                        <h4 class="card-title text-primary">
-                            Answer key
-                        </h4>
-                    </div>
-                </div>
-                <div class="card-block">
-                    @foreach ($exam_paper->Tests as $test)
-                        <div class="card-block">
-                            <div class="row">
-                                <div class="col-12">
-                                    {{-- Test --}}
-                                    {{$test->name}}. <strong>{{$test->test_type}}.</strong> <i>{{$test->description}}</i>
-                                </div>
-                            </div>
-
-                            <div class="card-block col">
-                                <ol>
-                                    {{-- Question Items --}}
-                                    @foreach ($test->Items as $key => $test_item)
-                                        <div class="row">
-                                            <div class="col">
-                                                {{-- Question --}}
-                                                <li><p> {{$test_item->question}}
-                                                    <br>
-                                                </p>
-                                                </li>
-                                                    <div class="row">
-                                                            {{-- Choices --}}
-                                                            @switch($test->test_type)
-                                                                @case('True or False')
-                                                                <div class="form-group">
-                                                                    <div >
-                                                                        <label>
-                                                                            <input class="radio green" name="{{$test_item->id}}ak" type="radio" value="true" @if($test_item->correct_answer == 'true') checked @else disabled @endif>
-                                                                            <span>True</span>
-                                                                        </label>
-                                                                        <label>
-                                                                            <input class="radio" name="{{$test_item->id}}ak" type="radio" value="false"  @if($test_item->correct_answer == 'false') checked @else disabled @endif>
-                                                                            <span>False</span>
-                                                                        </label>
-                                                                    </div>
-                                                                </div>
-                                                                @break
-                                                                @case('Multiple Choice')
-                                                                <div class="form-group">
-                                                                    <div>
-
-                                                                        @foreach ($test_item->Choices as $choice)
-                                                                            <label style="margin-left: 50px">
-                                                                                <input class="radio" name="{{$test_item->id}}ak" type="radio" value='{{$choice->choice}}'  @if($test_item->correct_answer == $choice->choice) checked @else disabled  @endif>
-                                                                                <span>{{$choice->choice}}</span>
-                                                                            </label>
-                                                                        @endforeach
-                                                                    </div>
-                                                                </div>
-                                                                @break
-                                                            @endswitch
-                                                    </div>
-
-                                            </div>
-                                        </div>
-                                    @endforeach
-                                </ol>
-                            </div>
-                        </div>
-                    @endforeach
-
-                </div>
-            </div>
-        </div>
-
     </div>
 
 
