@@ -63,11 +63,14 @@
                     @endif
                 </div>
                 <div class="card-block">
-                <form class="" action="{{route('exam.next')}}" method="post">
+                <form class="" action="{{route('exam.next')}}" method="post" enctype="multipart/form-data">
                     <div class="row">
                             {{ csrf_field() }}
                             <input type="hidden" name="page" value="{{$page}}">
                             <input type="hidden" name="exam_item_id" value="{{$item->id}}">
+                            <input type="hidden" name="exam_name" value="{{$exam_paper->name}}">
+                            <input type="hidden" name="exam_paper_id" value="{{$exam_paper->id}}">
+                            <input type="hidden" name="prev_answer" value="{{$student_answer}}">
                             <div class="col-1">
                                 <div class="question-container">
                                     @if($page > 0)
@@ -85,6 +88,66 @@
                                             @case('HTML')
                                                      {!!$item->question!!}
                                                     @break;
+                                            @case('post')
+                                                    <div class="row">
+                                                        <div class="col-md-8">
+                                                            <div class="card" style="background: #fff">
+                                                                <div class="card-header bordered">
+                                                                    <div class="header-block">
+                                                                        <h3 class="card-title text-primary"> Instructions   </h3>
+                                                                        <p class="title-description"> </p>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="card-block">
+                                                                    {!!$item->question!!}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            @if($exam_file == null)
+                                                                <h2 class="text-primary">Upload File</h2>
+                                                                <div class="form-group">
+                                                                    <input type="file" name="exam_file" value="" onchange="readURL(this);" class="form-control" >
+                                                                </div>
+                                                                <img src="" alt="" id="image" class="student_avatar" style="max-width: 100% !important;">
+                                                                <button type="submit" class="btn btn-primary display_hidden" id="savebtn" name="save_exam_file" value="{{$item->id}}">Save File</button>
+
+                                                                <script type="text/javascript">
+                                                                function readURL(input) {
+                                                                   if (input.files && input.files[0]) {
+                                                                       var reader = new FileReader();
+
+                                                                       reader.onload = function (e) {
+                                                                           $('#image')
+                                                                               .attr('src', e.target.result)
+                                                                       };
+
+                                                                       reader.readAsDataURL(input.files[0]);
+                                                                   }
+                                                                   var element = document.getElementById("savebtn");
+                                                                   element.classList.remove("display_hidden");
+                                                                }
+                                                                </script>
+                                                            @else
+                                                                <h3 class="text-primary">Submitted File</h3>
+                                                                <input type="hidden" name="submitted_exam_file" value="{{$exam_file->basename}}">
+                                                                <div class="file" style="background-color:#fff">
+                                                                    @if($exam_file->type == 'jpg' || $exam_file->type == 'jpeg' || $exam_file->type == 'png')
+                                                                        <img id="file" src="{{asset('storage/'.$exam_file->path.'/'.$exam_file->basename)}}" alt="" class="file-icon">
+                                                                        <p class="file-name">{{$exam_file->name}}.{{$exam_file->type}}</p>
+                                                                        <script>
+                                                                            var viewer = new Viewer(document.getElementById('file'));
+                                                                        </script>
+                                                                    @else
+                                                                        <img style="width: 200px;" src="@if(file_exists(public_path('img/icons/'.$exam_file->type.'.png'))){{asset('img/icons/'.$exam_file->type.'.png')}} @else {{asset('img/icons/file.png')}}@endif" alt="" class="file-icon">
+                                                                        <p class="file-name">{{$exam_file->name}}.{{$exam_file->type}}</p>
+                                                                    @endif
+                                                                </div>
+                                                                <button type="submit" class="btn btn-primary" name="delete_exam_file" value="{{$item->id}}">DELEte file</button>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                    @break;
                                             @default
                                                      {{$item->question}}
                                         @endswitch
@@ -92,44 +155,44 @@
                                     <p class="question-choices">
                                         @switch($item->Test->test_type)
                                             @case('True or False')
-                                            <div class="form-group">
-                                                <div >
-                                                    <label>
-                                                        <input class="radio" name="answer" type="radio" value="true" @if($student_answer == 'true') checked @endif>
-                                                        <span>True</span>
-                                                    </label>
-                                                    <label>
-                                                        <input class="radio" name="answer" type="radio" value="false"  @if($student_answer == 'false') checked @endif>
-                                                        <span>False</span>
-                                                    </label>
+                                                <div class="form-group">
+                                                    <div >
+                                                        <label>
+                                                            <input class="radio" name="answer" type="radio" value="true" @if($student_answer == 'true') checked @endif>
+                                                            <span>True</span>
+                                                        </label>
+                                                        <label>
+                                                            <input class="radio" name="answer" type="radio" value="false"  @if($student_answer == 'false') checked @endif>
+                                                            <span>False</span>
+                                                        </label>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            @break
+                                                @break
                                             @case('Identification')
                                             @case('Multiple Choice')
-                                            <div class="form-group">
-                                                <div>
+                                                <div class="form-group">
+                                                    <div>
 
-                                                    @foreach ($item_Choices as $choice)
-                                                        <label style="margin-left: 50px">
-                                                            <input class="radio" name="answer" type="radio" value='{{$choice}}'  @if($student_answer == $choice) checked @endif>
-                                                            <span>
-                                                                @switch($item->answer_type)
-                                                                    @case('image')
-                                                                            <img src="{{asset('photos/shares/'.$choice)}}" class="item_image_choice" alt="">
-                                                                            @break;
-                                                                    @case('HTML')
-                                                                             {!!$choice!!}
-                                                                            @break;
-                                                                    @default
-                                                                             {{$choice}}
-                                                                @endswitch
-                                                            </span>
-                                                        </label>
-                                                    @endforeach
+                                                        @foreach ($item_Choices as $choice)
+                                                            <label style="margin-left: 50px">
+                                                                <input class="radio" name="answer" type="radio" value='{{$choice}}'  @if($student_answer == $choice) checked @endif>
+                                                                <span>
+                                                                    @switch($item->answer_type)
+                                                                        @case('image')
+                                                                                <img src="{{asset('photos/shares/'.$choice)}}" class="item_image_choice" alt="">
+                                                                                @break;
+                                                                        @case('HTML')
+                                                                                 {!!$choice!!}
+                                                                                @break;
+                                                                        @default
+                                                                                 {{$choice}}
+                                                                    @endswitch
+                                                                </span>
+                                                            </label>
+                                                        @endforeach
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            @break
+                                                @break
                                         @endswitch
                                     </p>
                                 </div>

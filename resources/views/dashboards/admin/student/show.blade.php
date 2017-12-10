@@ -27,7 +27,6 @@
                             <h4>{{$student->lname}}</h4>
                             <h6 class="text-primary"><small><strong>Section</strong></small></h6>
                             <h4>{{$student->sectionTo->name}}</h4>
-                            <a href="{{route('student.folder',$student->id)}}" class="btn btn-primary">OPEN FOLDER</a>
                         </div>
                     </div>
                 </section>
@@ -124,7 +123,55 @@
                     </div>
                 @endif
             </div>
+            <div class="col col-12">
+                <div class="card">
+                    <div class="card-header bordered">
+                        <div class="header-block">
+                            <h3 class="card-title text-primary"> Activity Files  </h3>
+                            <p class="title-description"> </p>
+                        </div>
+                        <div class="header-block pull-right">
+                            <a href="{{route('student.folder',$student->id)}}" class="btn btn-primary">OPEN FOLDER</a>
+                            
+                        </div>
+                    </div>
+                    <div class="card-block">
+                        <div class="col">
+                            <div class="row files">
+                                @if($files != null)
+                                    @foreach ($files as $key => $file)
+                                        <div class="file-container">
+                                            <div class="dropdown ">
+                                                  <div class="file">
+                                                      @if($file->type == 'jpg' || $file->type == 'jpeg' || $file->type == 'png')
+                                                          <img id="file{{$key}}" src="{{asset('storage/'.$file->path.'/'.$file->basename)}}" alt="" class="file-icon">
+                                                          <img  src="@if(file_exists(public_path('img/icons/'.$file->type.'.png'))){{asset('img/icons/'.$file->type.'.png')}} @else {{asset('img/icons/file.png')}}@endif" alt="" class="file-sub-icon">
+                                                          <p class="file-name">{{$file->name}}.{{$file->type}}</p>
+                                                          <script>
+                                                              var viewer = new Viewer(document.getElementById('file{{$key}}'));
+                                                          </script>
+                                                      @else
+                                                          <img src="@if(file_exists(public_path('img/icons/'.$file->type.'.png'))){{asset('img/icons/'.$file->type.'.png')}} @else {{asset('img/icons/file.png')}}@endif" alt="" class="file-icon">
+                                                          <p class="file-name">{{$file->name}}.{{$file->type}}</p>
+                                                      @endif
+                                                  </div>
+                                            </div>
+                                        </div>
 
+
+                                    @endforeach
+                                @else
+                                    <p>No Files</p>
+                                @endif
+
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </section>

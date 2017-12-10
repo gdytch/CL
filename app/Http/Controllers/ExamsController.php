@@ -25,6 +25,7 @@ class ExamsController extends Controller
     {
         $sections = Section::all();
         $exam_papers = Exam_Paper::all();
+
         $exams = Exam::all()->sortBy('section_id');
         $submitted = 0;
         foreach ($exams as $key => $exam) {
@@ -159,6 +160,8 @@ class ExamsController extends Controller
             $exam_entry->save();
             foreach ($exam->ExamPaper->Tests as $test) {
                 $Items = Exam_Item::where('exam_test_id', $test->id)->get(['id']);
+                if($Items == null || count($Items) == 0)
+                    continue;
                 $test_Items = null;
                 foreach ($Items as $key => $value) {
                     $test_Items[] = $value->id;
@@ -190,10 +193,24 @@ class ExamsController extends Controller
         $exam_entry = Exam_Entry::where(['student_id' => $student->id, 'exam_id' => $exam->id])->get()->first();
         $exam_paper['date'] = $exam_entry->date;
         $exam_paper['score'] = $exam_entry->score;
+        if(!$exam_entry->active)
+            $exam_paper['submitted'] = true;
+        else
+            $exam_paper['submitted'] = false;
+
         foreach ($exam_paper->Tests as $key => $test) {
             foreach ($test->Items as $key2 => $item) {
                 $answer_entry = Exam_Answer::where(['exam_entry_id' => $exam_entry->id, 'exam_item_id' => $item->id])->get()->first();
                 $item_answers[$item->id] = (object) array('answer' => $answer_entry->answer, 'correct' => $answer_entry->correct);
+                if($test->test_type == 'HandsOn' && $answer_entry->answer != null){
+                    $directory = "/".$student->sectionTo->path."/".$student->path."/exam_files";
+                    $exam_file = $directory."/".$answer_entry->answer;
+                    $file = pathinfo((string)$exam_file."");
+                    $temp = explode("item_id=", $file['filename']);
+                    $file_id = $temp[1];
+                    $file['filename'] = $temp[0];
+                    $item_answers[$item->id] = (object) array('answer_entry_id' => $answer_entry->id, 'correct' => $answer_entry->correct, 'points' => $answer_entry->points, 'name' => $file['filename'], 'type' => $file['extension'], 'path' => $file['dirname'], 'id' => $file_id, 'basename' => $file['basename']);
+                }
             }
         }
 
@@ -205,6 +222,33 @@ class ExamsController extends Controller
 
         );
         return view('layouts.admin')->with($variables);
+    }
+
+
+
+    public function saveHandsOnPoints(Request $request)
+    {
+        $exam_item = Exam_Item::find($request->item_id);
+        if($request->points > $exam_item->points)
+            return redirect()->back()->withError('Points entered exceed max points of the test item');
+        $answer_entry = Exam_Answer::find($request->answer_entry_id);
+        $answer_entry->points = $request->points;
+        $answer_entry->update();
+
+        $student = Student::find($request->student_id);
+
+        $exam = Exam::where(['section_id' => $student->section, 'exam_paper_id' => $request->exam_paper_id])->get()->first();
+        $exam_entry = Exam_Entry::where(['student_id' => $student->id, 'exam_id' => $exam->id])->get()->first();
+        $correct_answers = Exam_Answer::where(['exam_entry_id' => $exam_entry->id, 'correct' => true])->get();
+        $score = 0;
+        if(count($correct_answers) > 0)
+            foreach ($correct_answers as $key => $answer_entry) {
+                $score += $answer_entry->points;
+            }
+        $exam_entry->score = $score;
+        $exam_entry->update();
+
+        return redirect()->back();
     }
 
 
@@ -340,6 +384,12 @@ class ExamsController extends Controller
     {
 
         $item = new Exam_Item($request->all());
+        if($item->Test->test_type == 'HandsOn'){
+            $item->points_type = 'Manual';
+        }else {
+            $item->points_type = 'Auto';
+        }
+
         $item->save();
 
         if($item->Test->test_type == 'Multiple Choice' || $item->Test->test_type == 'Identification'){

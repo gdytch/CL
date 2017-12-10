@@ -338,6 +338,9 @@ class HomeController extends Controller
         );
         return view('layouts.student')->with($variables);
     }
+
+
+
     public function exam($page)
     {
         $student = Auth::user();
@@ -375,6 +378,18 @@ class HomeController extends Controller
             $item_Choices[] = $choice->choice;
         }
         shuffle($item_Choices);
+        $exam_file = null;
+        if($item->Test->test_type == 'HandsOn' && $student_answer != null){
+            $directory = "/".$student->sectionTo->path."/".$student->path."/exam_files";
+            $exam_file = $directory."/".$student_answer;
+            $file = pathinfo((string)$exam_file."");
+            $temp = explode("item_id=", $file['filename']);
+            $file_id = $temp[1];
+            $file['filename'] = $temp[0];
+            $exam_file = (object) array('name' => $file['filename'], 'type' => $file['extension'], 'path' => $file['dirname'], 'id' => $file_id, 'basename' => $file['basename']);
+
+        }
+
         $variables = array(
             'dashboard_content' => 'dashboards.student.pages.exam',
             'student'           => $student,
@@ -385,12 +400,15 @@ class HomeController extends Controller
             'page_max'          => $page_max,
             'student_answer'    => $student_answer,
             'item_Choices'      => $item_Choices,
-            'total_answered'    => $total_answered
+            'total_answered'    => $total_answered,
+            'exam_file'         => $exam_file,
 
         );
 
         return view('layouts.student')->with($variables);
     }
+
+
 
     public function itemAnswered($entry_id, $item_id)
     {
@@ -404,6 +422,7 @@ class HomeController extends Controller
     public function NextPage(Request $request)
     {
 
+        $student   = Auth::user();
         $page = $request->page;
         if(isset($request->prev))
             $page--;
@@ -412,8 +431,46 @@ class HomeController extends Controller
         else if(isset($request->jump))
             $page = $request->jump;
 
-        $this->saveAnswer($request->answer, $request->exam_item_id);
+        $answer = $request->answer;
 
+        if(isset($request->submitted_exam_file)){
+            $answer = $request->submitted_exam_file;
+        }
+
+        if(isset($request->delete_exam_file)){
+            $answer = null;
+            $directory = '/'.$student->sectionTo->path."/".$student->path."/exam_files";
+            Storage::delete($directory."/".$request->submitted_exam_file);
+        }
+
+
+        if(isset($request->exam_file)){
+            $this->Validate($request, [
+                'exam_file'     => 'max:30000',
+            ]);
+            $directory = '/'.$student->sectionTo->path."/".$student->path."/exam_files";
+            if (!Storage::exists($directory)) {
+                Storage::makeDirectory($directory, 0777, true);
+            }
+            $file = $request->file('exam_file');
+            $extension = $file->getClientOriginalExtension();
+
+            $filename = $request->exam_name." - ".$student->lname." item_id=".$request->exam_item_id.".".$extension;
+            if($extension == 'jpg' || $extension == 'jpeg' || $extension == 'png' ){
+                $img = Image::make($request->file('exam_file'));
+                $img->resize(1920, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                    $constraint->upsize();
+                });
+                $img->save(public_path().'/storage'.$directory.'/'.$filename);
+            }
+            else
+                $request->file('exam_file')->storeAs($directory, $filename);
+            $answer = $filename;
+        }
+
+        if($request->answer != $request->prev_answer)
+            $this->saveAnswer($answer, $request->exam_item_id);
 
         if(isset($request->finish))
             return redirect('home/exam/finish/');
@@ -437,8 +494,14 @@ class HomeController extends Controller
         $answer_field = Exam_Answer::where(['exam_entry_id' => $exam_entry->id, 'exam_item_id' => $item_id])->get()->first();
         $answer_field->answer = $answer;
 
+        $exam_item = Exam_Item::find($item_id);
+        if($exam_item->points_type == 'Auto'){
+            $answer_field->points = $exam_item->points;
+        }
+        else if($answer != null){
+            $answer = 'submitted';
+        }
         $answer_field->correct = $this->checkAnswer($answer, $item_id);
-
         $answer_field->update();
 
 
@@ -511,13 +574,13 @@ class HomeController extends Controller
         if($invalid)
             return redirect()->back()->withError('Invalid Password');
 
-        $exam = Exam::where('section_id', $student->section)->get()->first();
-        $exam_entry = Exam_Entry::where(['student_id' => $student->id])->get()->first();
+        $exam = Exam::where(['section_id' => $student->section, 'exam_paper_id' => $request->exam_paper])->get()->first();
+        $exam_entry = Exam_Entry::where(['student_id' => $student->id, 'exam_id' => $exam->id])->get()->first();
         $correct_answers = Exam_Answer::where(['exam_entry_id' => $exam_entry->id, 'correct' => true])->get();
         $score = 0;
         if(count($correct_answers) > 0)
             foreach ($correct_answers as $key => $answer_entry) {
-                $score += $answer_entry->ItemTo->points;
+                $score += $answer_entry->points;
             }
         $date = date("Y-m-d", time());
         $exam_entry->date = $date;

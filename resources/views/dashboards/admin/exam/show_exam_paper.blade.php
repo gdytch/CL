@@ -155,7 +155,12 @@
                                                                 <img src="{{asset('photos/shares/'.$test_item->question)}}" class="item_image" alt="">
                                                                 @break;
                                                         @case('HTML')
-                                                                 {!!$test_item->question!!}
+                                                                {!!$test_item->question!!}
+                                                               @break;
+                                                        @case('post')
+                                                                <div style="border: 1px solid grey; padding: 50px;">
+                                                                        {!!$test_item->question!!}
+                                                                </div>
                                                                 @break;
                                                         @default
                                                                  {{$test_item->question}}
@@ -171,7 +176,7 @@
                                                     <div class="row">
                                                         <ol type="a">
                                                             @foreach ($test_item->Choices as $choice)
-                                                                    <li > <a href="#" data-toggle="modal" data-target="#test_item_edit_choice{{$choice->id}}">
+                                                                    <li style="display: list-item;"> <a href="#" data-toggle="modal" data-target="#test_item_edit_choice{{$choice->id}}">
                                                                         <span style="margin-left: 20px;">
                                                                             @switch($test_item->answer_type)
                                                                                 @case('image')
@@ -249,7 +254,7 @@
 
                                                 {{-- Question Edit modal --}}
                                                 <div class="modal fade" id="test_item{{$test_item->id}}" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
-                                                  <div class="modal-dialog">
+                                                  <div class="modal-dialog modal-lg">
                                                     <div class="modal-content">
                                                       <div class="modal-header">
                                                           <h4 class="modal-title" id="">Edit</h4>
@@ -261,13 +266,14 @@
                                                               <input type="hidden" name="_method" value="put">
                                                               <input type="hidden" name="exam_paper_id" value="{{$exam_paper->id}}">
                                                               <input type="hidden" name="exam_test_id" value="{{$test->id}}">
-                                                              <div class="form-group">
-                                                                  <label for="">Question</label>
-                                                                  <textarea type="text" name="question" class="form-control underlined"  placeholder="Question" required>{{$test_item->question}}</textarea>
-                                                              </div>
+
 
                                                               @switch($test->test_type)
                                                                   @case('True or False')
+                                                                      <div class="form-group">
+                                                                          <label for="">Question</label>
+                                                                          <textarea type="text" name="question" class="form-control underlined"  placeholder="Question" required>{{$test_item->question}}</textarea>
+                                                                      </div>
                                                                       <div class="form-group">
                                                                           <label for="">Correct Answer</label>
                                                                           <select class="form-control" name="correct_answer">
@@ -279,6 +285,10 @@
                                                                   @case('Identification')
                                                                   @case('Multiple Choice')
                                                                           <div class="form-group">
+                                                                              <label for="">Question</label>
+                                                                              <textarea type="text" name="question" class="form-control underlined"  placeholder="Question" required>{{$test_item->question}}</textarea>
+                                                                          </div>
+                                                                          <div class="form-group">
                                                                               <select class="form-control" name="question_type">
                                                                                   <option value="text" @if($test_item->question_type == 'text') selected @endif>Text</option>
                                                                                   <option value="HTML" @if($test_item->question_type == 'HTML') selected @endif>HTML code</option>
@@ -289,6 +299,45 @@
                                                                               <label for="">Correct Answer</label>
                                                                               <input type="text" name="correct_answer" class="form-control underlined" value="{{$test_item->correct_answer}}"  placeholder="Correct Answer" required>
                                                                           </div>
+                                                                      @break
+                                                                  @case('HandsOn')
+                                                                          <div class="form-group" style="width: 100%;">
+                                                                              <label class="col-12 control-label"> Hands On Instructions </label>
+                                                                              <div class="col-sm-12">
+                                                                                  <div id="wyswyg">
+                                                                                      <div id="toolbar">
+
+                                                                                      </div>
+                                                                                      <!-- Create the editor container -->
+                                                                                      {{-- <div id="editor" type="textarea" name="content"> --}}
+                                                                                          <textarea id="content"  type="text" name="question" style="width: 100%; height: 800px;" >
+                                                                                              {!!$test_item->question!!}
+                                                                                          </textarea>
+                                                                                      {{-- </div> --}}
+                                                                                  </div>
+                                                                              </div>
+                                                                          </div>
+                                                                          <div class="form-group">
+                                                                            <label for=""> Answer Type:</label>
+                                                                            <input type="hidden" name="correct_answer" value="submitted">
+                                                                            <input type="hidden" name="question_type" value="post">
+                                                                            <select class="form-control" name="answer_type">
+                                                                                  <option value="image"  @if($test_item->answer_type == 'image') selected @endif>Image</option>
+                                                                                  <option value="file" @if($test_item->answer_type == 'file') selected @endif>File</option>
+                                                                            </select>
+                                                                          </div>
+                                                                          <script src="{{asset('/vendor/unisharp/laravel-ckeditor/ckeditor.js')}}"></script>
+                                                                          <script>
+                                                                            var options = {
+                                                                              filebrowserImageBrowseUrl: '/laravel-filemanager?type=Images',
+                                                                              filebrowserImageUploadUrl: '/laravel-filemanager/upload?type=Images&_token=',
+                                                                              filebrowserBrowseUrl: '/laravel-filemanager?type=Files',
+                                                                              filebrowserUploadUrl: '/laravel-filemanager/upload?type=Files&_token='
+                                                                            };
+                                                                          </script>
+                                                                          <script>
+                                                                              CKEDITOR.replace('content', options);
+                                                                          </script>
                                                                       @break
                                                                   @default
                                                                       <div class="form-group">
@@ -329,52 +378,96 @@
                                                     {{ csrf_field() }}
                                                     <input type="hidden" name="exam_paper_id" value="{{$exam_paper->id}}">
                                                     <input type="hidden" name="exam_test_id" value="{{$test->id}}">
-                                                    <div class="form-group" style="width:100%">
-                                                        <input type="textarea" name="question" class="form-control"  placeholder="Question" required style="width:100%">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <select class="form-control" name="question_type">
-                                                            <option value="text">Text</option>
-                                                            <option value="HTML">HTML code</option>
-                                                            <option value="image">Image</option>
-                                                        </select>
-                                                    </div>
+
                                                     @switch($test->test_type)
                                                         @case('True or False')
-                                                        <div class="form-group">
-                                                            <select class="form-control" name="correct_answer">
-                                                                <option value="true">True</option>
-                                                                <option value="false">False</option>
-                                                            </select>
-                                                        </div>
-                                                        @break
+                                                            <div class="form-group" style="width:100%">
+                                                                <input type="text" name="question" class="form-control"  placeholder="Question" required style="width:100%">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <select class="form-control" name="question_type">
+                                                                    <option value="text">Text</option>
+                                                                    <option value="HTML">HTML code</option>
+                                                                    <option value="image">Image</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <select class="form-control" name="correct_answer">
+                                                                    <option value="true">True</option>
+                                                                    <option value="false">False</option>
+                                                                </select>
+                                                            </div>
+                                                            @break
                                                         @case('Identification')
                                                         @case('Multiple Choice')
-                                                        <div class="form-group">
-                                                            <input type="text" name="correct_answer" class="form-control"  placeholder="Correct Answer" required>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <select class="form-control" name="answer_type">
-                                                                <option value="text">Text</option>
-                                                                <option value="HTML">HTML code</option>
-                                                                <option value="image">Image</option>
-                                                            </select>
-                                                        </div>
-                                                        @break
+                                                            <div class="form-group" style="width:100%">
+                                                                <input type="text" name="question" class="form-control"  placeholder="Question" required style="width:100%">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <select class="form-control" name="question_type">
+                                                                    <option value="text">Text</option>
+                                                                    <option value="HTML">HTML code</option>
+                                                                    <option value="image">Image</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <input type="text" name="correct_answer" class="form-control"  placeholder="Correct Answer" required>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <select class="form-control" name="answer_type">
+                                                                    <option value="text">Text</option>
+                                                                    <option value="HTML">HTML code</option>
+                                                                    <option value="image">Image</option>
+                                                                </select>
+                                                            </div>
+                                                            @break
+                                                        @case('HandsOn')
+
+                                                                <div class="form-group" style="width: 100%;">
+                                                                    <label class="col-12 control-label"> Hands On Instructions </label>
+                                                                    <div class="col-sm-12">
+                                                                        <div id="wyswyg">
+                                                                            <div id="toolbar">
+
+                                                                            </div>
+                                                                            <!-- Create the editor container -->
+                                                                            {{-- <div id="editor" type="textarea" name="content"> --}}
+                                                                                <textarea id="content"  type="text" name="question" style="width: 100%; height: 800px;"></textarea>
+                                                                            {{-- </div> --}}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                  <label for=""> Answer Type:</label>
+                                                                  <input type="hidden" name="correct_answer" value="submitted">
+                                                                  <input type="hidden" name="question_type" value="post">
+                                                                  <select class="form-control" name="answer_type">
+                                                                        <option value="image">Image</option>
+                                                                        <option value="file">File</option>
+                                                                  </select>
+                                                                </div>
+                                                                <script src="{{asset('/vendor/unisharp/laravel-ckeditor/ckeditor.js')}}"></script>
+                                                                <script>
+                                                                  var options = {
+                                                                    filebrowserImageBrowseUrl: '/laravel-filemanager?type=Images',
+                                                                    filebrowserImageUploadUrl: '/laravel-filemanager/upload?type=Images&_token=',
+                                                                    filebrowserBrowseUrl: '/laravel-filemanager?type=Files',
+                                                                    filebrowserUploadUrl: '/laravel-filemanager/upload?type=Files&_token='
+                                                                  };
+                                                                </script>
+                                                                <script>
+                                                                    CKEDITOR.replace('content', options);
+                                                                </script>
+                                                            @break
                                                         @default
-                                                        <div class="form-group">
-                                                            <input type="text" name="correct_answer" class="form-control"  placeholder="Correct Answer" required>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <select class="form-control" name="answer_type">
-                                                                <option value="text">Text</option>
-                                                                <option value="HTML">HTML code</option>
-                                                                <option value="image">Image</option>
-                                                            </select>
-                                                        </div>
+                                                            <div class="form-group">
+                                                                <input type="text" name="correct_answer" class="form-control"  placeholder="Correct Answer" required>
+                                                            </div>
+
                                                     @endswitch
 
                                                     <div class="form-group">
+                                                        <label for="">Points:</label>
                                                         <input type="number" name="points" class="form-control" value="1" placeholder="Number of points" required>
                                                     </div>
                                                     <button type="submit"  class="btn btn-primary">Add</button>
@@ -416,6 +509,7 @@
                                 <option value="True or False">True or False</option>
                                 <option value="Multiple Choice">Multiple Choice</option>
                                 <option value="Identification">Identification</option>
+                                <option value="HandsOn">Hands On</option>
                             </select>
                         </div>
                         <div class="form-group">

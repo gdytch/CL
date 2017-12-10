@@ -174,3 +174,7 @@ table{
         overflow:auto;
     }
 }
+
+.display_hidden{
+    display: none;
+}

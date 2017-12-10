@@ -53,7 +53,7 @@
                     </div>
                 </div>
                 <div class="card-block">
-                <form class="" action="{{route('exam.preview.next')}}" method="post">
+                <form class="" action="{{route('exam.preview.next')}}" method="post" >
                     <div class="row">
                             {{ csrf_field() }}
                             <input type="hidden" name="page" value="{{$page}}">
@@ -75,6 +75,44 @@
                                                     @break;
                                             @case('HTML')
                                                      {!!$item->question!!}
+                                                    @break;
+                                            @case('post')
+                                                    <div class="row">
+                                                        <div class="col-md-8">
+                                                            <div class="card" style="background: #fff">
+                                                                <div class="card-header bordered">
+                                                                    <div class="header-block">
+                                                                        <h3 class="card-title text-primary"> Instructions   </h3>
+                                                                        <p class="title-description"> </p>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="card-block">
+                                                                    {!!$item->question!!}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <h2 class="text-primary">Upload File</h2>
+                                                            <div class="form-group">
+                                                                <input type="file" name="exam_file" value="" onchange="readURL(this);" class="form-control" required>
+                                                            </div>
+                                                            <img src="" alt="" id="image" class="student_avatar">
+                                                            <script type="text/javascript">
+                                                            function readURL(input) {
+                                                               if (input.files && input.files[0]) {
+                                                                   var reader = new FileReader();
+
+                                                                   reader.onload = function (e) {
+                                                                       $('#image')
+                                                                           .attr('src', e.target.result)
+                                                                   };
+
+                                                                   reader.readAsDataURL(input.files[0]);
+                                                               }
+                                                            }
+                                                            </script>
+                                                        </div>
+                                                    </div>
                                                     @break;
                                             @default
                                                      {{$item->question}}

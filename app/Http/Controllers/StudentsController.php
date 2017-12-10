@@ -177,13 +177,15 @@ class StudentsController extends Controller
 
         $table_item = $this->checkActivities($student);
         $exam_results = $this->studentExamPaper($student);
+        $files = $this->getFiles($student);
         $sections = Section::all();
         $variables = array(
            'dashboard_content' => 'dashboards.admin.student.show',
            'student'           => $student,
            'table_item'        => $table_item,
            'sections'          => $sections,
-           'exam_results'      => $exam_results
+           'exam_results'      => $exam_results,
+           'files'             => $files
         );
 
         return view('layouts.admin')->with($variables);

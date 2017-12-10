@@ -203,12 +203,15 @@ class FilesController extends Controller
     public function checkFileType($activity, $extension)
     {
 
+        $extension = strtolower($extension);
         $rule_extensions = str_replace(' ', '', $activity->FTRule->extensions);
-
         if($rule_extensions == 'any' || $activity->FTRule->extensions == null || $activity->FTRule->name == 'Default')
             return true;
 
         $rule_extensions = explode(',', $rule_extensions);
+        foreach ($rule_extensions as $key => $rule) {
+            $rule_extensions[$key] = strtolower($rule);
+        }
 
         if(!in_array($extension, $rule_extensions))
             return false;

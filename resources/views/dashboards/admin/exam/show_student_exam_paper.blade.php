@@ -25,6 +25,14 @@
                             <h4> {{$exam_paper->description}} </h4>
                             <h6 class="text-primary"><small><strong>Date</strong></small></h6>
                             <h4> {{$exam_paper->date}} </h4>
+                            <h6 class="text-primary"><small><strong>Submitted</strong></small></h6>
+                            <h4>
+                                @if($exam_paper->submitted)
+                                    <i class="fa fa-check green"></i>
+                                @else
+                                    <i class="fa fa-close red"></i>
+                                @endif
+                            </h4>
                             <h6 class="text-primary"><small><strong>Score</strong></small></h6>
                             <h1 style="font-size: 32pt; font-weight:100;"> <span class="text-primary" >{{$exam_paper->score}}</span>
                                 <span style="position: relative;left: -10px;font-size: 25pt;">/</span>
@@ -61,7 +69,11 @@
                                     @foreach ($test->Items as $key => $test_item)
                                         <div class="row">
                                             <div class="col-1" style="text-align:center">
-                                                @if($item_answers[$test_item->id]->correct) <i class="fa fa-check green"></i> @else <i class="fa fa-close red"></i> <br><span class="text-primary">ans: {{$test_item->correct_answer}}</span> @endif
+                                                @if($item_answers[$test_item->id]->correct)
+                                                    <i class="fa fa-check green"></i>
+                                                @else
+                                                    <i class="fa fa-close red"></i> <br><span class="text-primary">ans: {{$test_item->correct_answer}}</span>
+                                                @endif
 
                                             </div>
                                             <div class="col-11">
@@ -74,12 +86,37 @@
                                                         @case('HTML')
                                                                  {!!$test_item->question!!}
                                                                 @break;
+                                                        @case('post')
+                                                                <div class="form-group" style="width: 100%;">
+                                                                    <label class="col-12 control-label"> Hands On Instructions </label>
+                                                                    <div class="row">
+                                                                        <div class="col-sm-6" style="max-height: 500px; overflow: auto;">
+                                                                            {!!$test_item->question!!}
+                                                                        </div>
+                                                                        <div class="col-sm-6">
+                                                                            <div class="file" style="background-color:#fff">
+                                                                                @if($item_answers[$test_item->id]->type == 'jpg' || $item_answers[$test_item->id]->type == 'jpeg' || $item_answers[$test_item->id]->type == 'png')
+                                                                                    <img id="file" src="{{asset('storage/'.$item_answers[$test_item->id]->path.'/'.$item_answers[$test_item->id]->basename)}}" alt="" class="file-icon">
+                                                                                    <p class="file-name">{{$item_answers[$test_item->id]->name}}.{{$item_answers[$test_item->id]->type}}</p>
+                                                                                    <script>
+                                                                                    var viewer = new Viewer(document.getElementById('file'));
+                                                                                    </script>
+                                                                                @else
+                                                                                    <img style="width: 200px;" src="@if(file_exists(public_path('img/icons/'.$item_answers[$test_item->id]->type.'.png'))){{asset('img/icons/'.$item_answers[$test_item->id]->type.'.png')}} @else {{asset('img/icons/file.png')}}@endif" alt="" class="file-icon">
+                                                                                    <p class="file-name">{{$item_answers[$test_item->id]->name}}.{{$item_answers[$test_item->id]->type}}</p>
+                                                                                @endif
+                                                                            </div>
+                                                                            <a href="{{route('student.folder',$student->id)}}" class="btn btn-primary">OPEN FOLDER</a>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            @break;
                                                         @default
                                                                  {{$test_item->question}}
                                                     @endswitch
                                                     <br>
                                                 </p>
-                                                </li>
+
                                                     <div class="row">
                                                             {{-- Choices --}}
                                                             @switch($test->test_type)
@@ -124,7 +161,21 @@
                                                                 @break
                                                             @endswitch
                                                     </div>
-
+                                                @if($test_item->points_type == 'Manual')
+                                                    <form class="" action="{{route('exam.saveHandsOnPoints')}}" method="post">
+                                                        {{ csrf_field() }}
+                                                        <div class="form-group">
+                                                            <label for="">Points</label>
+                                                            <input type="hidden" name="answer_entry_id" value="{{$item_answers[$test_item->id]->answer_entry_id}}">
+                                                            <input type="hidden" name="item_id" value="{{$test_item->id}}">
+                                                            <input type="hidden" name="student_id" value="{{$student->id}}">
+                                                            <input type="hidden" name="exam_paper_id" value="{{$exam_paper->id}}">
+                                                            <input type="number" name="points" class="form-control underlined" value="{{$item_answers[$test_item->id]->points}}"  placeholder="Number of points" required>
+                                                            <button type="submit" name="submit" class="btn btn-primary">Save Points</button>
+                                                        </div>
+                                                    </form>
+                                                @endif
+                                                </li>
                                             </div>
                                         </div>
                                     @endforeach

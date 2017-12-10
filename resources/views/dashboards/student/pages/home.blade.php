@@ -25,7 +25,9 @@
                                                     @endif
                                                 </h4>
                                                 &nbsp;
-                                                <button type="button" name="button" class="btn btn-primary" data-toggle="modal" data-target="#uploadmodal{{$activity->post->id}}"><i class="fa fa-file"></i> Upload / Submit File</button>
+                                                @if(!$activity->submitted)
+                                                     <button type="button" name="button" class="btn btn-primary" data-toggle="modal" data-target="#uploadmodal{{$activity->post->id}}"><i class="fa fa-file"></i> Upload / Submit File</button>
+                                                @endif
                                                 <hr>
                                                 @if(!$activity->submitted)
                                                     <h4 class="card-title text-primary">

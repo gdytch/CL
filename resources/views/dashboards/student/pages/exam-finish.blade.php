@@ -77,6 +77,7 @@
                                   <form class="" action="{{route('exam.submit')}}" method="post">
                                       {{ csrf_field() }}
                                     <h6>Enter your <b>Login password</b> to confirm</h6>
+                                    <input type="hidden" name="exam_paper" value="{{$exam_paper->id}}">
                                     <input type="password" class="form-control underlined" name="password" value="" required autofocus>
                               </div>
                               <div class="modal-footer">

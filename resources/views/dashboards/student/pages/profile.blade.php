@@ -13,15 +13,15 @@
     </style>
     <div class="row ">
         <div class="col-md-3 col-xs-12">
-            <div class="col col-12 ">
+            <div class="col-12 ">
             <div class="card-block sameheight-item" >
 
                 <section class="section">
                     <div class="row">
-                        <div class="col-lg-12 col-xs-2" style="">
+                        <div class="col-lg-12 col-md-4" style="">
                             <img src="{{asset('storage/avatar/'.$student->avatar)}}" alt="" class="student_avatar">
                         </div>
-                        <div class="col-lg-12 col-xs-2" style="margin-left: 20px">
+                        <div class="col-lg-12 col-md-6" style="margin-left: 20px">
                             <h6 class="text-primary"><small><strong>Firstname</strong></small></h6>
                             <h4>{{$student->fname}}</h4>
                             <h6 class="text-primary"><small><strong>Lastname</strong></small></h6>

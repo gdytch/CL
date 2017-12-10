@@ -1,6 +1,6 @@
 <style>
 
-@media (max-width: 1367px){
+@media (max-width: 1920px){
     .sidebar{
         width: 85px;
         text-align: center;
@@ -27,11 +27,14 @@
     .header{
         left: 85px;
     }
+
+}
+@media (max-width: 1367px){
     body{
         zoom: 90%;
     }
-
 }
+
 @media (max-width: 991px){
     .app{
         padding-left: 0px;
