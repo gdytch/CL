@@ -310,7 +310,7 @@
                                                                                       </div>
                                                                                       <!-- Create the editor container -->
                                                                                       {{-- <div id="editor" type="textarea" name="content"> --}}
-                                                                                          <textarea id="content"  type="text" name="question" style="width: 100%; height: 800px;" >
+                                                                                          <textarea id="content{{$test_item->id}}"  type="text" name="question" style="width: 100%; height: 800px;" >
                                                                                               {!!$test_item->question!!}
                                                                                           </textarea>
                                                                                       {{-- </div> --}}
@@ -336,7 +336,7 @@
                                                                             };
                                                                           </script>
                                                                           <script>
-                                                                              CKEDITOR.replace('content', options);
+                                                                              CKEDITOR.replace('content{{$test_item->id}}', options);
                                                                           </script>
                                                                       @break
                                                                   @default

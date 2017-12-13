@@ -70,6 +70,31 @@
                                                     @case('HTML')
                                                              {!!$test_item->question!!}
                                                             @break;
+                                                    @case('post')
+                                                            <div class="form-group" style="width: 100%;">
+                                                                <label class="col-12 control-label"> Hands On Instructions </label>
+                                                                <div class="row">
+                                                                    <div class="col-sm-6" style="max-height: 500px; overflow: auto;">
+                                                                        {!!$test_item->question!!}
+                                                                    </div>
+                                                                    <div class="col-sm-6">
+                                                                        <div class="file" style="background-color:#fff">
+                                                                            @if($item_answers[$test_item->id]->type == 'jpg' || $item_answers[$test_item->id]->type == 'jpeg' || $item_answers[$test_item->id]->type == 'png')
+                                                                                <img id="file" src="{{asset('storage/'.$item_answers[$test_item->id]->path.'/'.$item_answers[$test_item->id]->basename)}}" alt="" class="file-icon">
+                                                                                <p class="file-name">{{$item_answers[$test_item->id]->name}}.{{$item_answers[$test_item->id]->type}}</p>
+                                                                                <script>
+                                                                                var viewer = new Viewer(document.getElementById('file'));
+                                                                                </script>
+                                                                            @else
+                                                                                <img style="width: 200px;" src="@if(file_exists(public_path('img/icons/'.$item_answers[$test_item->id]->type.'.png'))){{asset('img/icons/'.$item_answers[$test_item->id]->type.'.png')}} @else {{asset('img/icons/file.png')}}@endif" alt="" class="file-icon">
+                                                                                <p class="file-name">{{$item_answers[$test_item->id]->name}}.{{$item_answers[$test_item->id]->type}}</p>
+                                                                            @endif
+                                                                        </div>
+                                                                        <h5>Points: <span class="text-primary">{{$item_answers[$test_item->id]->points}}</span></h5>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        @break;
                                                     @default
                                                              {{$test_item->question}}
                                                 @endswitch

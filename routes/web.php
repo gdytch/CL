@@ -55,6 +55,7 @@ Route::group(['middleware' => 'auth:admin'], function () {
         Route::get('exam/active/{id}', 'ExamsController@activeStatus')->name('exam.active');
         Route::get('exam/showtostudents/{id}', 'ExamsController@show_to_students')->name('exam.show_to_students');
         Route::post('exam/savepoints/', 'ExamsController@saveHandsOnPoints')->name('exam.saveHandsOnPoints');
+        Route::post('exam/reOpen/', 'ExamsController@reOpen')->name('exam.reOpen');
 
 
         Route::post('exam/exam_paper/store', 'ExamsController@exam_paper_store')->name('exam_paper.store');

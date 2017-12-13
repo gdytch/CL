@@ -91,14 +91,14 @@
                                             @case('post')
                                                     <div class="row">
                                                         <div class="col-md-8">
-                                                            <div class="card" style="background: #fff">
+                                                            <div class="card" id="post" style="background: #fff">
                                                                 <div class="card-header bordered">
                                                                     <div class="header-block">
                                                                         <h3 class="card-title text-primary"> Instructions   </h3>
                                                                         <p class="title-description"> </p>
                                                                     </div>
                                                                 </div>
-                                                                <div class="card-block">
+                                                                <div class="card-block post" style="font-size: 12pt;">
                                                                     {!!$item->question!!}
                                                                 </div>
                                                             </div>

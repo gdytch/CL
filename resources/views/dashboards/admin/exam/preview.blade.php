@@ -79,14 +79,14 @@
                                             @case('post')
                                                     <div class="row">
                                                         <div class="col-md-8">
-                                                            <div class="card" style="background: #fff">
+                                                            <div class="card" id="post" style="background: #fff">
                                                                 <div class="card-header bordered">
                                                                     <div class="header-block">
                                                                         <h3 class="card-title text-primary"> Instructions   </h3>
                                                                         <p class="title-description"> </p>
                                                                     </div>
                                                                 </div>
-                                                                <div class="card-block">
+                                                                <div class="card-block post" style="font-size: 12pt;">
                                                                     {!!$item->question!!}
                                                                 </div>
                                                             </div>
@@ -94,7 +94,7 @@
                                                         <div class="col-md-4">
                                                             <h2 class="text-primary">Upload File</h2>
                                                             <div class="form-group">
-                                                                <input type="file" name="exam_file" value="" onchange="readURL(this);" class="form-control" required>
+                                                                <input type="file" name="exam_file" value="" onchange="readURL(this);" class="form-control" >
                                                             </div>
                                                             <img src="" alt="" id="image" class="student_avatar">
                                                             <script type="text/javascript">

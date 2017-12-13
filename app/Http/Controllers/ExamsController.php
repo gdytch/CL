@@ -38,11 +38,23 @@ class ExamsController extends Controller
             }
             $exams[$key]['submitted'] = $submitted;
         }
+
+        foreach ($sections as $key => $section) {
+            $temp = null;
+            foreach ($exams as $key => $exam) {
+                if($exam->section_id == $section->id){
+                    $temp[] = $exam;
+                }
+            }
+            $section_exams[$section->id] = $temp;
+        }
+
         $variables = array(
             'dashboard_content' => 'dashboards.admin.exam.index',
             'sections'          => $sections,
             'exam_papers'       => $exam_papers,
             'exams'             => $exams,
+            'section_exams'     => $section_exams
 
         );
 
@@ -201,7 +213,18 @@ class ExamsController extends Controller
         foreach ($exam_paper->Tests as $key => $test) {
             foreach ($test->Items as $key2 => $item) {
                 $answer_entry = Exam_Answer::where(['exam_entry_id' => $exam_entry->id, 'exam_item_id' => $item->id])->get()->first();
-                $item_answers[$item->id] = (object) array('answer' => $answer_entry->answer, 'correct' => $answer_entry->correct);
+                $item_answers[$item->id] = (object) array(
+                    'answer'          => $answer_entry->answer,
+                    'answer_entry_id' => '',
+                    'correct'         => $answer_entry->correct,
+                    'points'          => $answer_entry->points,
+                    'name'            => '',
+                    'type'            => '',
+                    'path'            => '',
+                    'id'              => '',
+                    'basename'        => ''
+                );
+
                 if($test->test_type == 'HandsOn' && $answer_entry->answer != null){
                     $directory = "/".$student->sectionTo->path."/".$student->path."/exam_files";
                     $exam_file = $directory."/".$answer_entry->answer;
@@ -209,13 +232,23 @@ class ExamsController extends Controller
                     $temp = explode("item_id=", $file['filename']);
                     $file_id = $temp[1];
                     $file['filename'] = $temp[0];
-                    $item_answers[$item->id] = (object) array('answer_entry_id' => $answer_entry->id, 'correct' => $answer_entry->correct, 'points' => $answer_entry->points, 'name' => $file['filename'], 'type' => $file['extension'], 'path' => $file['dirname'], 'id' => $file_id, 'basename' => $file['basename']);
+                    $item_answers[$item->id] = (object) array(
+                        'answer_entry_id' => $answer_entry->id,
+                        'correct'         => $answer_entry->correct,
+                        'points'          => $answer_entry->points,
+                        'name'            => $file['filename'],
+                        'type'            => $file['extension'],
+                        'path'            => $file['dirname'],
+                        'id'              => $file_id,
+                        'basename'        => $file['basename']
+                    );
                 }
             }
         }
 
         $variables = array(
             'dashboard_content' => 'dashboards.admin.exam.show_student_exam_paper',
+            'exam'              => $exam,
             'exam_paper'        => $exam_paper,
             'student'           => $student,
             'item_answers'      => $item_answers
@@ -529,4 +562,15 @@ class ExamsController extends Controller
     }
 
 
+
+    public function reOpen(Request $request)
+    {
+
+        $exam_entry = Exam_Entry::where(['student_id' => $request->student_id, 'exam_id' => $request->exam_id])->get()->first();
+        $exam_entry->score = 0;
+        $exam_entry->active = true;
+        $exam_entry->update();
+
+        return redirect()->back();
+    }
 }

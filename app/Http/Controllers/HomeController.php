@@ -469,7 +469,7 @@ class HomeController extends Controller
             $answer = $filename;
         }
 
-        if($request->answer != $request->prev_answer)
+        if($answer != $request->prev_answer)
             $this->saveAnswer($answer, $request->exam_item_id);
 
         if(isset($request->finish))
@@ -499,6 +499,7 @@ class HomeController extends Controller
             $answer_field->points = $exam_item->points;
         }
         else if($answer != null){
+            $answer_field->points = 1;
             $answer = 'submitted';
         }
         $answer_field->correct = $this->checkAnswer($answer, $item_id);
@@ -632,6 +633,15 @@ class HomeController extends Controller
             foreach ($test->Items as $key2 => $item) {
                 $answer_entry = Exam_Answer::where(['exam_entry_id' => $exam_entry->id, 'exam_item_id' => $item->id])->get()->first();
                 $item_answers[$item->id] = (object) array('answer' => $answer_entry->answer, 'correct' => $answer_entry->correct);
+                if($test->test_type == 'HandsOn' && $answer_entry->answer != null){
+                    $directory = "/".$student->sectionTo->path."/".$student->path."/exam_files";
+                    $exam_file = $directory."/".$answer_entry->answer;
+                    $file = pathinfo((string)$exam_file."");
+                    $temp = explode("item_id=", $file['filename']);
+                    $file_id = $temp[1];
+                    $file['filename'] = $temp[0];
+                    $item_answers[$item->id] = (object) array('answer_entry_id' => $answer_entry->id, 'correct' => $answer_entry->correct, 'points' => $answer_entry->points, 'name' => $file['filename'], 'type' => $file['extension'], 'path' => $file['dirname'], 'id' => $file_id, 'basename' => $file['basename']);
+                }
             }
         }
 

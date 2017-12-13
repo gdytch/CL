@@ -7,12 +7,13 @@
                 <hr>
             </div>
         </div>
+        @foreach ($sections as $key => $section)
         <div class="row">
             <div class="col col-12">
                 <div class="card">
                     <div class="card-header bordered">
                         <div class="header-block">
-                            <h3 class="card-title text-primary">  Exam List  </h3>
+                            <h3 class="card-title text-primary">  Exam List: {{$section->name}}  </h3>
                             <p class="title-description"> </p>
                         </div>
                     </div>
@@ -24,55 +25,55 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($exams as $exam)
-                                    <tr>
-                                        <td><a href="{{route('exam.show',$exam->id)}}">{{$exam->name}}</a></td>
-                                        <td>{{$exam->description}}</td>
-                                        <td>@if($exam->exam_paper_id){{$exam->ExamPaper->name}}@endif</td>
-                                        <td>
-                                            {{$exam->SectionTo->name}}
-                                        </td>
-                                        <td>
-                                            @if($exam->active)
-                                                <a href="{{route('exam.active', $exam->id)}}" class="btn btn-success btn-sm"> <i class="fa fa-check"></i> Yes</a>
-                                            @else
-                                                <a href="{{route('exam.active', $exam->id)}}" class="btn btn-danger btn-sm"> <i class="fa fa-close"></i> No</a>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            {{$exam->submitted}}/{{count($exam->SectionTo->Students)}}
-                                        </td>
-                                        <td>
-                                            @if(!$exam->generated_papers)
-                                                <button type="button" class="btn btn-sm btn-secondary" data-toggle="modal" data-target="#confirmPublish" name="button">Generate Papers</button>
-                                                <div class="modal fade" id="confirmPublish" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
-                                                  <div class="modal-dialog">
-                                                    <div class="modal-content">
-                                                      <div class="modal-body">
-                                                        Are you sure to generate papers for students?<br>
-                                                        This action is irreversable.
-                                                        <form class="" action="{{route('exam.generate_papers')}}" method="post">
-                                                            <input type="hidden" name="id" value="{{$exam->id}}">
-                                                            {{ csrf_field() }}
-                                                      </div>
-                                                      <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                                                        <button type="submit" name="submit" class="btn btn-primary">Yes</button>
-                                                        </form>
-                                                      </div>
+                                @foreach ($section_exams[$section->id] as $exam)
+                                        <tr>
+                                            <td><a href="{{route('exam.show',$exam->id)}}">{{$exam->name}}</a></td>
+                                            <td>{{$exam->description}}</td>
+                                            <td>@if($exam->exam_paper_id){{$exam->ExamPaper->name}}@endif</td>
+                                            <td>
+                                                {{$exam->SectionTo->name}}
+                                            </td>
+                                            <td>
+                                                @if($exam->active)
+                                                    <a href="{{route('exam.active', $exam->id)}}" class="btn btn-success btn-sm"> <i class="fa fa-check"></i> Yes</a>
+                                                @else
+                                                    <a href="{{route('exam.active', $exam->id)}}" class="btn btn-danger btn-sm"> <i class="fa fa-close"></i> No</a>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                {{$exam->submitted}}/{{count($exam->SectionTo->Students)}}
+                                            </td>
+                                            <td>
+                                                @if(!$exam->generated_papers)
+                                                    <button type="button" class="btn btn-sm btn-secondary" data-toggle="modal" data-target="#confirmPublish" name="button">Generate Papers</button>
+                                                    <div class="modal fade" id="confirmPublish" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <div class="modal-body">
+                                                                    Are you sure to generate papers for students?<br>
+                                                                    This action is irreversable.
+                                                                    <form class="" action="{{route('exam.generate_papers')}}" method="post">
+                                                                        <input type="hidden" name="id" value="{{$exam->id}}">
+                                                                        {{ csrf_field() }}
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                                                                        <button type="submit" name="submit" class="btn btn-primary">Yes</button>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                  </div>
-                                                </div>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @if($exam->show_to_students)
-                                                <a href="{{route('exam.show_to_students', $exam->id)}}" class="btn btn-success btn-sm"> <i class="fa fa-check"></i> Yes</a>
-                                            @else
-                                                <a href="{{route('exam.show_to_students', $exam->id)}}" class="btn btn-danger btn-sm"> <i class="fa fa-close"></i> No</a>
-                                            @endif
-                                        </td>
-                                    </tr>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if($exam->show_to_students)
+                                                    <a href="{{route('exam.show_to_students', $exam->id)}}" class="btn btn-success btn-sm"> <i class="fa fa-check"></i> Yes</a>
+                                                @else
+                                                    <a href="{{route('exam.show_to_students', $exam->id)}}" class="btn btn-danger btn-sm"> <i class="fa fa-close"></i> No</a>
+                                                @endif
+                                            </td>
+                                        </tr>
                                 @endforeach
                             </tbody>
                         </table>
@@ -81,6 +82,7 @@
                 </div>
             </div>
         </div>
+        @endforeach
 
         <div class="row">
             <div class="col-12">
