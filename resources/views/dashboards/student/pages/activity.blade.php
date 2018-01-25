@@ -16,10 +16,12 @@
                             <hr>
                         </div>
                         <div class="card-content col">
-                            <button type="button" name="button" class="btn btn-primary" data-toggle="modal" data-target="#uploadmodal{{$activity->id}}"> <i class="fa fa-file"></i> Upload / Submit File</button>
-                                <div class="card-block post" >
-                                    {!!$activity->Post->body !!}
-                                </div>
+                            @if($activity->submission)
+                                <button type="button" name="button" class="btn btn-primary" data-toggle="modal" data-target="#uploadmodal{{$activity->id}}"> <i class="fa fa-file"></i> Upload / Submit File</button>
+                            @endif
+                            <div class="card-block post" >
+                                {!!$activity->Post->body !!}
+                            </div>
                         </div>
                     </div>
 
@@ -47,7 +49,7 @@
                           </div>
                           <input type="hidden" name="id" value="{{$student->id}}">
                           <br>
-                         
+
                           <form>
                   </div>
                   <div class="modal-footer">

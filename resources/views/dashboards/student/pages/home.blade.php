@@ -118,7 +118,7 @@
                                             <div class="dropdown ">
                                               <a id='dropDown{{$key}}' data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-offset="0">
                                                   <div class="file">
-                                                      @if($file->type == 'jpg' || $file->type == 'jpeg' || $file->type == 'png')
+                                                      @if($file->type == 'jpg' || $file->type == 'jpeg' || $file->type == 'png' || $file->type == 'JPG' || $file->type == 'JPEG' )
                                                           <img id="file{{$key}}" src="{{asset('storage/'.$file->path.'/'.$file->basename)}}" alt="" class="file-icon">
                                                           <img  src="@if(file_exists(public_path('img/icons/'.$file->type.'.png'))){{asset('img/icons/'.$file->type.'.png')}} @else {{asset('img/icons/file.png')}}@endif" alt="" class="file-sub-icon">
                                                           <p class="file-name">{{$file->name}}.{{$file->type}}</p>

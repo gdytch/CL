@@ -18,7 +18,7 @@ class Student extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'fname', 'lname', 'password', 'section', 'path', 'avatar',
+        'fname', 'lname', 'password', 'section', 'path', 'avatar', 'gender'
     ];
 
     /**
@@ -60,7 +60,16 @@ class Student extends Authenticatable
         return $this->hasMany('App\Record', 'student_id', 'id')->where(['activity_id' => $activity_id, 'active' => true])->get();
     }
 
-    
 
+    public function scopeSearchByKeyword($query, $keyword)
+    {
+         if ($keyword!='') {
+             $query->where(function ($query) use ($keyword) {
+                 $query->where("fname", "LIKE","%$keyword%")
+                     ->orWhere("lname", "LIKE", "%$keyword%");
+             });
+         }
+         return $query;
+    }
 
 }

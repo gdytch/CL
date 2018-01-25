@@ -1,4 +1,5 @@
 @section('dashboard-content')
+{{ Breadcrumbs::render('activity.index') }}
     @php    if(!isset($active)) $active = 'default';    @endphp
 <section class="section">
     <div class="row sameheight-container">

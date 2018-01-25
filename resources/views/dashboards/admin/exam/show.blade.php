@@ -1,4 +1,5 @@
 @section('dashboard-content')
+    {{ Breadcrumbs::render('exam.show', $exam) }}
     <section class="section">
         <div class="row">
             <div class="col">

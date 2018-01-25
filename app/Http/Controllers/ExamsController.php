@@ -97,7 +97,7 @@ class ExamsController extends Controller
         if(!$exam->generated_papers)
             return redirect()->back()->withError('Generate Papers first');
         $exam_paper = $exam->ExamPaper;
-        $students = $exam->SectionTo->Students;
+        $students = Student::where('section', $exam->SectionTo->id)->orderBy('gender', 'desc')->orderBy('lname', 'asc')->get();
         $section = $exam->SectionTo;
         $students = $this->examResult($exam, $students);
         $variables = array(

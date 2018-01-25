@@ -11,6 +11,15 @@
         </div>
         <nav class="menu">
             <ul class="sidebar-menu metismenu" id="sidebar-menu">
+                <li >
+                    <form role="search" action="{{route('admin.general.search')}}" method="get">
+                        <div class="sidebar-search-container" >
+                            <i class="fa fa-search"></i>
+                            <input type="search" placeholder="Search" name="keyword" class="sidebar-search" required>
+                            <div class="underline"></div>
+                        </div>
+                    </form>
+                </li>
                 <li {{ (Route::is('admin') ? 'class=active' : '') }}>
                     <a href="{{route('admin')}}">
                         <i class="fa fa-home"></i> Dashboard </a>
@@ -33,7 +42,7 @@
               </li>
               <li {{ (Route::is('exam.index', 'exam_paper.show', 'exam.show', 'exam.show.student', 'exam.preview') ? 'class=active' : '') }}>
                  <a href="{{route('exam.index')}}">
-                     <i class="fa fa-file-text-o"></i> Exam manager </a>
+                     <i class="fa fa-file-text-o"></i> Exam Manager </a>
              </li>
                <li {{ (Route::is('admin.settings') ? 'class=active' : '') }}>
                   <a href="{{route('admin.settings')}}">

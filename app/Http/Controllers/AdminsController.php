@@ -14,6 +14,7 @@ use App\Activity;
 use App\FTRule;
 use App\Record;
 use App\Session;
+use App\Post;
 use App\Stats;
 
 class AdminsController extends Controller
@@ -295,7 +296,7 @@ class AdminsController extends Controller
         $section_storage = $this->getSectionStorage();
 
         //get login history
-        $login_history = $this->getLoginHistory();
+        // $login_history = $this->getLoginHistory();
 
         $stats = (object) array(
             'total_students'     => count($students),
@@ -307,7 +308,7 @@ class AdminsController extends Controller
             'logins_today'       => $logins_today,
             'todays_activities'  => $todays_activities,
             'login_list'         => $login_list,
-            'login_history'      => $login_history
+            // 'login_history'      => $login_history
         );
 
         return $stats;
@@ -504,5 +505,33 @@ class AdminsController extends Controller
             return '<span class="green"><i class="fa fa-check"></i></span>';
 
         return '<span class="red"><i class="fa fa-close"></i></span>';
+    }
+
+
+
+    public function generalSearch(Request $request)
+    {
+        $keyword = $request->keyword;
+        if($keyword == null)
+        return redirect()->back()->withError('No search keyword');
+
+        $no_result = false;
+
+        $student_result = Student::SearchByKeyword($keyword)->get();
+        $activity_result = Activity::SearchByKeyword($keyword)->get();
+        $post_result = Post::SearchByKeyword($keyword)->get();
+
+        if( count($student_result) == 0 && count($activity_result) == 0 && count($post_result) == 0)
+            $no_result = true;
+
+        $variables = [
+                'dashboard_content' => 'dashboards.admin.pages.search',
+                'student_result'    => $student_result,
+                'activity_result'   => $activity_result,
+                'post_result'       => $post_result,
+                'no_result'         => $no_result,
+                'keyword'           => $keyword
+        ];
+        return view('layouts.admin')->with($variables);
     }
 }

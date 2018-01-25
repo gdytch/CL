@@ -48,6 +48,13 @@
                             </select>
                         </div>
                         <div class="form-group">
+                            <label class="control-label col-md-4">Gender</label>
+                            <select class="form-control" name="gender" required="">
+                                <option value="male" @if($student->gender == 'male') selected @endif>Male</option>
+                                <option value="female" @if($student->gender == 'female') selected @endif>Female</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
                             <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#passwordModal">
                               Change password
                             </button>

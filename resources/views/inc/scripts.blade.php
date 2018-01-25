@@ -120,39 +120,6 @@
 
 });
 
-var dataVisits = [
-    @foreach ($stats->login_history->data_string as $data)
-    {!! $data !!}
-    @endforeach
-];
-var chart =  Morris.Line({
-
-        element: 'dashboard-visits-chart',
-        data: dataVisits,
-        xkey: 'x',
-        ykeys: {!! $stats->login_history->ykeys !!},
-        ymin: 'auto 40',
-        labels: {!! $stats->login_history->labels !!},
-        xLabels: "day",
-        hideHover: 'auto',
-        yLabelFormat: function (y) {
-            // Only integers
-            if (y === parseInt(y, 10)) {
-                return y;
-            }
-            else {
-                return '';
-            }
-        },
-        resize: true,
-
-
-    });
-    chart.options.labels.forEach(function(label, i){
-    var legendItem = $('<span></span>').text(label).css('color', chart.options.lineColors[i])
-    $('#legend').append(legendItem)
-});
-
 $(document).ready(function(){
     $("#fullscreenButton").on("click", function(){
         $("body").fullScreen(true);

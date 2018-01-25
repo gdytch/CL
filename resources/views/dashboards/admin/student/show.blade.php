@@ -1,4 +1,5 @@
 @section('dashboard-content')
+{{ Breadcrumbs::render('student.show', $student)}}
 <section class="section">
     <div class="row ">
         <div class="col-3">
@@ -27,6 +28,8 @@
                             <h4>{{$student->lname}}</h4>
                             <h6 class="text-primary"><small><strong>Section</strong></small></h6>
                             <h4>{{$student->sectionTo->name}}</h4>
+                            <h6 class="text-primary"><small><strong>Gender</strong></small></h6>
+                            <h4 style="text-transform: capitalize">{{$student->gender}}</h4>
                         </div>
                     </div>
                 </section>
@@ -132,7 +135,7 @@
                         </div>
                         <div class="header-block pull-right">
                             <a href="{{route('student.folder',$student->id)}}" class="btn btn-primary">OPEN FOLDER</a>
-                            
+
                         </div>
                     </div>
                     <div class="card-block">
@@ -143,7 +146,7 @@
                                         <div class="file-container">
                                             <div class="dropdown ">
                                                   <div class="file">
-                                                      @if($file->type == 'jpg' || $file->type == 'jpeg' || $file->type == 'png')
+                                                      @if($file->type == 'jpg' || $file->type == 'jpeg' || $file->type == 'png' || $file->type == 'JPG' || $file->type == 'JPEG' )
                                                           <img id="file{{$key}}" src="{{asset('storage/'.$file->path.'/'.$file->basename)}}" alt="" class="file-icon">
                                                           <img  src="@if(file_exists(public_path('img/icons/'.$file->type.'.png'))){{asset('img/icons/'.$file->type.'.png')}} @else {{asset('img/icons/file.png')}}@endif" alt="" class="file-sub-icon">
                                                           <p class="file-name">{{$file->name}}.{{$file->type}}</p>
@@ -208,18 +211,25 @@
                             <select class="form-control" name="section" required="">
                                 @foreach ($sections as $section)
                                     <option value="{{$section->id}}" @if($section->id == $student->section) selected @endif>{{$section->name}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <button type="button" class="btn btn-secondary" data-toggle="modal" data-dismiss="modal" data-target="#passwordModal">
-                                    Change password
-                                </button>
-                                <button type="button" class="btn btn-danger" data-toggle="modal" data-dismiss="modal" data-target="#deleteModal">
-                                    Delete
-                                </button>
-                            </div>
-                            <input type="hidden" name="_method" value="PUT">
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Gender</label>
+                            <select class="form-control" name="gender" required="">
+                                <option value="male" @if($student->gender == 'male') selected @endif>Male</option>
+                                <option value="female" @if($student->gender == 'female') selected @endif>Female</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-secondary" data-toggle="modal" data-dismiss="modal" data-target="#passwordModal">
+                                Change password
+                            </button>
+                            <button type="button" class="btn btn-danger" data-toggle="modal" data-dismiss="modal" data-target="#deleteModal">
+                                Delete
+                            </button>
+                        </div>
+                        <input type="hidden" name="_method" value="PUT">
                     </div>
                 </div>
             </div>

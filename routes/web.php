@@ -32,6 +32,7 @@ Route::group(['middleware' => 'auth:admin'], function () {
         Route::put('filetyperules/{id}', 'AdminsController@filetype_rule_update')->name('filetype_rule.update');
         Route::delete('filetyperules/{id}', 'AdminsController@filetype_rule_delete')->name('filetype_rule.delete');
         Route::put('update_password/{id}', 'AdminsController@update_password')->name('admin.update.password');
+        Route::get('search/', 'AdminsController@generalSearch')->name('admin.general.search');
 
         Route::get('student/index-thumb/', 'StudentsController@showThumbnail')->name('student.index.thumb');
         Route::resource('student', 'StudentsController');
@@ -56,6 +57,7 @@ Route::group(['middleware' => 'auth:admin'], function () {
         Route::get('exam/showtostudents/{id}', 'ExamsController@show_to_students')->name('exam.show_to_students');
         Route::post('exam/savepoints/', 'ExamsController@saveHandsOnPoints')->name('exam.saveHandsOnPoints');
         Route::post('exam/reOpen/', 'ExamsController@reOpen')->name('exam.reOpen');
+        Route::get('student/exam/folder/{id}', 'StudentsController@examFolder')->name('student.exam-folder');
 
 
         Route::post('exam/exam_paper/store', 'ExamsController@exam_paper_store')->name('exam_paper.store');

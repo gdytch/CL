@@ -1,4 +1,5 @@
 @section('dashboard-content')
+{{ Breadcrumbs::render('dashboard') }}
 <section class="section">
   <div class="row sameheight-container">
     <div class="col-sm-12 col-md-12 col-xl-6 col-xs-12 stats-col">
@@ -121,7 +122,7 @@
     </div>
   </div>
   <div class="row sameheight-container">
-    <div class="col col-sm-12 col-md-12 col-xl-7 history-col">
+    {{-- <div class="col col-sm-12 col-md-12 col-xl-7 history-col">
       <div class="card sameheight-item ">
         <div class="card-header bordered">
           <div class="header-block">
@@ -133,7 +134,7 @@
                     <div id="legend"></div>
         </div>
       </div>
-    </div>
+    </div> --}}
     <div class="col-xl-5 col-lg-6 col-md-12 col-sm-12 col-xs-12">
       <div class="card sameheight-item">
         <div class="card-header bordered">
@@ -179,8 +180,7 @@
         </div>
       </div>
     </div>
-  </div>
-  <div class="row">
+
       <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-xs-12">
       <div class="card sameheight-item   sales-breakdown" data-exclude="xs,sm,lg">
         <div class="card-header bordered">

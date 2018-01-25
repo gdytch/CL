@@ -30,7 +30,7 @@ class StudentsController extends Controller
         if ($request->id == 'all' || $request->id == null) {
             $students = Student::all();
         } else {
-            $students = Student::where('section', $request->id)->get();
+            $students = Student::where('section', $request->id)->orderBy('gender', 'desc')->get();
         }
 
         $sections = Section::all();
@@ -42,6 +42,7 @@ class StudentsController extends Controller
                 'lname'        => $student->lname,
                 'section_name' => $student->sectionTo->name,
                 'section_id'   => $student->section,
+                'gender'       => $student->gender,
             );
         }
 
@@ -137,6 +138,7 @@ class StudentsController extends Controller
         $student->path     = $path;
         $student->password = $password;
         $student->section  = $section;
+        $student->gender   = $request->gender;
         $student->theme    = 'green';
 
         if ($request->hasFile('avatar_file')) {
@@ -394,6 +396,22 @@ class StudentsController extends Controller
     }
 
 
+    public function examFolder($id)
+    {
+
+        $student = Student::find($id);
+        $directory = public_path()."\\storage"."\\".$student->sectionTo->path."\\".$student->path."\\exam_files";
+        if (!(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') && !(file_exists($directory))) {
+            $msg = array("Cannot open folder", "This function only works on a local server running in Windows");
+            return redirect()->back()->withErrors($msg);
+        }
+
+        $explorer =  'c:\\windows\\explorer.exe';
+        shell_exec("$explorer \\n,\\e,$directory");
+
+        return redirect()->back();
+    }
+
 
     public function makeFolder($path)
     {
@@ -523,4 +541,6 @@ class StudentsController extends Controller
 
         return $exam_results;
     }
+
+
 }

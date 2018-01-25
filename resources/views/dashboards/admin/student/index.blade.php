@@ -1,5 +1,5 @@
 @section('dashboard-content')
-
+{{ Breadcrumbs::render('student.index')}}
 <section class="section">
     <div class="row sameheight-container">
         <div class="col col-12 ">

@@ -1,4 +1,5 @@
 @section('dashboard-content')
+{{ Breadcrumbs::render('activity.show', $activity) }}
 <section class="section">
     <style>
             .student_avatar{

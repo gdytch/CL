@@ -1,4 +1,5 @@
 @section('dashboard-content')
+    {{ Breadcrumbs::render('exam.show.student', $student, $exam) }}
     <a href="{{route('exam.show',$exam->id)}}" class="btn btn-secondary">Back</a>
     <div class="row ">
         <div class="col col-12 ">
@@ -27,16 +28,16 @@
                             <h6 class="text-primary"><small><strong>Date</strong></small></h6>
                             <h4> {{$exam_paper->date}} </h4>
                             <h6 class="text-primary"><small><strong>Submitted</strong></small>
-                                <form class="" action="{{route('exam.reOpen')}}" method="post">
-                                    {{ csrf_field() }}
-                                    <input type="hidden"  name="exam_id" value="{{$exam->id}}">
-                                    <input type="hidden" name="student_id" value="{{$student->id}}">
-                                    <button type="submit" class="btn btn-sm btn-primary" name="submit">reopen</button>
-                                </form>
                             </h6>
                             <h4>
                                 @if($exam_paper->submitted)
                                     <i class="fa fa-check green"></i>
+                                    <form class="" action="{{route('exam.reOpen')}}" method="post">
+                                        {{ csrf_field() }}
+                                        <input type="hidden"  name="exam_id" value="{{$exam->id}}">
+                                        <input type="hidden" name="student_id" value="{{$student->id}}">
+                                        <button type="submit" class="btn btn-sm btn-primary" name="submit">reopen</button>
+                                    </form>
                                 @else
                                     <i class="fa fa-close red"></i>
                                 @endif
@@ -114,7 +115,7 @@
                                                                                     <p class="file-name">{{$item_answers[$test_item->id]->name}}.{{$item_answers[$test_item->id]->type}}</p>
                                                                                 @endif
                                                                             </div>
-                                                                            <a href="{{route('student.folder',$student->id)}}" class="btn btn-primary">OPEN FOLDER</a>
+                                                                            <a href="{{route('student.exam-folder',$student->id)}}" class="btn btn-primary">OPEN FOLDER</a>
                                                                         </div>
                                                                     </div>
                                                                 </div>
