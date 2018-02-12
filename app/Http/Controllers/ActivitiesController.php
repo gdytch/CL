@@ -115,7 +115,13 @@ class ActivitiesController extends Controller
         $rules    = FTRule::all();
         $students = $activity->SectionTo->Students()->orderBy('lname', 'asc')->get();
         $post     = $activity->Post;
-        // student who have are done with the activity
+        $activityStats = (object) array(
+                'submitted'    => 0,
+                'notsubmitted' => 0
+        );
+
+        // student who have are done with the activity\
+
         foreach ($students as $key => $student) {
             $status = false;
             $submitted_at = null;
@@ -123,6 +129,10 @@ class ActivitiesController extends Controller
             if (count($result)) {
                 $status = true;
                 $submitted_at = date("M d Y", strtotime($result->created_at));
+                $activityStats->submitted += 1;
+            }
+            else {
+                $activityStats->notsubmitted +=1;
             }
             $activity_log[] = (object) array(
                 'id'           => $student->id,
@@ -133,13 +143,16 @@ class ActivitiesController extends Controller
             );
         }
 
+
+
         $variables = array(
             'dashboard_content' => 'dashboards.admin.activity.show',
             'activity'          => $activity,
             'activity_log'      => $activity_log,
             'post'              => $post,
             'sections'          => $sections,
-            'filetype_rules'    => $rules
+            'filetype_rules'    => $rules,
+            'activityStats'     => $activityStats
         );
 
         return view('layouts.admin')->with($variables);

@@ -257,6 +257,7 @@ class AdminsController extends Controller
             $submits_count = count(Record::where('activity_id', $activity->id)->distinct()->get(['student_id']));
             $section_students = count($activity->SectionTo->Students);
             $precentage = ($submits_count/$section_students) * 100;
+            $todays_activities[$key]['section_name'] = $activity->SectionTo->name;
             $todays_activities[$key]['total_submits'] = $submits_count;
             $todays_activities[$key]['total_students'] = $section_students;
             $todays_activities[$key]['percentage'] = $precentage;

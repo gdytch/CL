@@ -50,7 +50,7 @@
                             <div class="col-1">
                                 <div class="question-container">
                                     @if($page > 0)
-                                        <a href="{{route('exam.open',$page-1)}}" class="btn btn-secondary">Back</a>
+                                        <a href="{{route('exam.open',[$exam_id,$page-1])}}" class="btn btn-secondary">Back</a>
                                     @endif
                                 </div>
                             </div>
@@ -58,7 +58,14 @@
                                 <div class="question-container">
                                     <h1>Finished</h1>
                                     <hr>
-                                    <button type="button" class="btn btn-lg btn-primary" name="button" data-toggle="modal" data-target="#finishmodal">Submit Exam</button>
+                                    <form class="form" style="text-align:center" action="{{route('exam.submit')}}" method="post">
+                                        {{ csrf_field() }}
+                                      <h6>Enter your <b>Login password</b> to submit</h6>
+                                      <input type="hidden" name="exam_paper" value="{{$exam_paper->id}}">
+                                      <input type="password" class="form-control underlined" name="password" value="" required autofocus>
+                                        <br>
+                                      <button type="submit" name="submit" class="btn btn-primary btn-center">Submit</button>
+                                  </form>
                                 </div>
                             </div>
                             <div class="col-1">
@@ -66,28 +73,7 @@
 
                                 </div>
                             </div>
-                        <div class="modal fade" id="finishmodal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
-                          <div class="modal-dialog">
-                            <div class="modal-content">
-                              <div class="modal-header">
-                                  <h4 class="modal-title" id="">Submit Exam</h4>
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                              </div>
-                              <div class="modal-body">
-                                  <form class="" action="{{route('exam.submit')}}" method="post">
-                                      {{ csrf_field() }}
-                                    <h6>Enter your <b>Login password</b> to confirm</h6>
-                                    <input type="hidden" name="exam_paper" value="{{$exam_paper->id}}">
-                                    <input type="password" class="form-control underlined" name="password" value="" required autofocus>
-                              </div>
-                              <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                    <button type="submit" name="submit" class="btn btn-primary">Submit</button>
-                                </form>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
+
                     </div>
 
 
@@ -103,9 +89,9 @@
 
                                     @foreach ($test1->Items as $key2 => $item2)
                                         @if($item_list[$p]->answered)
-                                                <a href="{{route('exam.open',$p)}}" class="btn btn-primary @if($p == $page) active @endif exam_nav">{{$key2+1}}</a>
+                                                <a href="{{route('exam.open',[$exam_id,$p])}}" class="btn btn-primary @if($p == $page) active @endif exam_nav">{{$key2+1}}</a>
                                         @else
-                                                <a href="{{route('exam.open',$p)}}" class="btn btn-secondary @if($p == $page) active @endif exam_nav">{{$key2+1}}</a>
+                                                <a href="{{route('exam.open',[$exam_id,$p])}}" class="btn btn-secondary @if($p == $page) active @endif exam_nav">{{$key2+1}}</a>
                                         @endif
                                         @php $p++; @endphp
                                     @endforeach

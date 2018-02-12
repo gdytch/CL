@@ -56,7 +56,7 @@
                                                           </div>
                                                           <div class="form-group">
                                                               <label class="control-label col-md-4">Select File</label>
-                                                              <input type="file" id="file" class="form-control file-input" name="file" required placeholder="">
+                                                              <input type="file" id="file" class="form-control file-input" name="file" required placeholder="" @if($activity->FTRule->extensions != 'any') accept="{{$activity->FTRule->extensions}}" @endif>
                                                           </div>
                                                           <input type="hidden" name="id" value="{{$student->id}}">
                                                           <br>
@@ -92,7 +92,7 @@
                             </div>
                         </div>
                         <div class="card-block">
-                            <a href="{{route('exam.open',0)}}"  class="btn btn-primary">Start Exam</a>
+                            <a href="{{route('exam.open',[$exam->id,0])}}"  class="btn btn-primary">Start Exam</a>
                         </div>
                     </div>
                 </div>
@@ -206,7 +206,7 @@
                       <br>
                       <div class="form-group">
                           <label class="control-label col-md-4">Select File</label>
-                          <input type="file" id="file" class="form-control file-input" name="file" required placeholder="">
+                              <input type="file" id="file" class="form-control file-input" name="file" required placeholder="" >
                       </div>
                       <input type="hidden" name="id" value="{{$student->id}}">
                       <br>

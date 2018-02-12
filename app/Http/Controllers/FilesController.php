@@ -205,6 +205,7 @@ class FilesController extends Controller
 
         $extension = strtolower($extension);
         $rule_extensions = str_replace(' ', '', $activity->FTRule->extensions);
+        $rule_extensions = str_replace('.', '', $rule_extensions);
         if($rule_extensions == 'any' || $activity->FTRule->extensions == null || $activity->FTRule->name == 'Default')
             return true;
 

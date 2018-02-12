@@ -18,21 +18,16 @@
                                         <th>Students</th>
                                         <th class="nosort">Folder</th>
                                         <th class="nosort" >Login Status</th>
-                                        <th class="nosort"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($sections as $section)
-
                                         <tr>
-                                            <td>{{$section->name}}</td>
+                                            <td><a href="{{route('section.show',$section->id)}}" >{{$section->name}}</a></td>
                                             <td>{{count($section->Students)}}</td>
-                                            <td><a href="{{route('section.folder',$section->id)}}">{{$section->path}}</a></td>
+                                            <td><a href="{{route('section.folder',$section->id)}}" class="btn btn-sm btn-primary">Open folder</a></td>
                                             <td><a href="{{route('section.status', $section->id)}}" class="btn btn-sm @if($section->status) btn-success @else btn-danger @endif" >@if($section->status)Open @else Close @endif</a></td>
-                                                <td><a href="{{route('section.show',$section->id)}}" class="btn btn-sm btn-info">View</a></td>
-                                            </tr>
-
-
+                                        </tr>
                                         @endforeach
                                     </tbody>
                                 </table>

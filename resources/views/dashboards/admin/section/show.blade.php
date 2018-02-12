@@ -15,7 +15,7 @@
             padding-right: 20px;
         }
 </style>
-    <div class="row ">
+    <div class="row sameheight-container">
         <div class="col-md-4">
             <div class="card card-block sameheight-item" >
                 <div class="title-block">
@@ -52,52 +52,14 @@
         <div class="col-md-8">
             <div class="card card-block sameheight-item" >
                 <div class="title-block">
-                    <h4 class="card-title text-primary">Stats </h4>
+                    <h4 class="card-title text-primary">Activity Chart </h4>
                     <hr>
                 </div>
                 <section class="section">
                     <div class="row">
-                        <div class="col-md-4">
-                            reports
-
+                        <div class="col-12">
+                            <div id="morris-bar-chart"></div>
                         </div>
-
-                    </div>
-                </section>
-            </div>
-
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card card-block sameheight-item" >
-                <div class="title-block">
-                    <h4 class="card-title text-primary">Students</h4>
-                    <hr>
-                </div>
-                <section class="section">
-                    <div class="row">
-                        <div class="col">
-                            <table class="table table-striped table-responsive" id="StudentTable">
-                                <thead>
-                                    <tr>
-                                        <th>First name</th>
-                                        <th>Last name</th>
-                                        <th class="nosort">Folder</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($students as $student)
-                                        <tr>
-                                            <td><a href="{{route('student.show',$student->id)}}">{{$student->fname}}</a></td>
-                                            <td><a href="{{route('student.show',$student->id)}}">{{$student->lname}}</a></td>
-                                            <td><a href="{{route('student.folder',$student->id)}}">OPEN FOLDER</a></td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-
                     </div>
                 </section>
             </div>
@@ -114,7 +76,7 @@
                 <section class="section">
                     <div class="row">
                         <div class="col">
-                            <table class="table table-striped table-responsive table-bordered" id="StudentTable">
+                            <table class="table table-striped table-responsive table-bordered">
                                 <thead>
                                     <tr>
                                         <th>First name</th>
@@ -128,7 +90,7 @@
                                     @foreach ($students as $student)
                                     <tr>
                                         <td>
-                                            <a href="{{route('student.show',$student->id)}}">{{$student->fname}}, {{$student->lname}}</a>
+                                            <a href="{{route('student.show',$student->id)}}">{{$student->lname}}, {{$student->fname}}</a>
                                         </td>
                                          @foreach($activities as $activity)
                                             <th>{!!$activity_table[$student->id][$activity->id]!!}</th>

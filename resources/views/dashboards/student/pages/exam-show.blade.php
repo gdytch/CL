@@ -2,6 +2,7 @@
     <div class="row ">
         <div class="col col-12 ">
             <div class=" sameheight-item" >
+                <a href="{{route('student.profile')}}" class="btn btn-secondary">Back</a>
 
                 <div class="card-block">
                     <div class="row">

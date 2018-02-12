@@ -99,11 +99,11 @@ Route::group(['middleware' => 'auth:web'], function () {
         Route::get('profile', 'HomeController@profile')->name('student.profile');
         Route::get('theme', 'StudentsController@theme')->name('student.theme');
         Route::get('activity', 'HomeController@activity')->name('student.activity');
-        Route::get('exam/finish/', 'HomeController@ExamFinish')->name('exam.finish');
+        Route::get('exam/finish/{exam_id}', 'HomeController@ExamFinish')->name('exam.finish');
         Route::post('exam/next/', 'HomeController@NextPage')->name('exam.next');
-        Route::get('exam/{page}/', 'HomeController@exam')->name('exam.open');
+        Route::get('exam/{id}/{page}/', 'HomeController@exam')->name('exam.open');
         Route::post('exam/submit/', 'HomeController@ExamSubmit')->name('exam.submit');
-        Route::get('exam/show/{id}', 'HomeController@showStudentExamPaper')->name('exam.student.show');
+        Route::get('exam/show/result/{id}', 'HomeController@showStudentExamPaper')->name('exam.student.show_result');
         Route::post('settings/avatar', 'HomeController@update_Avatar')->name('student.avatar');
         Route::get('activity/{id}', 'HomeController@showActivity')->name('student.activity.show');
     });

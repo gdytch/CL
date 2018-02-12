@@ -15,9 +15,9 @@
             padding-right: 20px;
         }
     </style>
-    <div class="row ">
-        <div class="col-md-6 col-sm-12 sameheight-container">
-            <div class="card card-block" >
+    <div class="row sameheight-container">
+        <div class="col-md-6 col-sm-12">
+            <div class="card card-block sameheight-item" >
                 <div class="title-block">
                     <h4 class="card-title text-primary">Activity </h4>
                     <button type="button" data-target="#editModal" data-toggle="modal" class="btn btn-sm btn-secondary pull-right" >Edit</button>
@@ -43,16 +43,22 @@
             </div>
 
         </div>
-        <div class="col-md-6 col-sm-12 sameheight-container">
-            <div class="card card-block" >
+        <div class="col-md-6 col-sm-12">
+            <div class="card card-block sameheight-item" >
                 <div class="title-block">
                     <h4 class="card-title text-primary">Activity Stats</h4>
                     <hr>
                 </div>
                 <section class="section">
                     <div class="row">
-                        <div class="col-md-12">
-                        Activity stats
+                        <div class="col-md-6">
+                            <div class="activityStats-chart" id="activityStats-chart"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 ><small><strong>Submitted</strong></small></h6>
+                            <h2 class="text-success">{{$activityStats->submitted}}</h2>
+                            <h6 ><small><strong>Not submitted</strong></small></h6>
+                            <h2 class="text-danger">{{$activityStats->notsubmitted}}</h2>
                         </div>
 
                     </div>
@@ -60,6 +66,8 @@
             </div>
 
         </div>
+    </div>
+    <div class="row">
         <div class="col-md-12 col-lg-6 col-sm-12">
             <div class="card card-block" >
                 <div class="title-block">

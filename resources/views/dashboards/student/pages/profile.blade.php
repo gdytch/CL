@@ -115,7 +115,7 @@
                                             @if($exam->show_to_students)
                                                 <td> <small class="text-primary"><b>Date: </b></small> {{$exam->date}}</td>
                                                 <td> <small class="text-primary"><b>Score: </b></small> {{$exam->score}}<small>/{{$exam->perfect_score}}</small></td>
-                                                <td><a href="{{route('exam.student.show', $exam->exam_id)}}" class="btn btn-sm btn-primary">open</a></td>
+                                                <td><a href="{{route('exam.student.show_result', $exam->exam_id)}}" class="btn btn-sm btn-primary">open</a></td>
                                             @else
                                                 <td><p class="text-primary"><b><i class="fa fa-check"></i> Submitted</b></p></td>
                                             @endif

@@ -58,7 +58,7 @@
                     </div>
                     @if($total_answered == count($item_list))
                         <div class="header-block pull-right">
-                            <a href="{{route('exam.finish')}}" class="btn btn-primary">Submit Exam</a>
+                            <a href="{{route('exam.finish',$exam_id)}}" class="btn btn-primary">Submit Exam</a>
                         </div>
                     @endif
                 </div>
@@ -71,6 +71,7 @@
                             <input type="hidden" name="exam_name" value="{{$exam_paper->name}}">
                             <input type="hidden" name="exam_paper_id" value="{{$exam_paper->id}}">
                             <input type="hidden" name="prev_answer" value="{{$student_answer}}">
+                            <input type="hidden" name="exam_id" value="{{$exam_id}}">
                             <div class="col-1">
                                 <div class="question-container">
                                     @if($page > 0)

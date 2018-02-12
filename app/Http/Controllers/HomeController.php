@@ -60,7 +60,7 @@ class HomeController extends Controller
         $exam = Exam::where(['section_id' => $student->section, 'active' => true])->get()->first();
         $exam_paper = null;
         if(count($exam) > 0){
-            $exam_entry = Exam_Entry::where(['student_id' => $student->id, 'active' => true])->get()->first();
+            $exam_entry = Exam_Entry::where(['student_id' => $student->id, 'active' => true, 'exam_id' => $exam->id])->get()->first();
             if(count($exam_entry) > 0){
                 $exam_paper = $exam_entry->Exam_Paper($exam_entry->exam_id);
             }
@@ -74,6 +74,7 @@ class HomeController extends Controller
             'todays_activity'   => $todays_activity,
             'message_infos'     => $message_infos,
             'exam_paper'        => $exam_paper,
+            'exam'              => $exam,
         );
         return view('layouts.student')->with($variables);
     }
@@ -341,15 +342,17 @@ class HomeController extends Controller
 
 
 
-    public function exam($page)
+    public function exam($id, $page)
     {
+
         $student = Auth::user();
 
-        $exam_entry = Exam_Entry::where(['student_id' => $student->id, 'active' => true])->get()->first();
-        if($exam_entry == null)
-            return redirect('home')->withError('Access Denied');
-        $exam = Exam::find($exam_entry->exam_id);
+        $exam = Exam::find($id);
         if(!$exam->active)
+            return redirect('home')->withError('Access Denied');
+
+        $exam_entry = Exam_Entry::where(['student_id' => $student->id, 'active' => true, 'exam_id' => $exam->id])->get()->first();
+        if($exam_entry == null)
             return redirect('home')->withError('Access Denied');
 
         $exam_paper = $exam_entry->Exam_Paper($exam_entry->exam_id);
@@ -402,6 +405,7 @@ class HomeController extends Controller
             'item_Choices'      => $item_Choices,
             'total_answered'    => $total_answered,
             'exam_file'         => $exam_file,
+            'exam_id'           => $exam->id
 
         );
 
@@ -443,6 +447,7 @@ class HomeController extends Controller
             Storage::delete($directory."/".$request->submitted_exam_file);
         }
 
+        $exam_id = $request->exam_id;
 
         if(isset($request->exam_file)){
             $this->Validate($request, [
@@ -470,21 +475,21 @@ class HomeController extends Controller
         }
 
         if($answer != $request->prev_answer)
-            $this->saveAnswer($answer, $request->exam_item_id);
+            $this->saveAnswer($answer, $request->exam_item_id,$exam_id);
 
         if(isset($request->finish))
-            return redirect('home/exam/finish/');
+            return redirect()->route('exam.finish',$exam_id);
 
 
-        return redirect()->route('exam.open',$page);
+        return redirect()->route('exam.open',[$exam_id,$page]);
     }
 
 
-    public function saveAnswer($answer, $item_id)
+    public function saveAnswer($answer, $item_id,$exam_id)
     {
 
         $student = Auth::user();
-        $exam_entry = Exam_Entry::where(['student_id' => $student->id, 'active' => true])->get()->first();
+        $exam_entry = Exam_Entry::where(['student_id' => $student->id, 'active' => true, 'exam_id' => $exam_id])->get()->first();
         if($exam_entry == null)
             return redirect('home')->withError('Access Denied');
         $exam = Exam::find($exam_entry->exam_id);
@@ -519,11 +524,10 @@ class HomeController extends Controller
         return false;
     }
 
-    public function ExamFinish()
+    public function ExamFinish($exam_id)
     {
         $student = Auth::user();
-        $exam_entry = Exam_Entry::where(['student_id' => $student->id, 'active' => true])->get()->first();
-
+        $exam_entry = Exam_Entry::where(['student_id' => $student->id, 'active' => true, 'exam_id' => $exam_id])->get()->first();
         $exam_paper = $exam_entry->Exam_Paper($exam_entry->exam_id);
 
         $item_list = Exam_Answer::where('exam_entry_id', $exam_entry->id)->get();
@@ -546,6 +550,7 @@ class HomeController extends Controller
             'item_list'         => $item_list,
             'page'              => $page,
             'page_max'          => $page_max,
+            'exam_id'           => $exam_id
 
 
         );

@@ -138,3 +138,63 @@ $(document).ready(function(){
     </script>
 
 @endif
+
+@if(Route::is('section.show'))
+
+    <script type="text/javascript">
+    Morris.Bar({
+      element: 'morris-bar-chart',
+      data: [
+        @foreach ($activityStats as $key => $value)
+            { y: '{!!$value->activity_name!!}', a: {!!$value->submitted!!}, b: {!!$value->notsubmitted!!} },
+        @endforeach
+
+      ],
+      xkey: 'y',
+      ykeys: ['a', 'b'],
+      labels: ['Submitted', 'Not Submitted'],
+      barColors: ['#4bcf99', '#FF4444']
+    });
+    </script>
+@endif
+
+
+
+@if(Route::is('activity.show'))
+<script type="text/javascript">
+  $(function() {
+
+    var $activityStats = $('#activityStats-chart');
+
+    if (!$activityStats.length) {
+      return false;
+    }
+
+    function drawSalesChart() {
+
+      $activityStats.empty();
+
+      Morris.Donut({
+        element: 'activityStats-chart',
+        data: [
+            { label: "Submitted", value: {!!$activityStats->submitted!!} },
+            { label: "Not Submitted", value: {!!$activityStats->notsubmitted!!} },
+        ],
+        resize: true,
+        colors: [
+         '#4bcf99', '#FF4444'
+        ],
+      });
+
+      var $sameheightContainer = $activityStats.closest(".sameheight-container");
+
+      setSameHeights($sameheightContainer);
+    }
+
+    drawSalesChart();
+
+
+});
+
+</script>
+@endif
