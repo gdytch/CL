@@ -22,11 +22,14 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($sections as $section)
-                                        <tr>
+                                        <tr class="sectiontr">
+                                            <td class="sectionId" style="display:none">{{$section->id}}</td>
                                             <td><a href="{{route('section.show',$section->id)}}" >{{$section->name}}</a></td>
                                             <td>{{count($section->Students)}}</td>
-                                            <td><a href="{{route('section.folder',$section->id)}}" class="btn btn-sm btn-primary">Open folder</a></td>
-                                            <td><a href="{{route('section.status', $section->id)}}" class="btn btn-sm @if($section->status) btn-success @else btn-danger @endif" >@if($section->status)Open @else Close @endif</a></td>
+                                            <td><a href="#" class="btn btn-sm btn-primary openFolderButton">Open folder</a></td>
+                                            <td>
+                                                <a href="#" id="changeStatusButton{{$section->id}}" class="changeStatusButton btn btn-sm @if($section->status) btn-success @else btn-danger @endif" >@if($section->status)Open @else Close @endif</a>
+                                            </td>
                                         </tr>
                                         @endforeach
                                     </tbody>
@@ -43,7 +46,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Add Student</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Add Section</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -53,7 +56,6 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group" >
-                            {{csrf_field()}}
                             <label class="control-label col-md-4">Section Name</label>
                             <input name="name" type="text" class="form-control underlined" required="">
                         </div>
@@ -74,4 +76,80 @@
         </div>
     </div>
 </div>
+{{csrf_field()}}
+<script type="text/javascript">
+$('.changeStatusButton').click(function(event){
+    var sectionId = $(this).closest('.sectiontr').find('.sectionId').text();
+    console.log(sectionId)
+    $.ajax({
+              type: 'post',
+              url: 'section/status/',
+              data: {
+                 '_token': $('input[name=_token]').val(),
+                 'id': sectionId
+              },
+              success: function(response) {
+                   var type = response.type;
+                   var message = response.message;
+                   if(type == 'success'){
+                       $("#changeStatusButton"+sectionId).removeClass('btn-danger');
+                       $("#changeStatusButton"+sectionId).addClass('btn-success');
+                       $("#changeStatusButton"+sectionId).text('OPEN');
+                       console.log('success')
+                   }else{
+                       $("#changeStatusButton"+sectionId).removeClass('btn-success');
+                       $("#changeStatusButton"+sectionId).addClass('btn-danger');
+                       $("#changeStatusButton"+sectionId).text('CLOSE');
+                       console.log('danger')
+                   }
+                   $.notify({
+                       message: message
+                   },{
+                       type: type,
+                       allow_dismiss: true,
+                       placement: {
+                           from: "top",
+                           align: "center"
+                       },
+                       delay: 5000,
+                       offset: 45,
+                   });
+
+              }
+    });
+
+});
+
+$('.openFolderButton').click(function(event){
+    var sectionId = $(this).closest('.sectiontr').find('.sectionId').text();
+    console.log(sectionId)
+    $.ajax({
+              type: 'GET',
+              url: 'section/folder/'+ sectionId,
+              data: {
+                 '_token': $('input[name=_token]').val(),
+                 'id': sectionId
+              },
+              success: function(response) {
+                   var type = response.type;
+                   var message = response.message;
+
+                   $.notify({
+                       message: message
+                   },{
+                       type: type,
+                       allow_dismiss: true,
+                       placement: {
+                           from: "top",
+                           align: "center"
+                       },
+                       delay: 5000,
+                       offset: 45,
+                   });
+
+              }
+    });
+
+});
+</script>
 @endsection

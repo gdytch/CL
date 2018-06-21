@@ -109,7 +109,7 @@ class ActivitiesController extends Controller
      */
     public function show($id)
     {
-
+    
         $activity = Activity::find($id);
         $sections = Section::all();
         $rules    = FTRule::all();
@@ -155,6 +155,7 @@ class ActivitiesController extends Controller
             'activityStats'     => $activityStats
         );
 
+   
         return view('layouts.admin')->with($variables);
     }
 
@@ -241,3 +242,4 @@ class ActivitiesController extends Controller
         }
     }
 }
+

@@ -9,188 +9,180 @@
                         <div class="header-block">
                             <h3 class="card-title text-primary">Today's Activity</h3>
                         </div>
+                    </div>
+                    <div class="card-block">
+                        <div class="col progressBar hidden">
+                            <center>
+                                <div class="lds-ring">
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                            </center>
                         </div>
-                        <div class="card-block">
-                            <div class="row">
-                                @if(count($stats->todays_activities) != 0)
-                                    @foreach ($stats->todays_activities as $key => $activity)
-                                        <div class="col-4 stats">
-                                            <a href="{{route('activity.show', $activity->id)}}" class="btn btn-sm btn-primary">{{$activity->section_name}} {{$activity->name}} {{$activity->description}}</a>
-                                            <div class="col-12 stat-col">
-                                                <div class="stat-icon">
-                                                    <i class="fa fa-list-alt"></i>
-                                                </div>
-                                                <div class="stat">
-                                                    <div class="value">{{$activity->total_submits}}/{{$activity->total_students}} </div>
-                                                    <div class="name"> Submitted Activities </div>
-                                                </div>
-                                                <div class="progress stat-progress">
-                                                    <div class="progress-bar" style="width: {{$activity->percentage}}%;"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    @endforeach
-                                @endif
+                        <div class="row" id="todays_activitiesContainer">
 
-                            </div>
+
                         </div>
                     </div>
                 </div>
+            </div>
             <div class="col-12 stats-col">
-                    <div class="card stats" data-exclude="xs">
-                        <div class="card-header bordered">
-                            <div class="header-block">
-                                <h4 class="card-title text-primary"> Stats </h4>
-                            </div>
+                <div class="card stats" data-exclude="xs">
+                    <div class="card-header bordered">
+                        <div class="header-block">
+                            <h4 class="card-title text-primary"> Stats </h4>
                         </div>
-                        <div class="card-block">
-                            <div class="row row-sm stats-container">
-                                <div class="col-12 col-sm-6  stat-col">
-                                    <div class="stat-icon">
-                                        <i class="fa fa-group"></i>
-                                    </div>
-                                    <div class="stat">
-                                        <div class="value">{{$stats->total_sections}} </div>
-                                        <div class="name"> Total Sections </div>
-                                    </div>
-                                    <div class="progress stat-progress">
-                                        <div class="progress-bar" style="width: 100%;"></div>
-                                    </div>
+                    </div>
+                    <div class="card-block">
+                        <div class="col progressBar hidden">
+                            <center>
+                                <div class="lds-ring">
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
                                 </div>
-                                <div class="col-12 col-sm-6  stat-col">
-                                    <div class="stat-icon">
-                                        <i class="fa fa-user"></i>
-                                    </div>
-                                    <div class="stat">
-                                        <div class="value"> {{$stats->total_students}} </div>
-                                        <div class="name"> Total students </div>
-                                    </div>
-                                    <div class="progress stat-progress">
-                                        <div class="progress-bar" style="width: 100%;"></div>
-                                    </div>
+                            </center>
+                        </div>
+                        <div class="row row-sm stats-container">
+                            <div class="col-12 col-sm-6  stat-col">
+                                <div class="stat-icon">
+                                    <i class="fa fa-group"></i>
                                 </div>
-                                <div class="col-12 col-sm-6  stat-col">
-                                    <div class="stat-icon">
-                                        <i class="fa fa-book"></i>
-                                    </div>
-                                    <div class="stat">
-                                        <div class="value"> {{$stats->total_activities}} </div>
-                                        <div class="name"> Total Activities </div>
-                                    </div>
-                                    <div class="progress stat-progress">
-                                        <div class="progress-bar" style="width: 100%;"></div>
-                                    </div>
+                                <div class="stat">
+                                    <div class="value" id="totalSections"> </div>
+                                    <div class="name"> Total Sections </div>
                                 </div>
-                                <div class="col-12 col-sm-6 stat-col">
-                                    <div class="stat-icon">
-                                        <i class="fa fa-list-alt"></i>
-                                    </div>
-                                    <div class="stat">
-                                        <div class="value">{{$stats->activity_submits}} </div>
-                                        <div class="name"> Submitted Activities </div>
-                                    </div>
-                                    <div class="progress stat-progress">
-                                        <div class="progress-bar" style="width: 100%;"></div>
-                                    </div>
+                                <div class="progress stat-progress">
+                                    <div class="progress-bar" style="width: 100%;"></div>
                                 </div>
-                                <div class="col-12 col-sm-6 stat-col">
-                                    <div class="stat-icon">
-                                        <i class="fa fa-hdd-o"></i>
-                                    </div>
-                                    <div class="stat">
-                                        <div class="value">{{$stats->total_storage_size}} </div>
-                                        <div class="name"> Storage Size </div>
-                                    </div>
-                                    <div class="progress stat-progress">
-                                        <div class="progress-bar" style="width: 100%;"></div>
-                                    </div>
+                            </div>
+                            <div class="col-12 col-sm-6  stat-col">
+                                <div class="stat-icon">
+                                    <i class="fa fa-user"></i>
                                 </div>
+                                <div class="stat">
+                                    <div class="value" id="totalStudents"> </div>
+                                    <div class="name"> Total students </div>
+                                </div>
+                                <div class="progress stat-progress">
+                                    <div class="progress-bar" style="width: 100%;"></div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6  stat-col">
+                                <div class="stat-icon">
+                                    <i class="fa fa-book"></i>
+                                </div>
+                                <div class="stat">
+                                    <div class="value" id="totalActivities"> </div>
+                                    <div class="name"> Total Activities </div>
+                                </div>
+                                <div class="progress stat-progress">
+                                    <div class="progress-bar" style="width: 100%;"></div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6 stat-col">
+                                <div class="stat-icon">
+                                    <i class="fa fa-list-alt"></i>
+                                </div>
+                                <div class="stat">
+                                    <div class="value" id="totalSubmits"></div>
+                                    <div class="name"> Submitted Activities </div>
+                                </div>
+                                <div class="progress stat-progress">
+                                    <div class="progress-bar" style="width: 100%;"></div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6 stat-col">
+                                <div class="stat-icon">
+                                    <i class="fa fa-hdd-o"></i>
+                                </div>
+                                <div class="stat">
+                                    <div class="value" id="totalStorage"> </div>
+                                    <div class="name"> Storage Size </div>
+                                </div>
+                                <div class="progress stat-progress">
+                                    <div class="progress-bar" style="width: 100%;"></div>
+                                </div>
+                            </div>
 
-                            </div>
                         </div>
                     </div>
                 </div>
+            </div>
             <div class="col-12">
-                    <div class="card sales-breakdown" data-exclude="xs,sm,lg">
-                        <div class="card-header bordered">
-                            <div class="header-block">
-                                <h3 class="card-title text-primary"> Storage breakdown </h3>
+                <div class="card sales-breakdown" data-exclude="xs,sm,lg">
+                    <div class="card-header bordered">
+                        <div class="header-block">
+                            <h3 class="card-title text-primary"> Storage breakdown </h3>
+                        </div>
+                    </div>
+                    <div class="card-block  stats-container">
+                        <div class="col progressBar hidden">
+                            <center>
+                                <div class="lds-ring">
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                            </center>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 col-sm-12">
+                                <div class="dashboard-storage-breakdown-chart" id="dashboard-storage-breakdown-chart"></div>
                             </div>
                         </div>
-                        <div class="card-block  stats-container">
-                            <div class="row">
-                                <div class="col-12 col-sm-12">
-                                    <div class="dashboard-storage-breakdown-chart" id="dashboard-storage-breakdown-chart"></div>
+                        <br>
+                        <div class="row">
+                            <div class="stats col-6 col-sm-6 stat-col">
+                                <div class="stat-icon">
+                                    <i class="fa fa-hdd-o"></i>
+                                </div>
+                                <div class="stat">
+                                    <div class="value" id="totalStorageSizeChart"> </div>
+                                    <div class="name"> Storage Size </div>
                                 </div>
                             </div>
-                            <br>
-                            <div class="row">
-                                <div class="stats col-6 col-sm-6 stat-col">
-                                    <div class="stat-icon">
-                                        <i class="fa fa-hdd-o"></i>
-                                    </div>
-                                    <div class="stat">
-                                        <div class="value">{{$stats->total_storage_size}} </div>
-                                        <div class="name"> Storage Size </div>
-                                    </div>
-                                </div>
-                                <div class="col-6 col-sm-6">
-                                    <table>
-                                        @foreach ($stats->section_storage as $section)
-                                            <tr>
-                                                <td><small><i class="fa fa-folder-o"></i> {{$section->path}} </small></td>
-                                                <td><small>{{$section->size}}</small></td>
-                                            </tr>
-                                        @endforeach
-                                    </table>
-                                </div>
+                            <div class="col-6 col-sm-6">
+                                <table id="sectionStorageInfo">
+
+                                </table>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
         </div>
         <div class="col-md-6">
             <div class="col-12">
                 <div class="card sameheight-item">
                     <div class="card-header bordered">
                         <div class="header-block">
-                            <h3 class="card-title text-primary"> Sessions </h3> &nbsp; <em> {{$current_date}} </em>
+                            <h3 class="card-title text-primary"> Sessions </h3> &nbsp;
+                            <em> {{$current_date}} </em>
                         </div>
                     </div>
                     <div class="card-block">
+                        <div class="col progressBar hidden">
+                            <center>
+                                <div class="lds-ring">
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                            </center>
+                        </div>
                         <div class="col">
-                            @if(count($stats->login_list) != null)
-                                <table class="table table-striped table-responsive">
-                                    <thead>
-                                        <tr>
-                                            <th></th><th>Student</th><th>Section</th><th>Submitted</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($stats->login_list as $student)
-                                            <tr>
-                                                <td width="10">
-                                                    {!!$student->online!!}
-                                                </td>
-                                                <td >
-                                                    <a href="{{route('student.show',$student->id)}}"> {{$student->lname}}, {{$student->fname}} </a>
-                                                </td>
-                                                <td >
-                                                    {{$student->section}}
-                                                </td>
-                                                <td>
-                                                    {!!$student->submit_status!!}
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            @else
-                                No Logins
-                            @endif
+                            <div id="sessionsContainer"></div>
                         </div>
                         <div class="col-12">
-                            <small><i class="fa fa-circle green"></i> Active  <i class="fa fa-circle yellow"></i> Idle <i class="fa fa-circle red"></i> Expired Session  <i class="fa fa-circle"></i> Logged out</small>
+                            <small>
+                                <i class="fa fa-circle green"></i> Active &nbsp;
+                                <i class="fa fa-circle"></i> Logged out</small>
                         </div>
                     </div>
                 </div>
@@ -199,8 +191,93 @@
     </div>
 
 
-
 </section>
+
+<script type="text/javascript">
+function updateStats() {
+    $.ajax({
+        type: 'GET',
+        url: '{{route('
+        ajax.stats ')}}',
+        success: function (response) {
+            var data = response;
+            $('#sessionsContainer').empty();
+            $('#sessionsContainer').append(data.sessions);
+            $('#todays_activitiesContainer').empty();
+            $('#todays_activitiesContainer').append(data.todays_activities);
+            $('#totalSections').text(data.stats.total_sections);
+            $('#totalStudents').text(data.stats.total_students);
+            $('#totalActivities').text(data.stats.total_activities);
+            $('#totalSubmits').text(data.stats.total_submits);
+            $('#totalStorage').text(data.stats.total_storage);
+            $('#totalStorageSizeChart').text(data.stats.total_storage);
+            storageChart(data.section_storage);
+            $('.progressBar').fadeOut('200');
+
+        }
+    });
+}
+
+function storageChart(data) {
+
+    var $dashboardSalesBreakdownChart = $('#dashboard-storage-breakdown-chart');
+
+    if (!$dashboardSalesBreakdownChart.length) {
+        return false;
+    }
+    $('#sectionStorageInfo').empty();
+    var items = [];
+    for (var a in data) {
+        items[a] = {
+            label: data[a].path,
+            value: data[a].percent
+        }
+        $('#sectionStorageInfo').append('<tr>\
+          <td><small><i class="fa fa-folder-o"></i> ' + data[a].path + ' </small></td>\
+          <td><small>' + data[a].size + '</small></td>\
+      </tr>');
+    }
+
+    function drawSalesChart(items) {
+
+        $dashboardSalesBreakdownChart.empty();
+
+        Morris.Donut({
+            element: 'dashboard-storage-breakdown-chart',
+            data: items,
+            resize: true,
+            colors: [
+                tinycolor(config.chart.colorPrimary.toString()).lighten(10).toString(),
+                tinycolor(config.chart.colorPrimary.toString()).darken(8).toString(),
+                config.chart.colorPrimary.toString()
+            ],
+        });
+
+        var $sameheightContainer = $dashboardSalesBreakdownChart.closest(".sameheight-container");
+
+        setSameHeights($sameheightContainer);
+    }
+
+    drawSalesChart(items);
+
+
+
+
+};
+window.onload = function () {
+    $('.progressBar').fadeIn('200');
+
+    updateStats();
+}
+
+setInterval("updateStats()", 10000);
+
+$('#addRuleButton').click(function (event) {
+    var ruleName = $('#addRuleTitleInput').val();
+    var ruleExtensions = $('#addRuleExtensionsInput').val();
+});
+
+</script>
  {{--
 <section class="section">
   <div class="row sameheight-container">

@@ -17,19 +17,20 @@
                 <section class="section card-block">
                     <div class="row">
                         <div class=" col" style="">
-                            <img src="{{asset('storage/avatar/'.$student->avatar)}}" alt="" class="student_avatar">
+                            <img src="{{asset('storage/avatar/'.$student->avatar)}}" alt="" id="avatarImg" class="student_avatar">
                         </div>
                     </div>
                     <div class="row">
                         <div class="col" style="margin-left: 20px">
-                            <h6 class="text-primary"><small><strong>Firstname</strong></small></h6>
-                            <h4>{{$student->fname}}</h4>
+                            <p class="hidden" id="studentId">{{$student->id}}</p>
+                            <h6  class="text-primary"><small><strong>Firstname</strong></small></h6>
+                            <h4 id="fname">{{$student->fname}}</h4>
                             <h6 class="text-primary"><small><strong>Lastname</strong></small></h6>
-                            <h4>{{$student->lname}}</h4>
+                            <h4 id="lname">{{$student->lname}}</h4>
                             <h6 class="text-primary"><small><strong>Section</strong></small></h6>
-                            <h4>{{$student->sectionTo->name}}</h4>
+                            <h4 id="sectionName">{{$student->sectionTo->name}}</h4>
                             <h6 class="text-primary"><small><strong>Gender</strong></small></h6>
-                            <h4 style="text-transform: capitalize">{{$student->gender}}</h4>
+                            <h4 id="gender" style="text-transform: capitalize">{{$student->gender}}</h4>
                         </div>
                     </div>
                 </section>
@@ -134,7 +135,7 @@
                             <p class="title-description"> </p>
                         </div>
                         <div class="header-block pull-right">
-                            <a href="{{route('student.folder',$student->id)}}" class="btn btn-primary">OPEN FOLDER</a>
+                            <a href="#" id="openFolderButton" class="btn btn-primary">OPEN FOLDER</a>
 
                         </div>
                     </div>
@@ -189,26 +190,26 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form role="form" action="{{route('student.update',$student->id)}}" method="POST" enctype="multipart/form-data">
+                <form role="form" action="#" id="studentForm" method="POST" enctype="multipart/form-data">
                 <div class="row">
                     <div class=" col-md-4" style="text-align: right">
-                        <img src="{{asset('storage/avatar/'.$student->avatar)}}" alt="" id="avatar" class="student_avatar">
-                        <input type="file" name="avatar_file" value="" onchange="readURL(this);" class="form-control">
+                        <img src="{{asset('storage/avatar/'.$student->avatar)}}" alt="" id="formAvatar" class="student_avatar">
+                        <input type="file" id="formAvatar_file" name="avatar_file" value="" onchange="readURL(this);" class="form-control">
                     </div>
                     <div class="col-md-8">
                         <div class="form-group" >
                             {{csrf_field()}}
                             <label class="control-label col-md-4">First Name</label>
-                            <input name="fname" type="text" class="form-control underlined" required="" value="{{$student->fname}}">
+                            <input name="fname" id="formFname" type="text" class="form-control underlined" required="" value="{{$student->fname}}">
                         </div>
                         <div class="form-group">
                             <label class="control-label col-md-4">Last Name</label>
-                            <input name="lname" type="text" class="form-control underlined" required="" value="{{$student->lname}}">
+                            <input name="lname" id="formLname"type="text" class="form-control underlined" required="" value="{{$student->lname}}">
                         </div>
                         <div class="form-group">
                             <label class="control-label col-md-4">Section</label>
 
-                            <select class="form-control" name="section" required="">
+                            <select class="form-control" id="formSection" name="section" required="">
                                 @foreach ($sections as $section)
                                     <option value="{{$section->id}}" @if($section->id == $student->section) selected @endif>{{$section->name}}</option>
                                 @endforeach
@@ -216,12 +217,13 @@
                         </div>
                         <div class="form-group">
                             <label class="control-label col-md-4">Gender</label>
-                            <select class="form-control" name="gender" required="">
+                            <select class="form-control" id="formGender" name="gender" required="">
                                 <option value="male" @if($student->gender == 'male') selected @endif>Male</option>
                                 <option value="female" @if($student->gender == 'female') selected @endif>Female</option>
                             </select>
                         </div>
                         <div class="form-group">
+
                             <button type="button" class="btn btn-secondary" data-toggle="modal" data-dismiss="modal" data-target="#passwordModal">
                                 Change password
                             </button>
@@ -232,12 +234,15 @@
                         <input type="hidden" name="_method" value="PUT">
                     </div>
                 </div>
+                </form>
             </div>
             <div class="modal-footer">
+                <div class="progress col hidden" id="studentFormProgress">
+                  <div class="bg-primary progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">Saving...</div>
+                </div>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <button type="submit" name="submit" class="btn btn-primary">Update</button>
+                <button type="button" id="studentFormConfirmUpdate" name="submit" class="btn btn-primary">Update</button>
              </div>
-                </form>
             </div>
         </div>
     </div>
@@ -255,7 +260,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form class="" action="{{route('student.update.password', $student->id)}}" method="post">
+                <form class="" action="" id="updatePasswordForm" method="post">
                     {{csrf_field()}}
                     <div class="form-group">
                         <label class="control-label col-md-4">New Password</label>
@@ -266,11 +271,11 @@
                     <input name="password_confirmation" type="password" class="form-control underlined" required="" Validate>
                     </div>
                     <input type="hidden" name="_method" value="PUT">
+                </form>
             </div>
             <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="submit" name="submit" class="btn btn-primary">Update</button>
-                </form>
+                    <button type="button" name="submit" id="studentConfirmUpdatePassword" class="btn btn-primary">Update</button>
             </div>
         </div>
     </div>
@@ -306,12 +311,133 @@ function readURL(input) {
        var reader = new FileReader();
 
        reader.onload = function (e) {
-           $('#avatar')
+           $('#formAvatar')
                .attr('src', e.target.result)
        };
 
        reader.readAsDataURL(input.files[0]);
    }
 }
+
+
+$('#openFolderButton').click(function(event){
+    $.ajax({
+              type: 'GET',
+              url: '{{route('student.folder', $student->id)}}',
+
+              success: function(response) {
+                   var type = response.type;
+                   var message = response.message;
+
+                   $.notify({
+                       message: message
+                   },{
+                       type: type,
+                       allow_dismiss: true,
+                       placement: {
+                           from: "top",
+                           align: "center"
+                       },
+                       delay: 5000,
+                       offset: 45,
+                   });
+
+              }
+    });
+
+});
+
+
+
+$('#studentFormConfirmUpdate').click(function(event){
+    var studentId = $('#studentId').text();
+    $('#studentFormProgress').show('500');
+    $.ajax({
+              type: 'POST',
+              url: '{{route('student.update', $student->id)}}',
+              data: new FormData($('#studentForm')[0]),
+              processData: false,
+              contentType: false,
+              success: function(response) {
+                   var data = response;
+                   $('#studentFormProgress').hide();
+
+                   $('#editmodal').modal('hide');
+                  if(data.errors){
+
+                      var errorsMessage = '';
+
+                      for(var a in data.errors){
+                          errorsMessage += '- ' + data.errors[a] + '<br> '; //showing only the first error.
+
+                      }
+
+                      $.notify({message: errorsMessage},{type: 'danger',allow_dismiss: true,placement: {from: "top",align: "center"},delay: 5000,offset: 45,});
+                  }else{
+
+                       $('#fname').text(data.student.fname);
+                       $('#lname').text(data.student.lname);
+                       $('#sectionName').text(data.sectionName);
+                       $('#gender').text(data.student.gender);
+                       $('#avatarImg').attr('src', data.avatar_file);
+                       $.notify({message: '<b>Success:</b> data updated.'},{type: 'success',allow_dismiss: true,placement: {from: "top",align: "center"},delay: 5000,offset: 45,});
+                  }
+              }
+          });
+
+});
+
+$('#studentConfirmUpdatePassword').click(function(event){
+    var studentId = $('#studentId').text();
+    $.ajax({
+              type: 'POST',
+              url: '{{route('student.update.password', $student->id)}}',
+              data: new FormData($('#updatePasswordForm')[0]),
+              processData: false,
+              contentType: false,
+              success: function(response) {
+                   var data = response;
+                   $('#passwordModal').modal('hide');
+                       $.notify({
+                           message: '<b>Success:</b> password updated.'
+                       },{
+                           type: 'success',
+                           allow_dismiss: true,
+                           placement: {
+                               from: "top",
+                               align: "center"
+                       },
+                       delay: 5000,
+                       offset: 45,
+                   });
+              },
+              error: function(data){
+              $('#passwordModal').modal('hide');
+               var data = data.responseJSON;
+               var errorsMessage = '';
+
+
+               for(var a in data['errors']){
+                   errorsMessage += '- ' + data['errors'][a] + '<br> '; //showing only the first error.
+
+               }
+
+               $.notify({
+                   message: errorsMessage
+               },{
+                   type: 'danger',
+                   allow_dismiss: true,
+                   placement: {
+                       from: "top",
+                       align: "center"
+                   },
+                   delay: 5000,
+                   offset: 45,
+
+               });
+             }
+          });
+
+});
 </script>
 @endsection

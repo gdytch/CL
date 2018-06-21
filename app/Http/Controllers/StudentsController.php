@@ -223,9 +223,14 @@ class StudentsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->Validate($request, [
-            'avatar_file' => 'file|max:1024',
+        $validator = \Validator::make($request->all(), [
+            'avatar_file' => 'file|max:10000',
         ]);
+
+        if ($validator->fails())
+        {
+            return response()->json(['errors'=>$validator->errors()->all()]);
+        }
 
         $student = Student::find($id);
         // Move the student folder if student is moved to a diff section
@@ -258,14 +263,14 @@ class StudentsController extends Controller
             if ($student->avatar != 'default-avatar.png') {
                 Storage::delete("avatar/".$student->avatar);
             }
-            Image::make($avatar)->resize(250, 250)->save(public_path().'/storage/avatar/'.$filename);
+            Image::make($avatar)->fit(250)->save(public_path().'/storage/avatar/'.$filename);
             $student->avatar = $filename;
         }
 
         $student->update($request->all());
         $student->save();
         //
-        return redirect()->route('student.show', $id)->withSuccess('Saved');
+        return response()->json(['student' => $student, 'sectionName' => $student->sectionTo->name, 'avatar_file' => asset('storage/avatar/'.$student->avatar)]);
     }
 
 
@@ -281,7 +286,7 @@ class StudentsController extends Controller
         $student->password = $request->password;
         $student->save();
 
-        return redirect()->back()->withSuccess('Password updated');
+        return response()->json(['success' => 'Password updated.']);
     }
 
     /**
@@ -386,13 +391,14 @@ class StudentsController extends Controller
         $directory = public_path()."\\storage"."\\".$student->sectionTo->path."\\".$student->path."\\files";
         if (!(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') && !(file_exists($directory))) {
             $msg = array("Cannot open folder", "This function only works on a local server running in Windows");
-            return redirect()->back()->withErrors($msg);
+            return response()->json(['message' => $msg, 'type' => 'danger']);
+
         }
 
         $explorer =  'c:\\windows\\explorer.exe';
         shell_exec("$explorer \\n,\\e,$directory");
 
-        return redirect()->back();
+        return response()->json(['message' => 'Folder opened: '.$student->lname.', '.$student->fname, 'type' => 'success']);
     }
 
 

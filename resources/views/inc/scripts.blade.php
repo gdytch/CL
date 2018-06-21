@@ -1,26 +1,14 @@
 
-
-<!-- Reference block for JS -->
-<div class="ref" id="ref">
-   <div class="color-primary"></div>
-   <div class="chart">
-       <div class="color-primary"></div>
-       <div class="color-secondary"></div>
-   </div>
-</div>
-{{-- <script type="text/javascript" src="{{asset('js/jquery.min.js')}}"></script> --}}
-{{-- <script type="text/javascript" src="{{asset('js/bootstrap.min.js')}}"></script> --}}
-{{-- <script type="text/javascript" src="{{asset('js/bootstrap-confirmation.min.js')}}"></script> --}}
-{{-- <script type="text/javascript" src="{{asset('js/quill.min.js')}}"></script> --}}
-<script type="text/javascript" src="{{asset('js/vendor.min.js')}}"></script>
-<script type="text/javascript" src="{{asset('js/app.js')}}"></script>
 <script type="text/javascript" src="{{asset('js/bootstrap-notify.min.js')}}"></script>
 <script type="text/javascript" src="{{asset('js/datatables.min.js')}}"></script>
 
 </script>
 
 <script type="text/javascript">
-
+    $(document).ready(function() {
+        var primaryColor = $('.color-primary').css("color");
+        $('.lds-ring div').css({"border-color": primaryColor+" transparent transparent transparent"});
+    });
     $(document).ready(function(){
         $('#StudentTable').dataTable(
             {
@@ -83,42 +71,7 @@
 
 @if(Route::is('admin'))
 <script type="text/javascript">
-  $(function() {
 
-    var $dashboardSalesBreakdownChart = $('#dashboard-storage-breakdown-chart');
-
-    if (!$dashboardSalesBreakdownChart.length) {
-      return false;
-    }
-
-    function drawSalesChart() {
-
-      $dashboardSalesBreakdownChart.empty();
-
-      Morris.Donut({
-        element: 'dashboard-storage-breakdown-chart',
-        data: [
-          @foreach($stats->section_storage as $value)
-            { label: "{!!$value->path!!}", value: {!!$value->percent!!} },
-          @endforeach
-        ],
-        resize: true,
-        colors: [
-          tinycolor(config.chart.colorPrimary.toString()).lighten(10).toString(),
-          tinycolor(config.chart.colorPrimary.toString()).darken(8).toString(),
-          config.chart.colorPrimary.toString()
-        ],
-      });
-
-      var $sameheightContainer = $dashboardSalesBreakdownChart.closest(".sameheight-container");
-
-      setSameHeights($sameheightContainer);
-    }
-
-    drawSalesChart();
-
-
-});
 
 $(document).ready(function(){
     $("#fullscreenButton").on("click", function(){
@@ -197,4 +150,34 @@ $(document).ready(function(){
 });
 
 </script>
+@endif
+
+@if(Auth::guard('web')->check())
+<script type="text/javascript">
+    function pingSession(){
+        $.ajax({
+                  type: 'GET',
+                  url: '{{route('ping.session')}}',
+                  error: function(){
+                   clearInterval(ping);
+                   $.notify({
+                       message: 'Connection Error'
+                   },{
+                       type: 'danger',
+                       allow_dismiss: true,
+                       placement: {
+                           from: "top",
+                           align: "center"
+                       },
+                       delay: 60000,
+                       offset: 45,
+
+                   });
+              }
+          });
+    }
+    var ping = setInterval('pingSession()', 60000);
+
+
+    </script>
 @endif

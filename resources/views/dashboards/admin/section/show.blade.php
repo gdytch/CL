@@ -81,14 +81,15 @@
                                     <tr>
                                         <th>First name</th>
                                         @foreach($activities as $activity)
-                                            <th>{{$activity->name}}</th>
+                                            <th>{{$activity->name}} <br> <small>{{$activity->date}}</small></th>
                                         @endforeach
                                         <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($students as $student)
-                                    <tr>
+                                    <tr class="studenttr">
+                                        <td class="studentId hidden">{{$student->id}}</td>
                                         <td>
                                             <a href="{{route('student.show',$student->id)}}">{{$student->lname}}, {{$student->fname}}</a>
                                         </td>
@@ -96,7 +97,7 @@
                                             <th>{!!$activity_table[$student->id][$activity->id]!!}</th>
                                         @endforeach
                                         <td width="100">
-                                            <a href="{{route('student.folder',$student->id)}}" class="btn btn-sm btn-primary">OPEN FOLDER</a>
+                                            <a href="#" class="openFolderButton btn btn-sm btn-primary">OPEN FOLDER</a>
                                         </td>
                                     </tr>
                                     @endforeach
@@ -152,5 +153,35 @@
     </div>
 </div>
 
+<script>
 
+$('.openFolderButton').click(function(event){
+    var studentId = $(this).closest('.studenttr').find('.studentId').text();
+    console.log(studentId)
+    $.ajax({
+              type: 'GET',
+              url: 'student/folder/'+studentId,
+
+              success: function(response) {
+                   var type = response.type;
+                   var message = response.message;
+
+                   $.notify({
+                       message: message
+                   },{
+                       type: type,
+                       allow_dismiss: true,
+                       placement: {
+                           from: "top",
+                           align: "center"
+                       },
+                       delay: 5000,
+                       offset: 45,
+                   });
+
+              }
+    });
+
+});
+</script>
 @endsection

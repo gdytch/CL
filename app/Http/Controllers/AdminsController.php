@@ -109,9 +109,17 @@ class AdminsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->Validate($request, [
+        // $this->Validate($request, [
+        //     'avatar_file' => 'file|max:1024',
+        // ]);
+        $validator = \Validator::make($request->all(), [
             'avatar_file' => 'file|max:1024',
         ]);
+
+        if ($validator->fails())
+        {
+            return response()->json(['errors'=>$validator->errors()->all()]);
+        }
 
         $admin = Admin::find($id);
 
@@ -206,7 +214,6 @@ class AdminsController extends Controller
         $current_date = date("M d Y", time());
         $variables = array(
             'dashboard_content' => 'dashboards.admin.pages.home',
-            'stats'             => $this->stats(),
             'current_date'      => $current_date
         );
 
@@ -241,10 +248,123 @@ class AdminsController extends Controller
     }
 
 
-    public function stats()
+    public function ajaxStats()
     {
         $students         = Student ::all();
         $sections         = Section ::all();
+        $activities       = Activity::all();
+        $activity_submits = 0;
+        $storage_size     = 0;
+        $today            = date("Y-m-d", time());
+        $login_list       = null;
+
+        // get today's activities
+        $todays_activities = Activity::where('date', $today)->get();
+        $content = '';
+        foreach ($todays_activities as $key => $activity) {
+            $submits_count = count(Record::where(['activity_id' => $activity->id, 'active' => true])->distinct()->get(['student_id']));
+            $section_students = count($activity->SectionTo->Students);
+
+            $content .= '
+            <div class="col-4 stats">
+                <a href="'. route('activity.show', $activity->id) .'" class="btn btn-sm btn-primary">'. $activity->SectionTo->name .' '. $activity->name .' '. $activity->description .'</a>
+                <div class="col-12 stat-col">
+                    <div class="stat-icon">
+                        <i class="fa fa-list-alt"></i>
+                    </div>
+                    <div class="stat">
+                        <div class="value">'. $submits_count .'/'. $section_students .'</div>
+                        <div class="name"> Submitted Activities </div>
+                    </div>
+                    <div class="progress stat-progress">
+                        <div class="progress-bar" style="width: '. ($submits_count/$section_students) * 100 .'%;"></div>
+                    </div>
+                </div>
+            </div>';
+        }
+
+        $todays_activities_content = $content;
+
+
+        //get today's total number of student logins/sessions
+        $logins_today = Student::where('last_login', $today)->distinct()->orderBy('section')->get();
+        $content = '';
+        foreach ($logins_today as $student) {
+            $submit_status = '<span class="yellow"><i class="fa fa-info-circle"> </i> <strong>No Activity</strong></span>';
+            foreach ($todays_activities as $key => $activity) {
+                if($activity->section_id == $student->section){
+                    $submit_status = $this->checkActivity($activity, $student);
+                    break;
+                }
+            }
+
+            $content .= '<tr>
+                  <td width="10">'
+                      . $this->sessionStatus($student) .
+                  '</td>
+                  <td >
+                      <a href="'.route('student.show',$student->id).'"> '. $student->lname .', '.$student->fname.'</a>
+                  </td>
+                  <td >
+                      '. $student->sectionTo->name .'
+                  </td>
+                  <td>
+                      '. $submit_status .'
+                  </td>
+            </tr>';
+
+        }
+        if(count($logins_today) != null || count($logins_today) > 0){
+            $sessions_content = '<table class="table table-striped table-responsive">
+                <thead>
+                    <tr>
+                        <th></th><th>Student</th><th>Section</th><th>Submitted</th>
+                    </tr>
+                </thead>
+                <tbody>'. $content. '
+                </tbody>
+            </table>';
+        }
+
+        else
+            $sessions_content = 'No Sessions';
+
+
+        //get total activity submits
+        foreach ($students as $student) {
+            $activity_submits += count($student->Records);
+        }
+
+        $all_files = Storage::allfiles();
+        //get total storage size
+        foreach ($all_files as $file) {
+            $storage_size += Storage::size($file);
+        }
+        //get total storage size per section
+        $section_storage = $this->getSectionStorage();
+
+        $stats = (object) array(
+            'total_students'   => count($students),
+            'total_sections'   => count($sections),
+            'total_activities' => count($activities),
+            'total_submits'    => $activity_submits,
+            'total_storage'    => $this->bytesToHuman($storage_size),
+        );
+
+
+        return response()->json([
+            'sessions'          => $sessions_content,
+            'todays_activities' => $todays_activities_content,
+            'stats'             => $stats,
+            'section_storage'   => $section_storage
+        ]);
+    }
+
+
+    public function stats()
+    {
+        $students         = Student::all();
+        $sections         = Section::all();
         $activities       = Activity::all();
         $activity_submits = 0;
         $storage_size     = 0;
@@ -391,12 +511,14 @@ class AdminsController extends Controller
     public function filetype_rule_store(Request $request)
     {
         $this->Validate($request, [
-            'name' => 'unique:ftrules'
+            'name' => 'unique:ftrules',
+            'extensions' => 'required'
         ]);
         $rule = new FTRule($request->all());
         $rule->save();
 
-        return redirect()->back()->withSuccess('Rule saved');
+        return response()->json($rule);
+
     }
 
 
@@ -415,7 +537,7 @@ class AdminsController extends Controller
 
         $rule->update($request->all());
 
-        return redirect()->back()->withSuccess('Rule updated');
+        return response()->json($rule);
     }
 
 
@@ -436,7 +558,7 @@ class AdminsController extends Controller
         }
         $rule->delete();
 
-        return redirect()->back()->withSuccess('Rule deleted');
+        return response()->json($rule);
     }
 
     public function sessionStatus($student)
@@ -446,18 +568,9 @@ class AdminsController extends Controller
         if($student->last_login != $today){
             return '<small><i class="fa fa-circle-o"></i></small>';
         }
-        if ($session == null || count($session) == 0) {
-            return '<small><i class="fa fa-circle"></i></small>';
-        }
-
         $current_time = time();
-
-        if (($current_time - $session->last_activity) >= 1800 && ($current_time - $session->last_activity) <= 7199) {
-            return '<small><i class="fa fa-circle yellow" ></i></small>';
-        }
-
-        if (($current_time - $session->last_activity) >= 7200) {
-            return '<small><i class="fa fa-circle red" ></i></small>';
+        if ($session == null || count($session) == 0 || ($current_time - $session->last_activity) >= 120) {
+            return '<small><i class="fa fa-circle"></i></small>';
         }
 
         return '<small><i class="fa fa-circle green"></i></small>';
@@ -500,7 +613,7 @@ class AdminsController extends Controller
 
     public function checkActivity($activity, $student)
     {
-        $record = Record::where(['student_id' => $student->id, 'activity_id' => $activity->id])->get()->first();
+        $record = Record::where(['student_id' => $student->id, 'activity_id' => $activity->id, 'active' => true])->get()->first();
 
         if(count($record) != 0)
             return '<span class="green"><i class="fa fa-check"></i></span>';
@@ -533,6 +646,8 @@ class AdminsController extends Controller
                 'no_result'         => $no_result,
                 'keyword'           => $keyword
         ];
+ 
+
         return view('layouts.admin')->with($variables);
     }
 }

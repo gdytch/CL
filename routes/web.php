@@ -16,7 +16,7 @@ Route::get('/', 'HomeController@welcome')->name('welcome');
 Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 
 // Admin
-Route::get('/admin/login', 'AdminsController@showLoginForm')->name('admin.login.form');
+Route::get('/admin/loginForm', 'AdminsController@showLoginForm')->name('admin.login.form');
 Route::post('/admin/login', 'AdminsController@login')->name('admin.login');
 Route::post('/admin/store_first', 'AdminsController@store_first')->name('admin.store_first');
 
@@ -28,11 +28,12 @@ Route::group(['middleware' => 'auth:admin'], function () {
     Route::prefix('admin')->group(function(){
         Route::get('settings', 'AdminsController@settings')->name('admin.settings');
         Route::get('theme', 'AdminsController@theme')->name('admin.theme');
-        Route::post('filetyperules', 'AdminsController@filetype_rule_store')->name('filetype_rule.store');
+        Route::post('filetyperules/store', 'AdminsController@filetype_rule_store')->name('filetype_rule.store');
         Route::put('filetyperules/{id}', 'AdminsController@filetype_rule_update')->name('filetype_rule.update');
         Route::delete('filetyperules/{id}', 'AdminsController@filetype_rule_delete')->name('filetype_rule.delete');
         Route::put('update_password/{id}', 'AdminsController@update_password')->name('admin.update.password');
         Route::get('search/', 'AdminsController@generalSearch')->name('admin.general.search');
+        Route::get('ajaxStats', 'AdminsController@ajaxStats')->name('ajax.stats');
 
         Route::get('student/index-thumb/', 'StudentsController@showThumbnail')->name('student.index.thumb');
         Route::resource('student', 'StudentsController');
@@ -41,8 +42,10 @@ Route::group(['middleware' => 'auth:admin'], function () {
         Route::post('student/create/batch', 'StudentsController@batch')->name('student.create.batch');
 
         Route::resource('section', 'SectionsController');
-        Route::get('section/status/{id}', 'SectionsController@changeStatus')->name('section.status');
+        Route::post('section/status/', 'SectionsController@changeStatus')->name('section.status');
         Route::get('section/folder/{id}', 'SectionsController@folder')->name('section.folder');
+        Route::get('/section/student/folder/{id}', 'StudentsController@folder')->name('section.student.folder');
+
 
         Route::resource('post', 'PostsController');
 
@@ -87,7 +90,8 @@ Route::group(['middleware' => 'auth:admin'], function () {
 
 Route::resource('file', 'FilesController');
 Route::post('login', 'HomeController@login')->name('login');
-Route::get('checkUser', 'HomeController@checkUser')->name('checkUser');
+Route::post('checkUser', 'HomeController@checkUser')->name('checkUser');
+Route::get('checkUserSection', 'HomeController@checkUserSection')->name('checkUserSection');
 
 //Student
 Route::group(['middleware' => 'auth:web'], function () {
@@ -101,10 +105,13 @@ Route::group(['middleware' => 'auth:web'], function () {
         Route::get('activity', 'HomeController@activity')->name('student.activity');
         Route::get('exam/finish/{exam_id}', 'HomeController@ExamFinish')->name('exam.finish');
         Route::post('exam/next/', 'HomeController@NextPage')->name('exam.next');
-        Route::get('exam/{id}/{page}/', 'HomeController@exam')->name('exam.open');
+        Route::get('exam/{id}/{page}/', 'HomeController@exam_page')->name('exam.open');
+        Route::get('exam_Contents/{id}/{page}', 'HomeController@exam_contents')->name('exam.contents');
         Route::post('exam/submit/', 'HomeController@ExamSubmit')->name('exam.submit');
         Route::get('exam/show/result/{id}', 'HomeController@showStudentExamPaper')->name('exam.student.show_result');
         Route::post('settings/avatar', 'HomeController@update_Avatar')->name('student.avatar');
         Route::get('activity/{id}', 'HomeController@showActivity')->name('student.activity.show');
+        Route::get('pingSession', 'HomeController@pingSession')->name('ping.session');
+        Route::get('checkConnection', 'HomeController@checkConnection')->name('ping.connection');
     });
 });

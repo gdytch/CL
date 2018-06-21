@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Student;
 use App\Activity;
 use App\Admin;
+use App\Section;
 use App\Stats;
 use App\Exam;
 use App\Exam_Entry;
@@ -26,7 +27,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:web')->except('checkUser', 'login', 'welcome');
+        $this->middleware('auth:web')->except('checkUser', 'login', 'welcome', 'checkUserSection');
     }
 
     /**
@@ -57,12 +58,14 @@ class HomeController extends Controller
         }
 
         //Exam_Paper
-        $exam = Exam::where(['section_id' => $student->section, 'active' => true])->get()->first();
-        $exam_paper = null;
-        if(count($exam) > 0){
-            $exam_entry = Exam_Entry::where(['student_id' => $student->id, 'active' => true, 'exam_id' => $exam->id])->get()->first();
-            if(count($exam_entry) > 0){
-                $exam_paper = $exam_entry->Exam_Paper($exam_entry->exam_id);
+        $exams = Exam::where(['section_id' => $student->section, 'active' => true])->get();
+        $exam_paper = array();
+        if(count($exams) > 0){
+            foreach ($exams as $key => $exam) {
+                $exam_entry = Exam_Entry::where(['student_id' => $student->id, 'active' => true, 'exam_id' => $exam->id])->get()->first();
+                if(count($exam_entry) > 0){
+                        $exam_paper[$key] = $exam_entry->Exam_Paper($exam_entry->exam_id);
+                }
             }
         }
 
@@ -74,7 +77,7 @@ class HomeController extends Controller
             'todays_activity'   => $todays_activity,
             'message_infos'     => $message_infos,
             'exam_paper'        => $exam_paper,
-            'exam'              => $exam,
+            'exams'             => $exams,
         );
         return view('layouts.student')->with($variables);
     }
@@ -83,28 +86,44 @@ class HomeController extends Controller
 
     public function login(Request $request)
     {
+        $error = null;
+        $redirect = null;
+
         if ($request->id == null) {
-            return back()->withError('Select an account');
+            return response()->json([
+                'error'    => 'Select an account',
+                'redirect' => $redirect
+            ]);
         }
 
         $student = Student::find($request->id);
         if(!$student->sectionTo->status)
-            return back()->withError('Section Closed');
+            return response()->json([
+                'error'    => 'Section Closed',
+                'redirect' => $redirect
+            ]);
 
         if (Auth::guard('web')->attempt(['id' => $request->id, 'password' => $request->password])) {
             $this->recordLogin($request->id);
-            return redirect()->intended('home');
+            // return redirect()->intended('home');
+            $redirect = route('home');
+        }else{
+            $error = 'Invalid password';
         }
 
         $admins = Admin::all();
         foreach ($admins as $value) {
             if(Hash::check($request->password, $value->password)){
                 Auth::login($student);
-                break;
+                $redirect = route('home');
             }
         }
 
-        return redirect()->back()->withError('Invalid Password')->with('error', 'Invalid password')->withInput();
+        return response()->json([
+            'error'    => $error,
+            'redirect' => $redirect
+        ]);
+        // return redirect()->back()->withError('Invalid Password')->with('error', 'Invalid password')->withInput();
     }
 
 
@@ -112,37 +131,51 @@ class HomeController extends Controller
     public function checkUser(Request $request)
     {
         $users = null;
-        if (Auth::guard('web')->check()) {
-            return redirect('home');
-        }
-
+        $error = 'null';
         if ($request->lname != null) {
             $lname = ucwords(strtolower($request->lname));
             $users = Student::where('lname', $lname)->get()->except('password');
-            if(strtolower($request->lname) == 'admin')
-                return redirect('/admin/login');
+            foreach ($users as $key => $user) {
+                $users[$key]['avatar_file'] = ''. asset('storage/avatar/'.$user->avatar). '';
+                $users[$key]['section_name'] = $user->sectionTo->name;
+                $users[$key]['section_status'] = $user->sectionTo->status;
+            }
         }
         if ($request->id != null) {
             $users = Student::where('id', $request->id)->get()->except('password');
         }
 
         if($users == null)
-            return redirect()->route('welcome');
+            $error = 'Error: no user indicated';
 
         if (count($users) == 0) {
-            return back()->withError('User not found');
+            $error = 'User not found';
         }
 
-        if (env('APP_URL') == 'https://computerclassapp.herokuapp.com/') {
-            $message_info = "Heroku demo <br> Select an account<br>Password: <strong>123456</strong>";
-        } else {
-            $message_info = null;
-        }
+        if(strtolower($request->lname) == 'admin')
+        return response()->json([
+            'redirect' => route('admin.login.form'),
+            'users' => $users,
+        ]);
 
-        return view('auth.login')->with('users', $users)->with('message_info', $message_info);
+        // return view('auth.login')->with('users', $users)->with('message_info', $message_info);
+        return response()->json([
+            'users' => $users,
+            'error' => $error
+        ]);
     }
 
+    public function checkUserSection(Request $request)
+    {
+        $sections = [];
+        $this_section = null;
+        foreach ($request->sections as $key => $section) {
+            $this_section = Section::find($section);
+            $sections[$key] = ['name' => $this_section->name, 'status' => $this_section->status];
+        }
 
+        return response()->json($sections);
+    }
 
     public function welcome()
     {
@@ -278,6 +311,22 @@ class HomeController extends Controller
 
 
 
+    public function pingSession()
+    {
+        $student = Auth::user();
+        if($student != null || count($student) != 0)
+        return response()->json(['message' => 'ping']);
+    }
+
+
+    public function checkConnection()
+    {
+        $student = Auth::user();
+        if($student != null || count($student) != 0)
+            return response()->json(['message' => 'ping']);
+    }
+
+
     public function update_password(Request $request, $id)
     {
         $this->Validate($request, [
@@ -340,27 +389,36 @@ class HomeController extends Controller
         return view('layouts.student')->with($variables);
     }
 
+    public function exam_page($id, $page)
+    {
+        $variables = array(
+            'dashboard_content' => 'dashboards.student.pages.exam',
+            'exam_id'           => $id,
+            'page'              => $page
+        );
+        return view('layouts.student')->with($variables);
+    }
 
-
-    public function exam($id, $page)
+    public function exam_contents($id, $page)
     {
 
         $student = Auth::user();
 
         $exam = Exam::find($id);
         if(!$exam->active)
-            return redirect('home')->withError('Access Denied');
+            return response(['error'=> 'Access Denied', 'redirect' => route('home')]);
 
         $exam_entry = Exam_Entry::where(['student_id' => $student->id, 'active' => true, 'exam_id' => $exam->id])->get()->first();
         if($exam_entry == null)
-            return redirect('home')->withError('Access Denied');
+            return response(['error'=> 'Access Denied', 'redirect' => route('home')]);
 
         $exam_paper = $exam_entry->Exam_Paper($exam_entry->exam_id);
 
         $item_list = Exam_Answer::where('exam_entry_id', $exam_entry->id)->get();
 
         if(!isset($item_list[$page]))
-            return redirect()->back()->withError('Invalid Item');
+            return response(['error'=> 'Invalid Item', 'redirect' => 'none']);
+
 
         $total_answered = 0;
         $item_Choices = array();
@@ -392,15 +450,21 @@ class HomeController extends Controller
             $exam_file = (object) array('name' => $file['filename'], 'type' => $file['extension'], 'path' => $file['dirname'], 'id' => $file_id, 'basename' => $file['basename']);
 
         }
+        $item['test_name'] = $item->Test->name;
+        $item['test_type'] = $item->Test->test_type;
+        $item['test_description'] = $item->Test->description;
+
+        if($item->question_type == 'image')
+            $item->question = '<img src="'. asset('photos/shares/'.$item->question). '" class="item_image" alt="">';
 
         $variables = array(
-            'dashboard_content' => 'dashboards.student.pages.exam',
             'student'           => $student,
             'exam_paper'        => $exam_paper,
+            'all_tests'         => $exam_paper->Tests,
             'item_list'         => $item_list,
             'item'              => $item,
             'page'              => $page,
-            'page_max'          => $page_max,
+            'page_max'          => $page_max-1,
             'student_answer'    => $student_answer,
             'item_Choices'      => $item_Choices,
             'total_answered'    => $total_answered,
@@ -408,8 +472,8 @@ class HomeController extends Controller
             'exam_id'           => $exam->id
 
         );
-
-        return view('layouts.student')->with($variables);
+        return response()->json($variables);
+        // return view('layouts.student')->with($variables);
     }
 
 
@@ -427,13 +491,8 @@ class HomeController extends Controller
     {
 
         $student   = Auth::user();
-        $page = $request->page;
-        if(isset($request->prev))
-            $page--;
-        else if(isset($request->next))
-            $page++;
-        else if(isset($request->jump))
-            $page = $request->jump;
+        $page = $request->next_page;
+
 
         $answer = $request->answer;
 
@@ -441,7 +500,7 @@ class HomeController extends Controller
             $answer = $request->submitted_exam_file;
         }
 
-        if(isset($request->delete_exam_file)){
+        if($request->delete_exam_file == 'yes'){
             $answer = null;
             $directory = '/'.$student->sectionTo->path."/".$student->path."/exam_files";
             Storage::delete($directory."/".$request->submitted_exam_file);
@@ -477,11 +536,9 @@ class HomeController extends Controller
         if($answer != $request->prev_answer)
             $this->saveAnswer($answer, $request->exam_item_id,$exam_id);
 
-        if(isset($request->finish))
-            return redirect()->route('exam.finish',$exam_id);
 
-
-        return redirect()->route('exam.open',[$exam_id,$page]);
+        return response()->json(['page' => $page, 'exam_id' => $exam_id]);
+        // return redirect()->route('exam.open',[$exam_id,$page]);
     }
 
 

@@ -93,8 +93,9 @@ class SectionsController extends Controller
                 'notsubmitted'   => 0,
             );
             foreach ($students as $key1 => $student) {
-                if($this->getActivityStats($student, $activity))
+                if($this->getActivityStats($student, $activity)){
                     $activityStats[$key]->submitted += 1;
+                }
                 else
                     $activityStats[$key]->notsubmitted +=1;
             }
@@ -162,20 +163,20 @@ class SectionsController extends Controller
 
 
 
-    public function changeStatus($id)
+    public function changeStatus(Request $request)
     {
 
-        $section = Section::find($id);
+        $section = Section::find($request->id);
 
         if($section->status){
             $section->status = 0;
             $section->save();
-            return redirect()->back()->withError('CLOSED - '.$section->name.'');
+            return response()->json(['type' => 'danger', 'message' => 'CLOSED: '.$section->name.'']);
         }
         else{
             $section->status = 1;
             $section->save();
-            return redirect()->back()->withSuccess('OPENED - '.$section->name.'');
+            return response()->json(['type' => 'success', 'message' => 'OPENED: '.$section->name.'']);
         }
 
     }
@@ -190,13 +191,13 @@ class SectionsController extends Controller
 
         if (!(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') && !(file_exists($directory))) {
             $msg = array("Cannot open folder", "This function only works on a local server running in Windows");
-            return redirect()->back()->withErrors($msg);
+            return response()->json(['message' => $msg, 'type' => 'danger']);
         }
 
         $explorer =  'c:\\windows\\explorer.exe';
         shell_exec("$explorer /n,/e,$directory");
 
-        return redirect()->back();
+        return response()->json(['message' => 'Folder opened', 'type' => 'success']);
 
     }
 
@@ -206,8 +207,14 @@ class SectionsController extends Controller
     {
 
         $record = Record::where(['student_id' => $student->id, 'activity_id' => $activity->id])->get()->first();
-        if(count($record) != 0)
-            return "<a href='".route('post.show',$activity->Post->id)."'><span class='green'><i class='fa fa-check' style='font-size:14pt'></i></span></a>";
+        if(count($record) != 0){
+            $string = "<a href='".route('post.show',$activity->Post->id)."'><span class='green'><i class='fa fa-check' style='font-size:14pt'></i></span></a><br>";
+            if($record->date == $activity->date)
+                $string = $string."<small class='green'>".$record->date."</small>";
+            else
+                $string = $string."<small class='orange'>".$record->date."</small>";
+            return $string;
+        }
 
         return "<a href='".route('post.show',$activity->Post->id)."'><span class='red'><i class='fa fa-close' style='font-size:14pt'></i></span></a>";
     }
@@ -219,6 +226,12 @@ class SectionsController extends Controller
             return true;
 
         return false;
+    }
+
+    public function getActivityDateSubmitted($student, $activity)
+    {
+        $record = Record::where(['student_id' => $student->id, 'activity_id' => $activity->id])->get()->first();
+        return $record->date;
     }
 
 }

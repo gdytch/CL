@@ -32,11 +32,12 @@
                                     </thead>
                                     <tbody>
                                         @foreach ($table_list as $student)
-                                            <tr>
+                                            <tr class="studenttr">
+                                                <td class="studentId hidden">{{$student->id}}</td>
                                                 <td><a href="{{route('student.show',$student->id)}}">{{$student->fname}}</a></td>
                                                 <td><a href="{{route('student.show',$student->id)}}">{{$student->lname}}</a></td>
                                                 <td><a href="{{route('section.show',$student->section_id)}}">{{$student->section_name}}</a></td>
-                                                <td><a href="{{route('student.folder',$student->id)}}" class="">OPEN FOLDER</a></td>
+                                                <td><a href="#" class="openFolderButton">OPEN FOLDER</a></td>
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -141,5 +142,35 @@ function readURL(input) {
        reader.readAsDataURL(input.files[0]);
    }
 }
+ 
+
+$('.openFolderButton').click(function(event){
+    var studentId = $(this).closest('.studenttr').find('.studentId').text();
+    console.log(studentId)
+    $.ajax({
+              type: 'GET',
+              url: 'student/folder/'+studentId,
+
+              success: function(response) {
+                   var type = response.type;
+                   var message = response.message;
+
+                   $.notify({
+                       message: message
+                   },{
+                       type: type,
+                       allow_dismiss: true,
+                       placement: {
+                           from: "top",
+                           align: "center"
+                       },
+                       delay: 5000,
+                       offset: 45,
+                   });
+
+              }
+    });
+
+});
 </script>
 @endsection

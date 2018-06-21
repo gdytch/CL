@@ -46,8 +46,7 @@ class FilesController extends Controller
             'file'     => 'max:30000',
             'activity' => 'required'
         ]);
-
-        $student   = Student ::find($request->id);
+        $student   = Student::find($request->id);
         $activity  = Activity::find($request->activity);
         $directory = '/'.$student->sectionTo->path."/".$student->path."/files";
         $file      = $request->file('file');
@@ -57,8 +56,8 @@ class FilesController extends Controller
         if(!$this->checkFileType($activity, $extension))
         {
             $errors[] = 'Invalid filetype';
-            $errors[] = 'Allowed files: '.$activity->FTRule->extensions;
-            return redirect()->back()->withErrors($errors);
+            $errors[] = 'Allowed files for <b>'. $activity->name .'</b>: '.$activity->FTRule->extensions;
+            return response()->json(['errors' => $errors]);
         }
 
         $filename = $this->getFilename($student, $activity, $file);
@@ -75,7 +74,25 @@ class FilesController extends Controller
         else
             $request->file('file')->storeAs($directory, $basename);
 
-        return redirect()->route('home')->withSuccess('File Submitted');
+        $file = Record::where(['basename' => $basename])->get()->first();
+
+        if(file_exists(public_path('img/icons/'.$extension.'.png'))){
+            $file_icon = "". asset('img/icons/'.$extension.'.png');
+        }else{
+            $file_icon = asset('img/icons/file.png');
+        }
+
+
+        return response()->json([
+            'activityId'    => $activity->id,
+            'filename'      => $file->filename,
+            'basename'      => $basename,
+            'studentId'     => $student->id,
+            'fileId'        => $file->id,
+            'extension'     => $extension,
+            'fileIcon'      => $file_icon,
+            'image_src'     => asset('storage/'.$student->sectionTo->path."/".$student->path."/files".'/'.$file->basename),
+        ]);
 
     }
 
@@ -143,7 +160,9 @@ class FilesController extends Controller
                     $record->active = false;
                     $record->update();
                 }
-                return redirect()->route('home')->withSuccess('File moved to trash');
+                $activity = Activity::find($record->activity_id);
+                $post = $activity->Post;
+                return response()->json(['activityId' => $record->activity_id, 'post' => $post, 'fileId' => $record->id, 'activity' => $activity]);
 
                 break;
 
@@ -238,5 +257,6 @@ class FilesController extends Controller
         return $filename;
 
     }
+
 
 }
